@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets = ["native", "darwin", "darwin-arm64", "linux-musl", "debian-openssl-1.1.x", "darwin"]
+  previewFeatures = ["interactiveTransactions"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                      Int     @id @default(autoincrement())
+  full_name               String
+  email                   String @unique
+  phone                   String
+  cpf                     String @unique
+  password                String
+  transaction_password    String
+  created_at              DateTime @default(now())
+  updated_at              DateTime?
+  address                 Address[]
+}
+
+model Address {
+  id            Int   @id @default(autoincrement())
+  user          User @relation(fields: [userId], references: [id])
+  userId        Int
+  cep           String
+  street        String
+  number        String
+  complement    String
+  neighborhood  String
+  city          String
+  state         String
+  created_at    DateTime @default(now())
+  updated_at    DateTime?
+}
