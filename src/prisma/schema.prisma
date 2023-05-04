@@ -12,12 +12,18 @@ enum AccountStatus {
   BLOCKED
 }
 
+enum TransferStatus {
+  SCHEDULED
+  DONE
+  CANCELED
+}
+
 model UserAuth {
-  cpf                Int       @id
-  bcrypt_user        String
-  bcrypt_transaction String
-  created_at         DateTime  @default(now())
-  updated_at         DateTime  @updatedAt
+  cpf                String    @id @db.VarChar(14)
+  bcrypt_user        String    @db.Char(60)
+  bcrypt_transaction String    @db.Char(60)
+  created_at         DateTime  @default(now()) @db.Timestamp()
+  updated_at         DateTime  @updatedAt @db.Timestamp()
   // ================================================================================
   address            Address?
   user_info          UserInfo?
@@ -25,55 +31,56 @@ model UserAuth {
 }
 
 model Address {
-  user_cpf      Int      @id
-  cep           Int
-  street        String
-  number        Int
-  complement    String
-  neighbourhood String
-  city          String
-  state         String
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  user_cpf      String   @id @db.VarChar(14)
+  cep           String   @db.Char(8)
+  street        String   @db.VarChar(120)
+  number        Int      @db.SmallInt
+  complement    String   @db.VarChar(300)
+  neighbourhood String   @db.VarChar(100)
+  city          String   @db.VarChar(100)
+  state         String   @db.Char(2)
+  created_at    DateTime @default(now()) @db.Timestamp()
+  updated_at    DateTime @updatedAt @db.Timestamp()
   // ================================================================================
   user          UserAuth @relation(fields: [user_cpf], references: [cpf])
 }
 
 model UserInfo {
-  cpf        Int      @id
-  name       String
-  email      String
-  phone      String
-  birthday   DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  cpf        String   @id @db.VarChar(14)
+  name       String   @db.VarChar(200)
+  email      String   @db.VarChar(320)
+  phone      String   @db.VarChar(13)
+  birthday   DateTime @db.Date
+  created_at DateTime @default(now()) @db.Timestamp()
+  updated_at DateTime @updatedAt @db.Timestamp()
   // ================================================================================
   user       UserAuth @relation(fields: [cpf], references: [cpf])
 }
 
 model Account {
-  account_number     Int           @id
-  agency             Int
-  balance            Decimal
-  owner_cpf          Int
-  account_status     AccountStatus
-  created_at         DateTime      @default(now())
-  updated_at         DateTime      @updatedAt
+  account_number     Int           @id @db.Integer
+  agency             Int           @db.SmallInt
+  balance            Decimal       @db.Money
+  owner_cpf          String        @db.VarChar(14)
+  account_status     AccountStatus @default(ACTIVE)
+  created_at         DateTime      @default(now()) @db.Timestamp()
+  updated_at         DateTime      @updatedAt @db.Timestamp()
   // ================================================================================
   user               UserAuth      @relation(fields: [owner_cpf], references: [cpf])
-  sent_transfers     Transfer[]    @relation(name: "Debitos")
-  received_transfers Transfer[]    @relation(name: "Creditos")
+  sent_transfers     Transfer[]    @relation(name: "debits")
+  received_transfers Transfer[]    @relation(name: "credits")
 }
 
 model Transfer {
-  id                  String    @id @default(uuid())
-  account_number_from Int
-  account_number_to   Int
-  value               Decimal
-  scheduled           DateTime?
-  created_at          DateTime  @default(now())
-  updated_at          DateTime  @updatedAt
+  id                  String         @id @default(uuid()) @db.Uuid
+  account_number_from Int            @db.Integer
+  account_number_to   Int            @db.Integer
+  value               Decimal        @db.Money
+  time_of_transfer    DateTime       @default(now()) @db.Timestamp()
+  transfer_status     TransferStatus @default(DONE)
+  created_at          DateTime       @default(now()) @db.Timestamp()
+  updated_at          DateTime       @updatedAt @db.Timestamp()
   // ================================================================================
-  conta_debitada      Account   @relation(name: "Debitos", fields: [account_number_from], references: [account_number])
-  conta_creditada     Account   @relation(name: "Creditos", fields: [account_number_to], references: [account_number])
+  debited_account     Account        @relation(name: "debits", fields: [account_number_from], references: [account_number])
+  credited_account    Account        @relation(name: "credits", fields: [account_number_to], references: [account_number])
 }
