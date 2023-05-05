@@ -1,0 +1,35 @@
+Gabriel:
+- Pensar sobre DADOS REPETIDOS, como evitar redundâncias desnecessárias
+- Endereço deve ser obrigatório, não opcional
+- Problemas relacionados às duas tabelas transaction e internal_transfer
+CORREÇÃO PARA MEU MER: bcrypt_transaction associado à conta e não a user_auth
+
+Guilherme Pacianotto:
+- Usar "document" ao invés de "cpf" para permitir cnpj implicitamente
+- Problemática de utilizar mesmo endereço para mais de um usuário
+! Já utilizou senha de transação na tabela de conta
+
+Luis:
+- Senha de usuário não pode ficar na tabela Account
+- Não é necessário "conta de administrador"
+- Colocar descrição do 'ticket'
+
+Guilherme Tomiasi
+- Pensar nas chaves primárias: CPF e número de conta acabam por expor informações em queries
+- Questão performática das chaves primárias
+- time_of_transfer virar time_to_transfer
+
+:
+- Tipo de conta, não método
+- Senha transacional na tabela de usuário
+
+Filipe Nava
+- Não é necessário cardinalidade n-n entre usuário e endereço
+
+Mudanças anotadas:
+- Mover senha de transação para tabela de conta
+- Melhorar nomes dos campos de senha
+- Melhorar referenciamento de chave primária, evitar CPF e número de conta
+- Implementar disable, inativo, etc para manter informações de conta
+- Melhorar uso de time_of_transfer, pensar em usar o updated_at (time_to_transfer)
+Pensar: depósito
