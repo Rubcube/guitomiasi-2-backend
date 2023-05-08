@@ -26,7 +26,7 @@ enum UserStatus {
 }
 
 model UserAuth {
-  id                   String     @id @db.Uuid
+  id                   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   bcrypt_user_password String     @db.Char(60)
   user_status          UserStatus @default(ACTIVE)
   created_at           DateTime   @default(now()) @db.Timestamp()
@@ -66,7 +66,7 @@ model UserInfo {
 }
 
 model Account {
-  id                          String        @id @db.Uuid
+  id                          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   account_number              Int           @unique @db.Integer
   bcrypt_transaction_password String        @db.Char(60)
   agency                      Int           @db.Integer
@@ -82,7 +82,7 @@ model Account {
 }
 
 model Transfer {
-  id               String         @id @default(uuid()) @db.Uuid
+  id               String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   account_id_from  String         @db.Uuid
   account_id_to    String         @db.Uuid
   value            Decimal        @db.Money
