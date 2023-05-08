@@ -19,11 +19,18 @@ enum TransferStatus {
   CANCELED
 }
 
+enum UserStatus {
+  ACTIVE
+  BLOCKED
+  INACTIVE
+}
+
 model UserAuth {
-  id                   String    @id @db.Uuid
-  bcrypt_user_password String    @db.Char(60)
-  created_at           DateTime  @default(now()) @db.Timestamp()
-  updated_at           DateTime  @updatedAt @db.Timestamp()
+  id                   String     @id @db.Uuid
+  bcrypt_user_password String     @db.Char(60)
+  user_status          UserStatus @default(ACTIVE)
+  created_at           DateTime   @default(now()) @db.Timestamp()
+  updated_at           DateTime   @updatedAt @db.Timestamp()
   // ================================================================================
   address              Address?
   user_info            UserInfo?
