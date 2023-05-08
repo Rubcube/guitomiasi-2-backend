@@ -42,7 +42,7 @@ model Address {
   cep           String   @db.Char(8)
   street        String   @db.VarChar(120)
   number        Int      @db.Integer
-  complement    String   @db.VarChar(300)
+  complement    String?  @db.VarChar(300)
   neighbourhood String   @db.VarChar(100)
   city          String   @db.VarChar(100)
   state         String   @db.Char(2)
@@ -53,16 +53,16 @@ model Address {
 }
 
 model UserInfo {
-  id         String   @id @db.Uuid
-  document   String   @unique @db.VarChar(14)
-  name       String   @db.VarChar(200)
-  email      String   @db.VarChar(320)
-  phone      String   @db.VarChar(13)
-  birthday   DateTime @db.Date
-  created_at DateTime @default(now()) @db.Timestamp()
-  updated_at DateTime @updatedAt @db.Timestamp()
+  id         String    @id @db.Uuid
+  document   String    @unique @db.VarChar(14)
+  name       String    @db.VarChar(200)
+  email      String    @db.VarChar(320)
+  phone      String    @db.VarChar(13)
+  birthday   DateTime? @db.Date
+  created_at DateTime  @default(now()) @db.Timestamp()
+  updated_at DateTime  @updatedAt @db.Timestamp()
   // ================================================================================
-  user       UserAuth @relation(fields: [id], references: [id])
+  user       UserAuth  @relation(fields: [id], references: [id])
 }
 
 model Account {
