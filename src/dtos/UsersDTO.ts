@@ -1,14 +1,27 @@
-export interface UserIn {
-  full_name: string;
+export interface UserOnboarding {
+  name: string;
   email: string;
   phone: string;
-  cpf: string;
-  password: string;
-  transaction_password: string;
+  document: string;
+  bcrypt_user_password: string;
+  birthday?: Date;
+}
+
+export interface UserAuthOnboarding {
+  bcrypt_user_password: string;
+}
+
+export interface UserInfoOnboarding {
+  id: string;
+  document: string;
+  name: string;
+  email: string;
+  phone: string;
+  birthday?: Date;
 }
 
 export interface UserOut {
-  id: number;
+  id: string;
   email: string;
-  full_name: string | null;
+  name: string;
 }

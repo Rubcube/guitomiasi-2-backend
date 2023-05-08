@@ -1,9 +1,10 @@
-export interface AddressIn {
+export interface AddressOnboarding {
+  owner_id: string;
   cep: string;
   street: string;
-  number: string;
+  number: number;
   complement: string;
-  neighborhood: string;
+  neighbourhood: string;
   city: string;
   state: string;
 }

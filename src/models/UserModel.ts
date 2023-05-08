@@ -1,44 +1,36 @@
 import { PrismaClient } from '@prisma/client';
-import { UserIn } from 'dtos/UsersDTO';
+import { UserOnboarding, UserOut } from 'dtos/UsersDTO';
 
 const prisma = new PrismaClient();
 
 export default class UserModel {
+  create = async (user: UserOnboarding) => {
+    const { bcrypt_user_password, ...userInfo } = user;
 
-  create = async (user: UserIn) => {
-    return await prisma.user.create({
-      data: user
-    });
-  }
-
-  getAll = async () => {
-    return await prisma.user.findMany();
-  }
-
-  get = async (id: number) => {
-    return await prisma.user.findUnique({
-      where: {
-        id
-      }
-    });
-  }
-
-  delete = async (id: number) => {
-    return await prisma.user.delete({
-      where: {
-        id
-      }
-    })
-  }
-
-  update = async (id: number, user: UserIn) => {
-    return await prisma.user.update({
-      where: {
-        id
-      },
+    const genUserAuth = await prisma.userAuth.create({
       data: {
-        ...user
+        bcrypt_user_password: bcrypt_user_password
+      }
+    });
+
+    // Use generated UUID to generate the UserInfo entry
+    const genUserInfo = await prisma.userInfo.create({
+      data: {
+        id: genUserAuth.id,
+        ...userInfo
+      }
+    });
+
+    return genUserInfo as UserOut;
+  }
+
+  getIDByDocument = async (document: string) => {
+    const userReference = await prisma.userInfo.findUnique({
+      where: {
+        document: document
       }
     })
+
+    return userReference?.id;
   }
 };
