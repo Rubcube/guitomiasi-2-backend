@@ -1,0 +1,49 @@
+Filipe Nava:
+- MER:
+  - ! Senha de transação deve estar na tabela de Conta se há mais de uma conta por usuário
+  ! Pensar em tentativas de login
+  - Pensar na possibilidade de uma tabela de log de autenticação
+  - Fluxo de saque e depósito
+  - Smart delete
+- Criação do BD.
+- Arquitetura MVC.
+- Workshop Docker.
+
+Guilherme Tomiasi:
+- MER:
+  - Tomar cuidado, conta CNPJ pode ser difícil demais.
+- Criação do BD.
+- Arquitetura MVC.
+- Workshop Docker.
+
+Guilherme Pacianotto:
+- MER:
+ - Em relações 1-1 a chave pode ser armazenada em duas tabelas diferentes, qual a melhor escolha?
+ - Utilizando ID gerado pelo BD ao invés de ID numérico.
+ - Ao invés de uma tabela para onboarding, utilizar status na tabela usuário.
+ - Vários PUT ao invés de POST único
+- Criação do BD:
+  ! Sempre inserir dados para testar o banco pelo menos
+- Arquitetura MVC.
+- Workshop Docker.
+
+Gabriel Ferreira:
+- MER:
+  - Pensar no posicionamento de chaves primárias para usuário e endereço.
+- Criação do BD:
+  - Subiu a exigência em cima do projeto.
+- Arquitetura MVC.
+- Workshop Docker.
+
+Luiz Vieira:
+- MER.
+- Criação do BD.
+- Arquitetura MVC.
+- Workshop Docker.
+
+Lucas Boas:
+- MER:
+  - Adicionando updated_at na tabela de transferências.
+- Criação do BD.
+- Arquitetura MVC.
+- Workshop Docker.
