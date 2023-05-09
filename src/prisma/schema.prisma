@@ -67,7 +67,7 @@ model UserInfo {
 
 model Account {
   id                          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  account_number              Int           @unique @db.Integer
+  account_number              Int           @unique @default(autoincrement()) @db.Integer
   bcrypt_transaction_password String        @db.Char(60)
   agency                      Int           @db.Integer
   balance                     Decimal       @db.Money
