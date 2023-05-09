@@ -18,7 +18,8 @@
       "models/*": ["models/*"],
       "routes/*": ["routes/*"],
       "dtos/*": ["dtos/*"],
-      "services/*": ["services/*"]
+      "services/*": ["services/*"],
+      "zodTypes/*": ["zodTypes/*"]
     }
   },
   "include": ["src/**/*.ts"],
