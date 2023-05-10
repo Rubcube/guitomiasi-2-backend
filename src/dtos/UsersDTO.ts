@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { bcryptHash, parsedDate } from 'zodTypes';
+import { parsedDate } from 'zodTypes';
 import { userDocument, userEmail, userName, userPassword, userPhone } from 'zodTypes/user';
 
 export const UserOnboardingSchema = z.object({
@@ -13,7 +13,7 @@ export const UserOnboardingSchema = z.object({
 
 export const UserLoginSchema = z.object({
   document: userDocument,
-  bcrypt_user_password: bcryptHash
+  password: userPassword
 })
 
 export const UserOutSchema = z.object({
