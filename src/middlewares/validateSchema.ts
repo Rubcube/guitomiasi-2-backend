@@ -6,8 +6,7 @@ export function validateSchema(schema: ZodTypeAny) {
     const reqParse = schema.safeParse(req.body);
 
     if (!reqParse.success) {
-      res.status(422).json({ reason: "Failed to validate schema", error: reqParse.error }).end();
-      return;
+      return res.status(422).json({ reason: "Failed to validate schema", error: reqParse.error });
     }
 
     res.locals.parsedBody = reqParse.data;

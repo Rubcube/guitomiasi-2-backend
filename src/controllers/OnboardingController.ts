@@ -18,11 +18,11 @@ export async function onboardUser(req: Request, res: Response) {
       return newUserUUID;
     })
 
-    res.status(201).json({
+    return res.status(201).json({
       newUserUUID
-    }).end();
+    });
   } catch (error) {
     console.log(error);
-    res.status(400).end();
+    return res.status(500);
   }
 }
