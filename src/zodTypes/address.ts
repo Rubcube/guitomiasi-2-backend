@@ -1,8 +1,7 @@
 import { z } from 'zod';
+import { numericString } from '.';
 
-export const addressCEP = z
-    .string()
-    .regex(/\d+/, "CEP contém caracteres que não são dígitos")
+export const addressCEP = numericString("CEP contém caracteres que não são dígitos")
     .length(8, "CEP não contém 8 dígitos");
 export const addressStreet = z
     .string()
