@@ -20,7 +20,6 @@
       "dtos/*": ["dtos/*"],
       "services/*": ["services/*"],
       "zodTypes/*": ["zodTypes/*"],
-      "types/*": ["types/*"],
     }
   },
   "include": ["src/**/*.ts"],
