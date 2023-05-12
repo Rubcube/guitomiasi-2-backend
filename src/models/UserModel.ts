@@ -24,14 +24,15 @@ export async function onboardUserInfo(
 }
 
 export async function getUserAuthInfo(document: string) {
-  const userUUID = await prisma.userInfo.findUnique({
+  const user = await prisma.userInfo.findUnique({
     where: { document },
     select: { id: true },
   });
 
-  if (userUUID === null) return null;
+  if (user === null) return null;
 
   return await prisma.userAuth.findUnique({
-    where: { id: userUUID.id },
+    where: { id: user.id },
+    include: { user_info: true, accounts: true, address: true },
   });
 }

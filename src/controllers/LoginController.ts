@@ -24,7 +24,14 @@ export async function loginUser(req: Request, res: Response) {
         process.env.SECRET_JWT as string,
         { expiresIn: 60 },
       );
-      return res.status(200).json(jwtToken);
+
+      const responseJson = {
+        token: jwtToken,
+        user_id: fetchedUser.id,
+        accounts_id: fetchedUser.accounts.map(account => account.id),
+      };
+
+      return res.status(200).json(responseJson);
     } else {
       return res.status(403).json("Password is incorrect");
     }
