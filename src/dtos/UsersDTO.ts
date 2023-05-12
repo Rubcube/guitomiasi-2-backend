@@ -1,6 +1,12 @@
-import { z } from 'zod';
-import { parsedDate } from 'zodTypes';
-import { userDocument, userEmail, userName, userPassword, userPhone } from 'zodTypes/user';
+import { z } from "zod";
+import { parsedDate } from "zodTypes";
+import {
+  userDocument,
+  userEmail,
+  userName,
+  userPassword,
+  userPhone,
+} from "zodTypes/user";
 
 export const UserOnboardingSchema = z.object({
   name: userName,
@@ -8,13 +14,13 @@ export const UserOnboardingSchema = z.object({
   phone: userPhone,
   document: userDocument,
   password: userPassword,
-  birthday: parsedDate.optional()
-})
+  birthday: parsedDate.optional(),
+});
 
 export const UserLoginSchema = z.object({
   document: userDocument,
-  password: userPassword
-})
+  password: userPassword,
+});
 
 export const UserOutSchema = z.object({
   id: z.string().uuid(),
@@ -22,8 +28,8 @@ export const UserOutSchema = z.object({
   document: userDocument,
   email: userEmail,
   phone: userPhone,
-  birthday: z.date().optional()
-})
+  birthday: z.date().optional(),
+});
 
 export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;
 export type UserLogin = z.infer<typeof UserLoginSchema>;

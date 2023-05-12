@@ -14,9 +14,16 @@ export async function loginUser(req: Request, res: Response) {
       return res.status(404).json("User doesn't exist");
     }
 
-    const passwordIsCorrect = await compare(password, fetchedUser.bcrypt_user_password);
+    const passwordIsCorrect = await compare(
+      password,
+      fetchedUser.bcrypt_user_password,
+    );
     if (passwordIsCorrect) {
-      const jwtToken = sign({ id: fetchedUser.id }, process.env.SECRET_JWT as string, { expiresIn: 60 });
+      const jwtToken = sign(
+        { id: fetchedUser.id },
+        process.env.SECRET_JWT as string,
+        { expiresIn: 60 },
+      );
       return res.status(200).json(jwtToken);
     } else {
       return res.status(403).json("Password is incorrect");

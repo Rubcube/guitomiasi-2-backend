@@ -11,25 +11,28 @@ export async function onboardUser(req: Request, res: Response) {
   const { password, ...userInfo } = user;
 
   const bcrypt_user_password = await hash(password, 10);
-  const bcrypt_transaction_password = await hash(account.transaction_password, 10);
+  const bcrypt_transaction_password = await hash(
+    account.transaction_password,
+    10,
+  );
 
   try {
     const newUser = await prisma.userAuth.create({
       data: {
         bcrypt_user_password,
         user_info: {
-          create: userInfo
+          create: userInfo,
         },
         address: {
-          create: address
+          create: address,
         },
         accounts: {
           create: {
             bcrypt_transaction_password,
-            ...ACCOUNT_DEFAULT_OPTIONS
-          }
-        }
-      }
+            ...ACCOUNT_DEFAULT_OPTIONS,
+          },
+        },
+      },
     });
 
     return res.status(201).json(newUser.id);

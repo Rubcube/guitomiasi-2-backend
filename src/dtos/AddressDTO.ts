@@ -1,5 +1,13 @@
-import { z } from 'zod';
-import { addressCEP, addressCity, addressComplement, addressNeighbourhood, addressNumber, addressState, addressStreet } from 'zodTypes/address';
+import { z } from "zod";
+import {
+  addressCEP,
+  addressCity,
+  addressComplement,
+  addressNeighbourhood,
+  addressNumber,
+  addressState,
+  addressStreet,
+} from "zodTypes/address";
 
 export const AddressOnboardingSchema = z.object({
   cep: addressCEP,
@@ -8,7 +16,7 @@ export const AddressOnboardingSchema = z.object({
   complement: addressComplement.optional(),
   neighbourhood: addressNeighbourhood,
   city: addressCity,
-  state: addressState
-})
+  state: addressState,
+});
 
 export type AddressOnboarding = z.infer<typeof AddressOnboardingSchema>;

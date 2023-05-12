@@ -15,7 +15,7 @@ app.get("/", (_, res) => {
 });
 app.get("/testLogin", authentication, (_, res) => {
   return res.status(200).json("Authentication successfull!");
-})
+});
 app.use("/onboarding", onboardingRoute);
 app.use("/login", loginRoute);
 app.listen(process.env.PORT || 3344);
