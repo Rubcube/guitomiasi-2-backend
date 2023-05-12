@@ -2,6 +2,7 @@ import "dotenv/config";
 import express from "express";
 import onboardingRoute from "routes/OnboardingRoute";
 import loginRoute from "routes/LoginRoute";
+import accountRoute from "routes/AccountRoute";
 import { authentication } from "middlewares/auth";
 import { DateTime } from "luxon";
 
@@ -18,4 +19,5 @@ app.get("/testLogin", authentication, (_, res) => {
 });
 app.use("/onboarding", onboardingRoute);
 app.use("/login", loginRoute);
+app.use("/account", accountRoute);
 app.listen(process.env.PORT || 3344);

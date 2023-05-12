@@ -1,11 +1,21 @@
 import { AccountOnboarding } from "dtos/AccountDTO";
 import { PrismaTransactionalClient } from "types/index";
 import { hash } from "bcrypt";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export const ACCOUNT_DEFAULT_OPTIONS = {
   agency: 1,
   balance: 100,
 };
+
+export async function getAccount(accountID: string) {
+  return await prisma.account.findUnique({
+    where: { id: accountID },
+    include: { user: true, sent_transfers: true, received_transfers: true },
+  });
+}
 
 export async function onboardUserAccount(
   account: AccountOnboarding,
