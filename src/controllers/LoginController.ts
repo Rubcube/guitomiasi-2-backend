@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { UserLogin } from "dtos/UsersDTO";
 import { compare } from "bcrypt";
-import { getUserAuthInfo } from "models/UserModel";
+import { getUserAuthInfo, getUserStatus } from "models/UserModel";
 import { sign } from "jsonwebtoken";
+import { UserStatus } from "@prisma/client";
 
 export async function loginUser(req: Request, res: Response) {
   const { document, password }: UserLogin = res.locals.parsedBody;
@@ -12,6 +13,10 @@ export async function loginUser(req: Request, res: Response) {
 
     if (fetchedUser === null) {
       return res.status(404).json("User doesn't exist");
+    }
+
+    if (fetchedUser.user_status !== UserStatus.ACTIVE) {
+      return res.status(403).send();
     }
 
     const passwordIsCorrect = await compare(

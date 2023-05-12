@@ -1,11 +1,13 @@
+import { UserStatus } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
 import { verify } from "jsonwebtoken";
+import { getUserStatus } from "models/UserModel";
 
-export const authentication = (
+export async function authentication(
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+) {
   const fetchedToken = req.headers["x-access-token"];
 
   if (!fetchedToken) {
@@ -13,17 +15,19 @@ export const authentication = (
   }
 
   const token = Array.isArray(fetchedToken) ? fetchedToken[0] : fetchedToken;
+  const parsedToken = await verify(token, process.env.SECRET_JWT as string);
 
-  verify(token, process.env.SECRET_JWT as string, (error, decodedToken) => {
-    if (error) {
-      return res.status(500).json("Failed to authenticate token");
-    }
+  if (typeof parsedToken === "string") {
+    return res.status(500).json("Failed to authenticate token");
+  }
 
-    if (typeof decodedToken === "string" || decodedToken === undefined) {
-      return res.status(500).json("Failed to parse token");
-    }
+  // Check for user status
+  const userCurrentStatus = await getUserStatus(parsedToken.id);
 
-    res.locals.parsedJWTToken = decodedToken;
+  if (userCurrentStatus === UserStatus.ACTIVE) {
+    res.locals.parsedJWTToken = parsedToken;
     next();
-  });
-};
+  } else {
+    return res.status(403).send();
+  }
+}

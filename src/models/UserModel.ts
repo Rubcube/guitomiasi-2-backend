@@ -1,7 +1,7 @@
 import { UserOnboarding } from "dtos/UsersDTO";
 import bcrypt from "bcrypt";
 import { PrismaTransactionalClient } from "types/index";
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, UserStatus } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +21,18 @@ export async function onboardUserInfo(
   await prisma.userInfo.create({ data: { id: newUserUUID, ...userInfo } });
 
   return newUserUUID;
+}
+
+export async function getUserStatus(id: string) {
+  const user = await prisma.userAuth.findUnique({
+    where: { id },
+  });
+
+  if (user === null) {
+    return null;
+  }
+
+  return user.user_status;
 }
 
 export async function getUserAuthInfo(document: string) {
