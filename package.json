@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "prisma migrate deploy && ts-node-dev --poll -r tsconfig-paths/register --respawn src/index.ts",
-    "dev": "prisma migrate deploy && ts-node-dev --poll -r tsconfig-paths/register --exit-child --respawn --transpile-only src/index.ts"
+    "dev": "prisma migrate deploy && ts-node-dev --poll -r tsconfig-paths/register --exit-child --respawn --inspect=0.0.0.0:9229 --transpile-only src/index.ts"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

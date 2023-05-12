@@ -33,6 +33,7 @@ services:
     ports:
       - 3344:3344
       - 5555:5555
+      - 9229:9229
     networks:
       - rubcamp
     links:
