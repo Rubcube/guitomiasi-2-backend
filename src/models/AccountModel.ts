@@ -10,10 +10,10 @@ export const ACCOUNT_DEFAULT_OPTIONS = {
   balance: 100,
 };
 
-export async function getAccount(accountID: string) {
+export async function getAccountAndUser(accountID: string) {
   return await prisma.account.findUnique({
     where: { id: accountID },
-    include: { user: true, sent_transfers: true, received_transfers: true },
+    include: { user: true },
   });
 }
 

@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { getAccount } from "models/AccountModel";
+import { getAccountAndUser } from "models/AccountModel";
 
 const prisma = new PrismaClient();
 
@@ -8,7 +8,7 @@ export async function getAccountBalance(req: Request, res: Response) {
   const userID: string = res.locals.parsedJWTToken.id;
   const accountID: string = req.params.id;
 
-  const account = await getAccount(accountID);
+  const account = await getAccountAndUser(accountID);
 
   if (account === null) {
     return res
