@@ -56,8 +56,8 @@ model UserInfo {
   id         String    @id @db.Uuid
   document   String    @unique @db.VarChar(14)
   name       String    @db.VarChar(200)
-  email      String    @db.VarChar(320)
-  phone      String    @db.VarChar(13)
+  email      String    @unique @db.VarChar(320)
+  phone      String    @unique @db.VarChar(13)
   birthday   DateTime? @db.Date
   created_at DateTime  @default(now()) @db.Timestamp()
   updated_at DateTime  @updatedAt @db.Timestamp()
