@@ -17,8 +17,13 @@ export async function getAccountBalance(req: Request, res: Response) {
   }
 
   if (account.user.id !== userID) {
-    return res.status(403).send();
+    return res.status(403).json({
+      error: "ACC-001",
+      message: "UID doesn't match JWT token",
+    });
   }
 
-  return res.status(200).json(account.balance);
+  return res.status(200).json({
+    balance: account.balance,
+  });
 }

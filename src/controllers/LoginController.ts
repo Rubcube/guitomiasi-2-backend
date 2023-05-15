@@ -12,11 +12,18 @@ export async function loginUser(req: Request, res: Response) {
     const fetchedUser = await getUserAuthInfo(document);
 
     if (fetchedUser === null) {
-      return res.status(404).json("User doesn't exist");
+      return res.status(404).json({
+        error: "LOGIN-001",
+        message: "User is not present in the database",
+      });
     }
 
     if (fetchedUser.user_status !== UserStatus.ACTIVE) {
-      return res.status(403).send();
+      return res.status(403).json({
+        error: "LOGIN-002",
+        message: "User is not currently active",
+        user_status: fetchedUser.user_status,
+      });
     }
 
     const passwordIsCorrect = await compare(
@@ -27,7 +34,7 @@ export async function loginUser(req: Request, res: Response) {
       const jwtToken = sign(
         { id: fetchedUser.id },
         process.env.SECRET_JWT as string,
-        { expiresIn: 60 },
+        { expiresIn: parseInt(process.env.JWT_EXPIRATION_TIME || "60") },
       );
 
       const responseJson = {
@@ -38,10 +45,15 @@ export async function loginUser(req: Request, res: Response) {
 
       return res.status(200).json(responseJson);
     } else {
-      return res.status(403).json("Password is incorrect");
+      return res.status(403).json({
+        error: "LOGIN-003",
+        message: "Authentication failed",
+      });
     }
   } catch (error) {
-    console.log(error);
-    return res.status(500);
+    return res.status(500).json({
+      error: "INTERNAL_ERROR",
+      message: "An internal error occurred",
+    });
   }
 }

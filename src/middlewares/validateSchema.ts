@@ -7,8 +7,8 @@ export function validateSchema(schema: ZodTypeAny) {
 
     if (!reqParse.success) {
       return res.status(422).json({
-        reason: "Failed to validate schema",
-        error: reqParse.error,
+        error: "Failed to validate schema",
+        message: reqParse.error,
       });
     }
 

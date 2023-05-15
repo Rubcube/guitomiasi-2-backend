@@ -11,23 +11,39 @@ export async function authentication(
   const fetchedToken = req.headers["x-access-token"];
 
   if (!fetchedToken) {
-    return res.status(401).json("No JWT token was found");
+    return res.status(401).json({
+      error: "AUTH-001",
+      message: "No JWT token was found",
+    });
   }
 
-  const token = Array.isArray(fetchedToken) ? fetchedToken[0] : fetchedToken;
-  const parsedToken = await verify(token, process.env.SECRET_JWT as string);
+  try {
+    const token = Array.isArray(fetchedToken) ? fetchedToken[0] : fetchedToken;
+    const parsedToken = verify(token, process.env.SECRET_JWT as string);
 
-  if (typeof parsedToken === "string") {
-    return res.status(500).json("Failed to authenticate token");
-  }
+    if (typeof parsedToken === "string") {
+      throw new Error("Unable to retrieve JWT payload");
+    }
 
-  // Check for user status
-  const userCurrentStatus = await getUserStatus(parsedToken.id);
+    // Check for user status
+    const userCurrentStatus = await getUserStatus(parsedToken.id);
 
-  if (userCurrentStatus === UserStatus.ACTIVE) {
-    res.locals.parsedJWTToken = parsedToken;
-    next();
-  } else {
-    return res.status(403).send();
+    if (userCurrentStatus === UserStatus.ACTIVE) {
+      res.locals.parsedJWTToken = parsedToken;
+      next();
+    } else {
+      return res.status(403).json({
+        error: "AUTH-003",
+        message: "User is not currently active",
+        user_status: userCurrentStatus,
+      });
+    }
+  } catch (e) {
+    const err = e as Error;
+    return res.status(500).json({
+      error: "AUTH-002",
+      message: "Failed to authenticate JWT token",
+      jwt_message: err.message,
+    });
   }
 }
