@@ -13,10 +13,10 @@ export const userPhone = numericString(
   "Número de telefone contém caracteres não-numéricos",
 ).max(13, "Número de telefone excede 13 dígitos");
 const userCPF = numericString("CPF contém caracteres não-numéricos")
-  .length(11)
+  .length(11, "CPF deve conter 11 dígitos")
   .refine(validateCPF, "CPF inserido não é válido");
 const userCNPJ = numericString("CNPJ contém caracteres não-numéricos")
-  .length(14)
+  .length(14, "CNPJ deve conter 14 dígitos")
   .refine(validateCNPJ, "CNPJ inserido não é válido");
 export const userDocument = userCPF.or(userCNPJ);
 export const userPassword = z
