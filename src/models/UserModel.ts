@@ -1,26 +1,36 @@
 import { UserOnboarding } from "dtos/UsersDTO";
-import bcrypt from "bcrypt";
-import { PrismaTransactionalClient } from "types/index";
-import { PrismaClient, UserStatus } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+import { AddressOnboarding } from "dtos/AddressDTO";
+import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
 const prisma = new PrismaClient();
 
 export async function onboardUserInfo(
-  user: UserOnboarding,
-  prisma: PrismaTransactionalClient,
+  bcrypt_user_password: string,
+  userInfo: Omit<UserOnboarding, "password">,
+  address: AddressOnboarding,
+  bcrypt_transaction_password: string,
 ) {
-  const { password, ...userInfo } = user;
-  const bcryptUserPassword = await bcrypt.hash(password, 10);
-
-  const newUserUUID = (
-    await prisma.userAuth.create({
-      data: { bcrypt_user_password: bcryptUserPassword },
-    })
-  ).id;
-
-  await prisma.userInfo.create({ data: { id: newUserUUID, ...userInfo } });
-
-  return newUserUUID;
+  return await prisma.userAuth.create({
+    data: {
+      bcrypt_user_password,
+      user_info: {
+        create: userInfo,
+      },
+      address: {
+        create: address,
+      },
+      accounts: {
+        create: {
+          bcrypt_transaction_password,
+          ...ACCOUNT_DEFAULT_OPTIONS,
+        },
+      },
+    },
+    include: {
+      accounts: true,
+    },
+  });
 }
 
 export async function getUserStatus(id: string) {

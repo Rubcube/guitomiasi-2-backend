@@ -1,12 +1,9 @@
 import { Request, Response } from "express";
-import { PrismaClient } from "@prisma/client";
 import { Onboarding } from "dtos/OnboardingDTO";
-import { ACCOUNT_DEFAULT_OPTIONS } from "models/AccountModel";
 import { hash } from "bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { sign } from "jsonwebtoken";
-
-const prisma = new PrismaClient();
+import { onboardUserInfo } from "models/UserModel";
 
 export async function onboardUser(req: Request, res: Response) {
   const { user, address, account }: Onboarding = res.locals.parsedBody;
@@ -19,26 +16,12 @@ export async function onboardUser(req: Request, res: Response) {
   );
 
   try {
-    const newUser = await prisma.userAuth.create({
-      data: {
-        bcrypt_user_password,
-        user_info: {
-          create: userInfo,
-        },
-        address: {
-          create: address,
-        },
-        accounts: {
-          create: {
-            bcrypt_transaction_password,
-            ...ACCOUNT_DEFAULT_OPTIONS,
-          },
-        },
-      },
-      include: {
-        accounts: true,
-      },
-    });
+    const newUser = await onboardUserInfo(
+      bcrypt_user_password,
+      userInfo,
+      address,
+      bcrypt_transaction_password,
+    );
 
     const jwtToken = sign(
       { id: newUser.id },
@@ -59,7 +42,7 @@ export async function onboardUser(req: Request, res: Response) {
       const prismaErr = err as PrismaClientKnownRequestError;
       if (prismaErr.code === "P2002") {
         return res.status(422).json({
-          error: "OBD-001",
+          error: "ONBOARDING-VIOLATION-UNIQUE-CONSTRAINT",
           message: "New user violates unique key constraint",
           field: prismaErr.meta,
         });
