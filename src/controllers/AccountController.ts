@@ -1,8 +1,23 @@
-import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
-import { getAccountAndUser } from "models/AccountModel";
+import { getAccountAndUser, getAccountTransfers } from "models/AccountModel";
+import { parsedDate } from "zodTypes/index";
+import moment from "moment";
+import { z } from "zod";
+import { DateRange } from "dtos/DateDTO";
 
-const prisma = new PrismaClient();
+function checkDateRange(date: Date, startDate?: Date, endDate?: Date) {
+  const dateMoment = moment(date);
+  let dateIsValid = true;
+
+  if (startDate) {
+    dateIsValid = dateIsValid && dateMoment.isAfter(moment(startDate));
+  }
+  if (endDate) {
+    dateIsValid = dateIsValid && dateMoment.isBefore(moment(endDate));
+  }
+
+  return dateIsValid;
+}
 
 export async function getAccountBalance(req: Request, res: Response) {
   const userID: string = res.locals.parsedJWTToken.id;
@@ -10,20 +25,16 @@ export async function getAccountBalance(req: Request, res: Response) {
 
   const account = await getAccountAndUser(accountID);
 
-  if (account === null) {
-    return res
-      .status(404)
-      .json("No account with associated ID was found in the database.");
-  }
-
-  if (account.user.id !== userID) {
-    return res.status(403).json({
-      error: "ACC-001",
-      message: "UID doesn't match JWT token",
-    });
-  }
-
   return res.status(200).json({
-    balance: account.balance,
+    balance: account!.balance,
   });
+}
+
+export async function getAllTransfers(req: Request, res: Response) {
+  const accountID = req.params.id;
+  const { start, end }: DateRange = res.locals.parsedQuery;
+
+  const transfers = await getAccountTransfers(accountID, start, end);
+
+  return res.status(200).json(transfers);
 }

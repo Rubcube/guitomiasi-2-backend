@@ -12,6 +12,8 @@ account_mock = account_mock.astype({'transaction_password': 'string'})
 # Endpoint
 url = "http://0.0.0.0:3344/onboarding"
 
+amount = 0
+
 for i in range(100):
     user = user_mock.iloc[i].to_dict()
     address = address_mock.iloc[i].to_dict()
@@ -23,3 +25,7 @@ for i in range(100):
         print(response.status_code)
         if response.status_code == 422:
             print(response.json())
+    else:
+        amount += 1
+        if amount == 3:
+            break
