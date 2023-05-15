@@ -13,14 +13,14 @@ export async function loginUser(req: Request, res: Response) {
 
     if (fetchedUser === null) {
       return res.status(404).json({
-        error: "LOGIN-001",
+        error: "LOGIN-USER-NOT-FOUND",
         message: "User is not present in the database",
       });
     }
 
     if (fetchedUser.user_status !== UserStatus.ACTIVE) {
       return res.status(403).json({
-        error: "LOGIN-002",
+        error: "LOGIN-USER-NOT-ACTIVE",
         message: "User is not currently active",
         user_status: fetchedUser.user_status,
       });
@@ -46,7 +46,7 @@ export async function loginUser(req: Request, res: Response) {
       return res.status(200).json(responseJson);
     } else {
       return res.status(403).json({
-        error: "LOGIN-003",
+        error: "LOGIN-AUTHENTICATION-FAILED",
         message: "Authentication failed",
       });
     }

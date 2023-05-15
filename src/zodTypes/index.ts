@@ -5,7 +5,7 @@ export const parsedDate = z
   .string()
   .regex(
     /^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/,
-    "Formato de data é inválido",
+    "DATE-INVALID-FORMAT",
   )
   .or(z.date())
   .or(z.string().datetime())

@@ -1,6 +1,6 @@
 import { UserStatus } from "@prisma/client";
 import { Request, Response, NextFunction } from "express";
-import { verify } from "jsonwebtoken";
+import { JsonWebTokenError, TokenExpiredError, verify } from "jsonwebtoken";
 import { getUserStatus } from "models/UserModel";
 
 export async function authentication(
@@ -12,7 +12,7 @@ export async function authentication(
 
   if (!fetchedToken) {
     return res.status(401).json({
-      error: "AUTH-001",
+      error: "AUTH-NO-TOKEN",
       message: "No JWT token was found",
     });
   }
@@ -33,17 +33,25 @@ export async function authentication(
       next();
     } else {
       return res.status(403).json({
-        error: "AUTH-003",
+        error: "AUTH-USER-NOT-ACTIVE",
         message: "User is not currently active",
         user_status: userCurrentStatus,
       });
     }
   } catch (e) {
-    const err = e as Error;
-    return res.status(500).json({
-      error: "AUTH-002",
-      message: "Failed to authenticate JWT token",
-      jwt_message: err.message,
-    });
+    if (e instanceof TokenExpiredError) {
+      return res.status(403).json({
+        error: "AUTH-JWT-EXPIRED",
+        message: "User was not authorized because the JWT is expired",
+      });
+    } else if (e instanceof JsonWebTokenError) {
+      return res.status(403).json({
+        error: "AUTH-JWT-ERROR",
+      });
+    } else {
+      return res.status(500).json({
+        error: "INTERNAL-ERROR",
+      });
+    }
   }
 }
