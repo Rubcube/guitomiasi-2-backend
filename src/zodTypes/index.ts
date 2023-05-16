@@ -12,3 +12,4 @@ export const parsedDate = z
   .transform(date => new Date(date));
 export const numericString = (errorMsg: string) =>
   z.string().regex(/^\d*$/, errorMsg);
+export const uuidFormat = z.string().uuid("UUID-INVALID-FORMAT");
