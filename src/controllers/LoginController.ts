@@ -1,15 +1,20 @@
 import { Request, Response } from "express";
 import { UserLogin } from "dtos/UsersDTO";
 import { compare } from "bcrypt";
-import { getUserAuthInfo, getUserStatus } from "models/UserModel";
+import * as UserModel from "models/UserModel";
 import { sign } from "jsonwebtoken";
 import { UserStatus } from "@prisma/client";
 
+/**
+ * Rota utilizada para realizar o login de um USUÁRIO.
+ *
+ * Em caso de sucesso, retorna um JWT.
+ */
 export async function loginUser(req: Request, res: Response) {
   const { document, password }: UserLogin = res.locals.parsedBody;
 
   try {
-    const fetchedUser = await getUserAuthInfo(document);
+    const fetchedUser = await UserModel.getAuth(document);
 
     if (fetchedUser === null) {
       return res.status(404).json({
@@ -30,6 +35,7 @@ export async function loginUser(req: Request, res: Response) {
       password,
       fetchedUser.bcrypt_user_password,
     );
+
     if (passwordIsCorrect) {
       const jwtToken = sign(
         { id: fetchedUser.id },

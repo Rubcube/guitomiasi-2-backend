@@ -1,9 +1,7 @@
-import { onboardUser } from "controllers/OnboardingController";
-import { OnboardingSchema } from "dtos/OnboardingDTO";
 import { Router } from "express";
-import { validateSchema } from "middlewares/validateSchema";
+import * as OnboardingController from "controllers/OnboardingController";
 
-const routes = Router();
-routes.post("/", validateSchema(OnboardingSchema), onboardUser);
+const OnboardingRoute = Router();
+OnboardingRoute.post("/", OnboardingController.create);
 
-export default routes;
+export default OnboardingRoute;

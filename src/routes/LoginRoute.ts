@@ -1,9 +1,14 @@
-import { loginUser } from "controllers/LoginController";
+import * as LoginController from "controllers/LoginController";
 import { UserLoginSchema } from "dtos/UsersDTO";
 import { Router } from "express";
+import { authentication } from "middlewares/auth";
 import { validateSchema } from "middlewares/validateSchema";
 
-const routes = Router();
-routes.post("/", validateSchema(UserLoginSchema), loginUser);
+const LoginRoute = Router();
+LoginRoute.post(
+  "/",
+  validateSchema(UserLoginSchema),
+  LoginController.loginUser,
+);
 
-export default routes;
+export default LoginRoute;

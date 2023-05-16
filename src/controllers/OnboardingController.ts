@@ -3,9 +3,13 @@ import { Onboarding } from "dtos/OnboardingDTO";
 import { hash } from "bcrypt";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { sign } from "jsonwebtoken";
-import { onboardUserInfo } from "models/UserModel";
+import * as UserModel from "models/UserModel";
 
-export async function onboardUser(req: Request, res: Response) {
+/**
+ * Realiza o *onboarding* de um usuário com base nas suas informações pessoais,
+ * de endereço e de senha (transacional e de usuário).
+ */
+export async function create(req: Request, res: Response) {
   const { user, address, account }: Onboarding = res.locals.parsedBody;
   const { password, ...userInfo } = user;
 
@@ -16,7 +20,7 @@ export async function onboardUser(req: Request, res: Response) {
   );
 
   try {
-    const newUser = await onboardUserInfo(
+    const newUser = await UserModel.create(
       bcrypt_user_password,
       userInfo,
       address,
@@ -38,6 +42,7 @@ export async function onboardUser(req: Request, res: Response) {
     return res.status(201).json(responseJson);
   } catch (e) {
     const err = e as Error;
+
     if ("clientVersion" in err) {
       const prismaErr = err as PrismaClientKnownRequestError;
       if (prismaErr.code === "P2002") {
@@ -48,6 +53,7 @@ export async function onboardUser(req: Request, res: Response) {
         });
       }
     }
+
     return res.status(500).json({
       error: "INTERNAL_ERROR",
       message: "An internal error occurred",

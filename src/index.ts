@@ -1,10 +1,10 @@
 import "dotenv/config";
 import express from "express";
-import onboardingRoute from "routes/OnboardingRoute";
-import loginRoute from "routes/LoginRoute";
-import accountRoute from "routes/AccountRoute";
 import { authentication } from "middlewares/auth";
 import { DateTime } from "luxon";
+import OnboardingRoute from "routes/OnboardingRoute";
+import LoginRoute from "routes/LoginRoute";
+import AccountRoute from "routes/AccountRoute";
 
 DateTime.local().setZone("America/Sao_Paulo");
 
@@ -17,7 +17,7 @@ app.get("/", (_, res) => {
 app.get("/testLogin", authentication, (_, res) => {
   return res.status(200).json("Authentication successfull!");
 });
-app.use("/onboarding", onboardingRoute);
-app.use("/login", loginRoute);
-app.use("/account", accountRoute);
+app.use("/onboarding", OnboardingRoute);
+app.use("/login", LoginRoute);
+app.use("/account", AccountRoute);
 app.listen(process.env.PORT || 3344);

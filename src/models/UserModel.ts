@@ -5,32 +5,40 @@ import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
 const prisma = new PrismaClient();
 
-export async function onboardUserInfo(
+/**
+ * Realiza o cadastro de informações pessoais do usuário,
+ * seu endereço e conta no banco de dados.
+ */
+export async function create(
   bcrypt_user_password: string,
   userInfo: Omit<UserOnboarding, "password">,
   address: AddressOnboarding,
   bcrypt_transaction_password: string,
 ) {
-  return await prisma.userAuth.create({
-    data: {
-      bcrypt_user_password,
-      user_info: {
-        create: userInfo,
-      },
-      address: {
-        create: address,
-      },
-      accounts: {
-        create: {
-          bcrypt_transaction_password,
-          ...ACCOUNT_DEFAULT_OPTIONS,
+  try {
+    return await prisma.userAuth.create({
+      data: {
+        bcrypt_user_password,
+        user_info: {
+          create: userInfo,
+        },
+        address: {
+          create: address,
+        },
+        accounts: {
+          create: {
+            bcrypt_transaction_password,
+            ...ACCOUNT_DEFAULT_OPTIONS,
+          },
         },
       },
-    },
-    include: {
-      accounts: true,
-    },
-  });
+      include: {
+        accounts: true,
+      },
+    });
+  } catch (e) {
+    throw e;
+  }
 }
 
 export async function getUserStatus(id: string) {
@@ -45,7 +53,7 @@ export async function getUserStatus(id: string) {
   return user.user_status;
 }
 
-export async function getUserAuthInfo(document: string) {
+export async function getAuth(document: string) {
   const user = await prisma.userInfo.findUnique({
     where: { document },
     select: { id: true },

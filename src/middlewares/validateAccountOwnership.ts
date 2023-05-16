@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { getAccountAndUser } from "models/AccountModel";
+import * as AccountModel from "models/AccountModel";
 
 export async function validateAccountOwnership(
   req: Request,
@@ -7,9 +7,9 @@ export async function validateAccountOwnership(
   next: NextFunction,
 ) {
   const userID: string = res.locals.parsedJWTToken.id;
-  const accountID: string = req.params.id;
+  const accountID: string = req.params.accountId;
 
-  const account = await getAccountAndUser(accountID);
+  const account = await AccountModel.getAccount(accountID, true);
 
   if (account === null) {
     return res.status(404).json({
@@ -25,5 +25,6 @@ export async function validateAccountOwnership(
     });
   }
 
+  res.locals.account = account;
   next();
 }
