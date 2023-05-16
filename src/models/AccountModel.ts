@@ -1,7 +1,5 @@
-import { AccountOnboarding } from "dtos/AccountDTO";
-import { PrismaTransactionalClient } from "types/index";
-import { hash } from "bcrypt";
-import { Prisma, PrismaClient, TransferStatus } from "@prisma/client";
+import { PrismaClient, TransferStatus } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime";
 
 const prisma = new PrismaClient();
 
@@ -10,14 +8,25 @@ export const ACCOUNT_DEFAULT_OPTIONS = {
   balance: 100,
 };
 
-export async function getAccountAndUser(accountID: string) {
+/**
+ * Recupera uma conta do banco de dados a partir de seu ID.
+ * Também pode retornar usuário associado à conta.
+ */
+export async function getAccount(
+  accountID: string,
+  includeUser: boolean = true,
+) {
   return await prisma.account.findUnique({
     where: { id: accountID },
-    include: { user: true },
+    include: { user: includeUser },
   });
 }
 
-export async function getAccountTransfers(
+/**
+ * Recupera lista de transferências recebidas e realizadas
+ * por uma determinada conta a partir do banco de dados.
+ */
+export async function getTransfers(
   accountID: string,
   start?: Date,
   end?: Date,
@@ -33,7 +42,6 @@ export async function getAccountTransfers(
         orderBy: [{ updated_at: "desc" }],
         select: {
           id: true,
-          account_id_to: true,
           value: true,
           updated_at: true,
         },
@@ -46,7 +54,6 @@ export async function getAccountTransfers(
         orderBy: [{ updated_at: "desc" }],
         select: {
           id: true,
-          account_id_from: true,
           value: true,
           updated_at: true,
         },
@@ -54,64 +61,91 @@ export async function getAccountTransfers(
     },
   });
 
-  const sentTransfers = await Promise.all(
-    account!.sent_transfers.map(async transfer => {
-      const accountTo = await prisma.$queryRaw(Prisma.sql`
-    SELECT a.account_number, ui.name, ui.email, ui.phone
-    FROM ("Account" a INNER JOIN "UserInfo" ui ON a.owner_id = ui.id)
-    WHERE a.id = ${transfer.account_id_to}::uuid
-    `);
-
-      return {
-        id: transfer.id,
-        to: accountTo,
-        value: transfer.value,
-        time: transfer.updated_at,
-      };
-    }),
-  );
-
-  const receivedTransfers = await Promise.all(
-    account!.received_transfers.map(async transfer => {
-      const accountFrom: {
-        account_number: number;
-        email: string;
-        name: string;
-        phone: string;
-      } = await prisma.$queryRaw(Prisma.sql`
-    SELECT a.account_number, ui.name, ui.email, ui.phone
-    FROM ("Account" a INNER JOIN "UserInfo" ui ON a.owner_id = ui.id)
-    WHERE a.id = ${transfer.account_id_from}::uuid
-    `);
-
-      return {
-        id: transfer.id,
-        from: accountFrom,
-        value: transfer.value,
-        time: transfer.updated_at,
-      };
-    }),
-  );
-
   return {
-    sent: sentTransfers,
-    received: receivedTransfers,
+    sent: account!.sent_transfers,
+    received: account!.received_transfers,
   };
 }
 
-export async function onboardUserAccount(
-  account: AccountOnboarding,
-  owner_id: string,
-  prisma: PrismaTransactionalClient,
-) {
-  const { transaction_password } = account;
-  const bcrypt_transaction_password = await hash(transaction_password, 10);
-
-  await prisma.account.create({
-    data: {
-      owner_id,
-      bcrypt_transaction_password,
-      ...ACCOUNT_DEFAULT_OPTIONS,
+/**
+ * Retorna informações detalhadas de uma transferência a partir do banco de dados.
+ */
+export async function getTransferDetail(transferId: string) {
+  return await prisma.transfer.findUnique({
+    where: { id: transferId },
+    include: {
+      credited_account: {
+        include: {
+          user: {
+            include: {
+              user_info: {
+                select: {
+                  name: true,
+                  email: true,
+                  phone: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      debited_account: {
+        include: {
+          user: {
+            include: {
+              user_info: {
+                select: {
+                  name: true,
+                  email: true,
+                  phone: true,
+                },
+              },
+            },
+          },
+        },
+      },
     },
   });
+}
+
+export async function makeTransfer(
+  account_id_from: string,
+  account_number_to: number,
+  value: Decimal,
+) {
+  try {
+    return await prisma.$transaction(async prisma => {
+      const newBalance = (
+        await prisma.account.update({
+          where: { id: account_id_from },
+          data: { balance: { decrement: value } },
+          select: { balance: true },
+        })
+      ).balance;
+
+      if (newBalance.isNegative()) {
+        throw new Error("Not enough money to execute transfer");
+      }
+
+      const account_id_to = (
+        await prisma.account.update({
+          where: { account_number: account_number_to },
+          data: { balance: { increment: value } },
+          select: { id: true },
+        })
+      ).id;
+
+      const generatedTransfer = await prisma.transfer.create({
+        data: {
+          account_id_from,
+          account_id_to,
+          value,
+        },
+      });
+
+      return generatedTransfer;
+    });
+  } catch (e) {
+    throw e;
+  }
 }
