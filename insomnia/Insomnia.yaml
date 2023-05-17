@@ -1,0 +1,1025 @@
+_type: export
+__export_format: 4
+__export_date: 2023-05-17T14:54:10.346Z
+__export_source: insomnia.desktop.app:v2023.2.1
+resources:
+  - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684334478528
+    created: 1684181567401
+    url: "{{ _.loginEndpoint }}"
+    name: Login
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "{{ _.sissy_roche.document }}",
+        	"password": "{{ _.sissy_roche.password }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684181799883.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_fa8cb03041884f5d885679e1d135b964
+    parentId: fld_a83e9f54106f48cfbfebb02f88491bcb
+    modified: 1684334469383
+    created: 1684181559410
+    name: Sissy Roche
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684181496222.9375
+    _type: request_group
+  - _id: fld_a83e9f54106f48cfbfebb02f88491bcb
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1684333391000
+    created: 1684157914981
+    name: Sprint 3
+    description: ""
+    environment:
+      addressEndpoint: "{{ _.baseUrl }}/address"
+    environmentPropertyOrder:
+      "&":
+        - addressEndpoint
+    metaSortKey: -1684157914981
+    _type: request_group
+  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
+    parentId: null
+    modified: 1684332678588
+    created: 1684332678588
+    name: RubCamp 2
+    description: ""
+    scope: design
+    _type: workspace
+  - _id: req_43a86d5b38324333ac047d07adfb1db0
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684334482047
+    created: 1684181770108
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Extrato
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181777551.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_db4fdf75237c4986a212c9e2e8a3afcc
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684334483278
+    created: 1684181829659
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id
+      }}/transfers?start=2023-01-01&end=2023-01-31"
+    name: Extrato (filtrado)
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181748125.4375
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_a5033135f4b645e79985e5b9246fb47e
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684333647770
+    created: 1684181718699
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/balance"
+    name: Retornando saldo da conta
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181718699
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_589f3586dd8249398e22c3e85ac79f07
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684334813299
+    created: 1684243639551
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Realizar transferência
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"account_number_to": 2,
+        	"value": 1,
+        	"transactional_password": "{{ _.sissy_roche.transactional_password }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_d9f2faefa5e14134882c76b0e5c1812c
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181567351
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b8d91a85b7ae4b5c9ee9ad6ab582146e
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684333869437
+    created: 1684238124471
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers/{{
+      _.sissy_roche.transfer_example_id }}"
+    name: Transferência em detalhes
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181567301
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6fd4949995ea4051bc746335d90bec7d
+    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    modified: 1684334347561
+    created: 1684157925711
+    url: "{{ _.loginEndpoint }}"
+    name: Login
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "{{ _.fredericka_fredi.document }}",
+        	"password": "{{ _.fredericka_fredi.password }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684181093483.3438
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    parentId: fld_a83e9f54106f48cfbfebb02f88491bcb
+    modified: 1684334470443
+    created: 1684181447083
+    name: Fredericka Fredi
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684181496172.9375
+    _type: request_group
+  - _id: req_64ed31b37ed34b8398cd024b85e0d1e6
+    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    modified: 1684333659772
+    created: 1684161152806
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Extrato
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181093433.3438
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_fb40b7b09191460aa6fe05ebb8a734d6
+    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    modified: 1684334499840
+    created: 1684158816705
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id
+      }}/transfers?start=2023-01-01&end=2023-05-31"
+    name: Extrato (filtrado)
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181093383.3438
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_fdba317eb82a4fd897578125a2442a14
+    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    modified: 1684333666147
+    created: 1683896006133
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/balance"
+    name: Retornando saldo de conta
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181093333.3438
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8f276fd2519340189317426faa8176f4
+    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    modified: 1684334402824
+    created: 1684327097278
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Realizar transferência
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: >-
+        {
+        	"account_number_to": 2,
+        	"value": 1,
+        	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_d9f2faefa5e14134882c76b0e5c1812c
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684181093283.3438
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_eaf6d4bf4f3d4953b0f72a6fb3afb6e4
+    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+    modified: 1684334459985
+    created: 1684327562199
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Realizar transferência loop
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: >-
+        {
+        	"account_number_to": 1,
+        	"value": 1,
+        	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_d9f2faefa5e14134882c76b0e5c1812c
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684165525146.1719
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_9d6b2f9cef4c4f708f7e058a903fd54e
+    parentId: fld_4ce0ab96e8974116976e93463840c23c
+    modified: 1684152770580
+    created: 1684149957009
+    url: 0.0.0.0:3344/login
+    name: Login
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "97478167845",
+        	"password": "SenhaForte01@"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684149957009
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_4ce0ab96e8974116976e93463840c23c
+    parentId: fld_b37b4ad50a6341a499dcbf3efcca6df0
+    modified: 1684149916450
+    created: 1684149916450
+    name: Login
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684149916450
+    _type: request_group
+  - _id: fld_b37b4ad50a6341a499dcbf3efcca6df0
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1683901233029
+    created: 1683652947113
+    name: Sprint 2
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1683652947113
+    _type: request_group
+  - _id: req_76846da5a52c48c0a5bd2474897c8c28
+    parentId: fld_4ce0ab96e8974116976e93463840c23c
+    modified: 1684152119165
+    created: 1684152028330
+    url: 0.0.0.0:3344/login
+    name: Login [INVÁLIDO, CPF/Senha inválido]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "000000000",
+        	"password": "senha"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684122912401.9688
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1ed207f9a8ed4c7188785a039dd36caa
+    parentId: fld_4ce0ab96e8974116976e93463840c23c
+    modified: 1684152120320
+    created: 1684149984530
+    url: 0.0.0.0:3344/login
+    name: Login [INVÁLIDO, usuário não-existente]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "48168871804",
+        	"password": "Senhaforte01@"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684114799019.8594
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_9c0c3fabb1284a1a844bb523734aa219
+    parentId: fld_4ce0ab96e8974116976e93463840c23c
+    modified: 1684151885431
+    created: 1684151838017
+    url: 0.0.0.0:3344/login
+    name: Login [INVÁLIDO, inativo]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "96586245613",
+        	"password": "IsFtwy@jY4g*I"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684106685637.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_a20ebd97f8384d7ab210b42095bc844e
+    parentId: fld_4ce0ab96e8974116976e93463840c23c
+    modified: 1684151977216
+    created: 1684151951017
+    url: 0.0.0.0:3344/login
+    name: Login [INVÁLIDO, bloqueado]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "48236006735",
+        	"password": "l0w!bAuQb?bkhUl1"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684085049952.125
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_d153076f8f5a44dd8dcbff7229b95126
+    parentId: fld_4ce0ab96e8974116976e93463840c23c
+    modified: 1684152285207
+    created: 1684152212427
+    url: 0.0.0.0:3344/login
+    name: Login [INVÁLIDO, senha incorreta]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "81071419706",
+        	"password": "SenhaIncorreta01@"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684074232109.3125
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6229fd7aa81a4a73bb24c9dd9dc16d50
+    parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
+    modified: 1684149651493
+    created: 1683650802722
+    url: 0.0.0.0:3344/onboarding
+    name: Onboard - Usuário [VÁLIDO]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {
+        		"name": "Teddy Denis",
+        		"email": "t.denis@email.com",
+        		"phone": "15997190307",
+        		"document": "97478167845",
+        		"password": "SenhaForte01@",
+        		"birthday": "2000-08-11T00:00:00Z"
+        	},
+        	"address": {
+        		"cep": "19030370",
+        		"street": "Rua Francisco de Almeida",
+        		"number": 101,
+        		"complement": "Algum complemento",
+        		"neighbourhood": "Centro",
+        		"city": "São Paulo",
+        		"state": "SP"
+        	},
+        	"account": {
+        		"transaction_password": "1234"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684063414266.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_b954d67ad47b4ab9b2268bcf28db8427
+    parentId: fld_b37b4ad50a6341a499dcbf3efcca6df0
+    modified: 1684149397292
+    created: 1684149397292
+    name: Onboarding
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684149397292
+    _type: request_group
+  - _id: req_daae00a5a4834877892297e920cc5067
+    parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
+    modified: 1684153036093
+    created: 1684152951325
+    url: 0.0.0.0:3344/onboarding
+    name: Onboard - Usuário [CPF duplicado]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {
+        		"name": "Teddy Denis",
+        		"email": "t.denis@email.com",
+        		"phone": "15997190307",
+        		"document": "81071419706",
+        		"password": "SenhaForte01@",
+        		"birthday": "2000-08-11T00:00:00Z"
+        	},
+        	"address": {
+        		"cep": "19030370",
+        		"street": "Rua Francisco de Almeida",
+        		"number": 101,
+        		"complement": "Algum complemento",
+        		"neighbourhood": "Centro",
+        		"city": "São Paulo",
+        		"state": "SP"
+        	},
+        	"account": {
+        		"transaction_password": "1234"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684063414254
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_70d627e052704fb3817cf2f6ed4e5450
+    parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
+    modified: 1684153045200
+    created: 1684152956801
+    url: 0.0.0.0:3344/onboarding
+    name: Onboard - Usuário [Telefone duplicado]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {
+        		"name": "Teddy Denis",
+        		"email": "t.denis@email.com",
+        		"phone": "34725922884",
+        		"document": "97478167845",
+        		"password": "SenhaForte01@",
+        		"birthday": "2000-08-11T00:00:00Z"
+        	},
+        	"address": {
+        		"cep": "19030370",
+        		"street": "Rua Francisco de Almeida",
+        		"number": 101,
+        		"complement": "Algum complemento",
+        		"neighbourhood": "Centro",
+        		"city": "São Paulo",
+        		"state": "SP"
+        	},
+        	"account": {
+        		"transaction_password": "1234"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684063414247.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_305db4cdfaef4b36aec77965fd451db1
+    parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
+    modified: 1684153053457
+    created: 1684152961927
+    url: 0.0.0.0:3344/onboarding
+    name: Onboard - Usuário [Email duplicado]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {
+        		"name": "Teddy Denis",
+        		"email": "Fredericka.Fredi@yopmail.com",
+        		"phone": "15997190307",
+        		"document": "97478167845",
+        		"password": "SenhaForte01@",
+        		"birthday": "2000-08-11T00:00:00Z"
+        	},
+        	"address": {
+        		"cep": "19030370",
+        		"street": "Rua Francisco de Almeida",
+        		"number": 101,
+        		"complement": "Algum complemento",
+        		"neighbourhood": "Centro",
+        		"city": "São Paulo",
+        		"state": "SP"
+        	},
+        	"account": {
+        		"transaction_password": "1234"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684063414244.625
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_5d6992c24678455b98430103892f8bad
+    parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
+    modified: 1684150037011
+    created: 1684149843892
+    url: 0.0.0.0:3344/onboarding
+    name: Onboard - Usuário [CPF inválido]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {
+        		"name": "Denis Teddy",
+        		"email": "d.teddy@email.com",
+        		"phone": "15991790509",
+        		"document": "97478167800",
+        		"password": "SenhaForte01@",
+        		"birthday": "2000-05-01T00:00:00Z"
+        	},
+        	"address": {
+        		"cep": "12050010",
+        		"street": "Rua Francisco",
+        		"number": 201,
+        		"complement": "Algum complemento",
+        		"neighbourhood": "Centro",
+        		"city": "São Paulo",
+        		"state": "SP"
+        	},
+        	"account": {
+        		"transaction_password": "1234"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684063414241.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_36fa9186889443ab9ac079bb32464bd0
+    parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
+    modified: 1684165954496
+    created: 1683652733437
+    url: 0.0.0.0:3344/onboarding
+    name: Onboard - Usuário [INVÁLIDO]
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: >-
+        {
+        	"user": {
+        		"name": "Pedro de Alcântara João Carlos Leopoldo Salvador Bibiano Francisco Xavier de Paula Leocádio Miguel Gabriel Rafael Gonzaga Pedro de Alcântara João Carlos Leopoldo Salvador Bibiano Francisco Xavier de Paula Leocádio Miguel Gabriel Rafael Gonzaga",
+        		"email": "emailmalformatado.com",
+        		"phone": "AUhsd877y172chhxiuhiuzhxiu",
+        		"document": "a7478b67e45",
+        		"password": "senhafraca",
+        		"birthday": "2001-13-09"
+        	},
+        	"address": {
+        		"cep": "2e131a21",
+        		"street": "Rua Francisco de Almeida",
+        		"number": -500,
+        		"complement": "Algum complemento",
+        		"neighbourhood": "Centro",
+        		"city": "São Paulo",
+        		"state": "SPM"
+        	},
+        	"account": {
+        		"transaction_password": "12a34"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684063414216.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_24ac06921d1c4f8cba5b09bab370db91
+    parentId: fld_b37b4ad50a6341a499dcbf3efcca6df0
+    modified: 1684162350101
+    created: 1683805465190
+    url: 0.0.0.0:3344/testLogin
+    name: Testando autorização por JWT
+    description: ""
+    method: GET
+    body:
+      mimeType: application/json
+      text: " {}"
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+        id: pair_f6e1a43c21b146dd8ba79bd071d48db5
+      - id: pair_8a0e54a6c1d44af1b6a335e04542c55c
+        name: x-access-token
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjdhZDRiMDEzLTI1MWItNGZiMi1iZTBkLTZjYTFkYjUwNjJjZSIsImlhdCI6MTY4NDE2MjMzOCwiZXhwIjoxNjg0MTYyMzY4fQ.mTTH_6SpRty7g3W479iUkVxSWxyJuuoXCk5wsYyzAoM
+        description: ""
+    authentication: {}
+    metaSortKey: -1683805465190
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_fe67a55ee27843bab5b0a673795aaa67
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1684158541914
+    created: 1683805388797
+    url: 0.0.0.0:3344/
+    name: Testando conexão
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1683652947063
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_7dd09c99d2dd44c4bd391bd2d9996b5d
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1684324580383
+    created: 1684324573926
+    url: https://0.0.0.0:6666/
+    name: Testando conexão HTTPS
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication: {}
+    metaSortKey: -1683652947013
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: env_22ac494303a347fe8a892f81b6f1fc54
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1684332978768
+    created: 1683564731268
+    name: Base Environment
+    data: {}
+    dataPropertyOrder: {}
+    color: null
+    isPrivate: false
+    metaSortKey: 1683564731268
+    _type: environment
+  - _id: jar_224894ecd06b481b8a0a5eb32c4c88e2
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1683564731269
+    created: 1683564731269
+    name: Default Jar
+    cookies: []
+    _type: cookie_jar
+  - _id: spc_cc499173400c4999906da20df58f331a
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1684332678589
+    created: 1684332678589
+    fileName: RubCamp 2
+    contents: ""
+    contentType: yaml
+    _type: api_spec
+  - _id: env_4d1c8b67a2b84778913c143f3d64c6dd
+    parentId: env_22ac494303a347fe8a892f81b6f1fc54
+    modified: 1684334212869
+    created: 1684332979493
+    name: RubCamp 2
+    data:
+      baseUrl: 0.0.0.0:3344
+      loginEndpoint: "{{ _.baseUrl }}/login"
+      accountEndpoint: "{{ _.baseUrl }}/account"
+      sissy_roche:
+        account_id: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+          'b64::JC5hY2NvdW50c19pZFswXQ==::46b', 'never', 60 %}"
+        account_number: 2
+        document: "96586245613"
+        password: IsFtwy@jY4g*I
+        transactional_password: "5775"
+        transfer_example_id: "{% response 'body',
+          'req_43a86d5b38324333ac047d07adfb1db0', 'b64::JC5zZW50WzBdLmlk::46b',
+          'never', 60 %}"
+      fredericka_fredi:
+        account_id: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+          'b64::JC5hY2NvdW50c19pZFswXQ==::46b', 'never', 60 %}"
+        account_number: 1
+        document: "81071419706"
+        password: llTvdp$j!b5zvXnK
+        transactional_password: "2377"
+        transfer_example_id: "{% response 'body',
+          'req_64ed31b37ed34b8398cd024b85e0d1e6',
+          'b64::JC5yZWNlaXZlZFswXQ==::46b', 'never', 60 %}"
+    dataPropertyOrder:
+      "&":
+        - baseUrl
+        - loginEndpoint
+        - accountEndpoint
+        - sissy_roche
+        - fredericka_fredi
+      "&~|sissy_roche":
+        - account_id
+        - account_number
+        - document
+        - password
+        - transactional_password
+        - transfer_example_id
+      "&~|fredericka_fredi":
+        - account_id
+        - account_number
+        - document
+        - password
+        - transactional_password
+        - transfer_example_id
+    color: null
+    isPrivate: false
+    metaSortKey: 1684332979493
+    _type: environment
