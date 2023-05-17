@@ -4,6 +4,7 @@ import moment from "moment";
 import { DateRange } from "dtos/DateDTO";
 import { Account, TransferStatus, UserAuth } from "@prisma/client";
 import { TransferIn } from "dtos/TransferDTO";
+import { compare } from "bcrypt";
 
 /**
  * Retorna saldo atual de uma determinada conta.
@@ -99,6 +100,28 @@ export async function getTransfer(req: Request, res: Response) {
 export async function postTransfer(req: Request, res: Response) {
   const transferRequest: TransferIn = res.locals.parsedBody;
   const debitedAccountId: string = res.locals.account.id;
+  const accountTransactionalPasswordHash: string =
+    res.locals.account.bcrypt_transaction_password;
+  const passwordIsCorrect = await compare(
+    transferRequest.transactional_password,
+    accountTransactionalPasswordHash,
+  );
+  const loopbackTransfer =
+    res.locals.account.account_number === transferRequest.account_number_to;
+
+  if (!passwordIsCorrect) {
+    return res.status(403).json({
+      error: "ACCOUNT_INCORRECT_TRANSACTIONAL_PASSWORD",
+      message: "Inserted transactional password is not correct",
+    });
+  }
+
+  if (loopbackTransfer) {
+    return res.status(403).json({
+      error: "LOOP_TRANSFER",
+      message: "An account can't make a transfer to itself",
+    });
+  }
 
   try {
     const transfer = await AccountModel.makeTransfer(
