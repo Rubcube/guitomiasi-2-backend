@@ -1,5 +1,5 @@
 import { PrismaClient, TransferStatus } from "@prisma/client";
-import { Decimal } from "@prisma/client/runtime";
+import { Decimal } from "@prisma/client/runtime/library";
 
 const prisma = new PrismaClient();
 

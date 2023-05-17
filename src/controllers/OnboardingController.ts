@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { Onboarding } from "dtos/OnboardingDTO";
 import { hash } from "bcrypt";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { sign } from "jsonwebtoken";
 import * as UserModel from "models/UserModel";
 
