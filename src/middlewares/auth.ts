@@ -8,7 +8,7 @@ export async function authentication(
   res: Response,
   next: NextFunction,
 ) {
-  const fetchedToken = req.headers["x-access-token"];
+  const fetchedToken = req.headers["authorization"];
 
   if (!fetchedToken) {
     return res.status(401).json({
