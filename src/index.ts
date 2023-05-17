@@ -28,7 +28,12 @@ app.use("/login", LoginRoute);
 app.use("/account", AccountRoute);
 app.listen(process.env.PORT || 3344);
 
-https.createServer({
-  key,
-  cert
-}, app).listen(6666);
+https
+  .createServer(
+    {
+      key,
+      cert,
+    },
+    app,
+  )
+  .listen(6666);
