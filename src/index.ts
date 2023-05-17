@@ -5,6 +5,12 @@ import { DateTime } from "luxon";
 import OnboardingRoute from "routes/OnboardingRoute";
 import LoginRoute from "routes/LoginRoute";
 import AccountRoute from "routes/AccountRoute";
+import https from "https";
+import fs from "fs";
+import path from "path";
+
+const key = fs.readFileSync("kc/key.pem");
+const cert = fs.readFileSync("kc/cert.pem");
 
 DateTime.local().setZone("America/Sao_Paulo");
 
@@ -21,3 +27,8 @@ app.use("/onboarding", OnboardingRoute);
 app.use("/login", LoginRoute);
 app.use("/account", AccountRoute);
 app.listen(process.env.PORT || 3344);
+
+https.createServer({
+  key,
+  cert
+}, app).listen(6666);
