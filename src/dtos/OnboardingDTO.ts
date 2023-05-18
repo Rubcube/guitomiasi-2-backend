@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { UserOnboardingSchema } from "./UsersDTO";
-import { AddressOnboardingSchema } from "./AddressDTO";
 import { AccountOnboardingSchema } from "./AccountDTO";
+import { AddressOnboardingSchema } from "./AddressDTO";
+import { UserOnboardingSchema } from "./UsersDTO";
 
 export const OnboardingSchema = z.object({
   user: UserOnboardingSchema,
