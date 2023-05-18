@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import RubError from "handlers/ErrorHandler";
+import { RubError } from "handlers/ErrorHandler";
 import { SafeParseReturnType, ZodIssueCode, ZodTypeAny } from "zod";
 
 type schemaOrigin = "BODY" | "QUERY";
@@ -18,23 +18,6 @@ export function validateSchema(
 
     if (!reqParse.success) {
       throw new RubError(422, "Failed to validate request schema", reqParse.error);
-      // const flatErrorArray: string[] = issueArray.map(issue => {
-      //   let errorMessage = issue.message;
-      //   const relevantCodes: ZodIssueCode[] = [
-      //     ZodIssueCode.too_big,
-      //     ZodIssueCode.too_small,
-      //   ];
-      //   if (relevantCodes.indexOf(issue.code) >= 0) {
-      //     errorMessage += `: ${issue.code.toUpperCase()}`;
-      //   }
-
-      //   return errorMessage;
-      // });
-
-      // return res.status(422).json({
-      //   error: flatErrorArray,
-      //   message: "Request was rejected because the schema was not validated",
-      // });
     }
 
     if (origin === "BODY") {

@@ -7,11 +7,10 @@ import LoginRoute from "routes/LoginRoute";
 import AccountRoute from "routes/AccountRoute";
 import https from "https";
 import fs from "fs";
-import path from "path";
-import RubError, { handleError } from "handlers/ErrorHandler";
+import { RubError, handleError } from "handlers/ErrorHandler";
 
-const key = fs.readFileSync("kc/key.pem");
-const cert = fs.readFileSync("kc/cert.pem");
+// const key = fs.readFileSync("kc/key.pem");
+// const cert = fs.readFileSync("kc/cert.pem");
 
 DateTime.local().setZone("America/Sao_Paulo");
 
@@ -33,12 +32,12 @@ app.use(async (error: RubError, req: Request, res: Response, next: NextFunction)
   handleError(error, res);
 });
 
-https
-  .createServer(
-    {
-      key,
-      cert,
-    },
-    app,
-  )
-  .listen(6666);
+// https
+//   .createServer(
+//     {
+//       key,
+//       cert,
+//     },
+//     app,
+//   )
+//   .listen(6666);
