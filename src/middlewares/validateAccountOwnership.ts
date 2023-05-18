@@ -1,4 +1,5 @@
-import { Request, Response, NextFunction } from "express";
+import { NextFunction, Request, Response } from "express";
+import { RubError } from "handlers/errors/RubError";
 import * as AccountModel from "models/AccountModel";
 
 export async function validateAccountOwnership(
@@ -12,17 +13,17 @@ export async function validateAccountOwnership(
   const account = await AccountModel.getAccount(accountID, true);
 
   if (account === null) {
-    return res.status(404).json({
-      error: "ACCOUNT-NOT-FOUND",
-      message: "Account don't exist",
-    });
+    return next(new RubError(404, "Account don't exist", "ACCOUNT-NOT-FOUND"));
   }
 
   if (account.user.id !== userID) {
-    return res.status(403).json({
-      error: "ACCOUNT-NO-OWNERSHIP",
-      message: "User does not have account ownership",
-    });
+    return next(
+      new RubError(
+        403,
+        "User does not have account ownership",
+        "ACCOUNT-NO-OWNERSHIP",
+      ),
+    );
   }
 
   res.locals.account = account;

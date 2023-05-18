@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { validateCNPJ, validateCPF } from "./customValidators";
 import { numericString } from ".";
+import { validateCNPJ, validateCPF } from "./customValidators";
 
 export const userName = z.string().max(200, "USERNAME-INVALID-LENGTH");
 export const userEmail = z

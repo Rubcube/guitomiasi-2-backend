@@ -1,5 +1,6 @@
 import { PrismaClient, TransferStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
+import { RubError } from "handlers/errors/RubError";
 
 const prisma = new PrismaClient();
 
@@ -108,11 +109,29 @@ export async function getTransferDetail(transferId: string) {
   });
 }
 
+/**
+ * Tenta realizar uma transferência IMEDIATAMENTE.
+ *
+ * Caso obtenha sucesso -> Cria nova transferência com status DONE
+ * Caso falhe -> Cria nova transferência com status FAILED
+ */
 export async function makeTransfer(
   account_id_from: string,
   account_number_to: number,
   value: Decimal,
 ) {
+  const account_to = await prisma.account.findUnique({
+    where: { account_number: account_number_to },
+  });
+
+  if (account_to === null) {
+    throw new RubError(
+      404,
+      "CREDITED-ACCOUNT-NOT-FOUND",
+      "Can't execute a transfer to an account that don't exist",
+    );
+  }
+
   try {
     return await prisma.$transaction(async prisma => {
       const newBalance = (
@@ -124,21 +143,23 @@ export async function makeTransfer(
       ).balance;
 
       if (newBalance.isNegative()) {
-        throw new Error("Not enough money to execute transfer");
+        throw new RubError(
+          500,
+          "Not enough money to make the transfer",
+          "TRANSFER-NOT-ENOUGH-BALANCE",
+        );
       }
 
-      const account_id_to = (
-        await prisma.account.update({
-          where: { account_number: account_number_to },
-          data: { balance: { increment: value } },
-          select: { id: true },
-        })
-      ).id;
+      await prisma.account.update({
+        where: { id: account_to.id },
+        data: { balance: { increment: value } },
+        select: { id: true },
+      });
 
       const generatedTransfer = await prisma.transfer.create({
         data: {
           account_id_from,
-          account_id_to,
+          account_id_to: account_to.id,
           value,
         },
       });
@@ -146,6 +167,17 @@ export async function makeTransfer(
       return generatedTransfer;
     });
   } catch (e) {
+    if (!(e instanceof RubError)) {
+      await prisma.transfer.create({
+        data: {
+          account_id_from,
+          account_id_to: account_to.id,
+          value,
+          transfer_status: TransferStatus.CANCELED,
+        },
+      });
+    }
+
     throw e;
   }
 }

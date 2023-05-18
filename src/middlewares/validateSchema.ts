@@ -1,6 +1,6 @@
-import { Request, Response, NextFunction } from "express";
-import { RubError } from "handlers/ErrorHandler";
-import { SafeParseReturnType, ZodIssueCode, ZodTypeAny } from "zod";
+import { NextFunction, Request, Response } from "express";
+import { RSchemaError } from "handlers/errors/RubError";
+import { SafeParseReturnType, ZodTypeAny } from "zod";
 
 type schemaOrigin = "BODY" | "QUERY";
 
@@ -17,7 +17,7 @@ export function validateSchema(
     }
 
     if (!reqParse.success) {
-      throw new RubError(422, "Failed to validate request schema", reqParse.error);
+      return next(new RSchemaError(reqParse.error));
     }
 
     if (origin === "BODY") {

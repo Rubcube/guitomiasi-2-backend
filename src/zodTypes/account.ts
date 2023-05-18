@@ -1,6 +1,6 @@
+import { Decimal } from "@prisma/client/runtime/library";
 import { z } from "zod";
 import { numericString } from ".";
-import { Decimal } from "@prisma/client/runtime/library";
 
 export const transactionPassword = numericString("TP-INVALID-FORMAT").length(
   4,

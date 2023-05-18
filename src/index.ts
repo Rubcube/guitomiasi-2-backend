@@ -1,13 +1,11 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
-import { authentication } from "middlewares/auth";
+import { handleError } from "handlers/errors/ErrorHandler";
 import { DateTime } from "luxon";
-import OnboardingRoute from "routes/OnboardingRoute";
-import LoginRoute from "routes/LoginRoute";
+import { authentication } from "middlewares/auth";
 import AccountRoute from "routes/AccountRoute";
-import https from "https";
-import fs from "fs";
-import { RubError, handleError } from "handlers/ErrorHandler";
+import LoginRoute from "routes/LoginRoute";
+import OnboardingRoute from "routes/OnboardingRoute";
 
 // const key = fs.readFileSync("kc/key.pem");
 // const cert = fs.readFileSync("kc/cert.pem");
@@ -28,9 +26,11 @@ app.use("/login", LoginRoute);
 app.use("/account", AccountRoute);
 app.listen(process.env.PORT || 3344);
 
-app.use(async (error: RubError, req: Request, res: Response, next: NextFunction) => {
-  handleError(error, res);
-});
+app.use(
+  async (error: Error, req: Request, res: Response, next: NextFunction) => {
+    handleError(error, res);
+  },
+);
 
 // https
 //   .createServer(

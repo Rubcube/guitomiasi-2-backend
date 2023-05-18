@@ -1,10 +1,11 @@
-import { Request, Response } from "express";
+import { Account, TransferStatus } from "@prisma/client";
+import { compare } from "bcrypt";
+import { DateRange } from "dtos/DateDTO";
+import { TransferIn } from "dtos/TransferDTO";
+import { NextFunction, Request, Response } from "express";
+import { RubError } from "handlers/errors/RubError";
 import * as AccountModel from "models/AccountModel";
 import moment from "moment";
-import { DateRange } from "dtos/DateDTO";
-import { Account, TransferStatus, UserAuth } from "@prisma/client";
-import { TransferIn } from "dtos/TransferDTO";
-import { compare } from "bcrypt";
 
 /**
  * Retorna saldo atual de uma determinada conta.
@@ -33,16 +34,19 @@ export async function getTransfers(req: Request, res: Response) {
 /**
  * Retorna informações detalhadas de uma determinada transferência.
  */
-export async function getTransfer(req: Request, res: Response) {
+export async function getTransfer(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const transferId: string = req.params.transferId;
 
   const transfer = await AccountModel.getTransferDetail(transferId);
 
   if (!transfer) {
-    return res.status(404).json({
-      error: "TRANSFER-NOT-FOUND",
-      message: "Transfer don't exist",
-    });
+    return next(
+      new RubError(404, "Transfer don't exist", "TRANSFER-NOT-FOUND"),
+    );
   }
 
   // Retrieve ID from JWT
@@ -54,10 +58,13 @@ export async function getTransfer(req: Request, res: Response) {
   const isSender = senderAccount!.user.id === userId;
   const isReceiver = receiverAccount!.user.id === userId;
   if (!isSender && !isReceiver) {
-    return res.status(403).json({
-      error: "TRANSFER-FORBIDDEN-ACCESS",
-      message: "User is neither sender nor receiver",
-    });
+    return next(
+      new RubError(
+        403,
+        "User is neither sender nor receiver",
+        "TRANSFER-FORBIDDEN-ACCESS",
+      ),
+    );
   }
 
   let timeOfTransfer: Date;
@@ -97,7 +104,11 @@ export async function getTransfer(req: Request, res: Response) {
  * Executa uma transferência da conta do usuário logado para
  * uma outra conta.
  */
-export async function postTransfer(req: Request, res: Response) {
+export async function postTransfer(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const transferRequest: TransferIn = res.locals.parsedBody;
   const debitedAccountId: string = res.locals.account.id;
   const accountTransactionalPasswordHash: string =
@@ -106,21 +117,27 @@ export async function postTransfer(req: Request, res: Response) {
     transferRequest.transactional_password,
     accountTransactionalPasswordHash,
   );
-  const loopbackTransfer =
+  const loopTransfer =
     res.locals.account.account_number === transferRequest.account_number_to;
 
   if (!passwordIsCorrect) {
-    return res.status(403).json({
-      error: "ACCOUNT_INCORRECT_TRANSACTIONAL_PASSWORD",
-      message: "Inserted transactional password is not correct",
-    });
+    return next(
+      new RubError(
+        403,
+        "Inserted transactional password is not correct",
+        "ACCOUNT_INCORRECT_TRANSACTIONAL_PASSWORD",
+      ),
+    );
   }
 
-  if (loopbackTransfer) {
-    return res.status(403).json({
-      error: "LOOP_TRANSFER",
-      message: "An account can't make a transfer to itself",
-    });
+  if (loopTransfer) {
+    return next(
+      new RubError(
+        403,
+        "An account can't make a transfer to itself",
+        "LOOP_TRANSFER",
+      ),
+    );
   }
 
   try {
@@ -134,13 +151,8 @@ export async function postTransfer(req: Request, res: Response) {
       transfer_status: transfer.transfer_status,
       time_of_transfer: transfer.updated_at,
       transfered_value: transfer.value,
-      message: "SUCCESS",
     });
   } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      error: "INTERNAL_ERROR",
-      message: "An internal error occurred",
-    });
+    return next(e);
   }
 }

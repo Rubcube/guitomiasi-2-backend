@@ -1,7 +1,7 @@
-import { Router } from "express";
 import * as OnboardingController from "controllers/OnboardingController";
-import { validateSchema } from "middlewares/validateSchema";
 import { OnboardingSchema } from "dtos/OnboardingDTO";
+import { Router } from "express";
+import { validateSchema } from "middlewares/validateSchema";
 
 const OnboardingRoute = Router();
 OnboardingRoute.post(

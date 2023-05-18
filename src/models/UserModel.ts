@@ -1,6 +1,6 @@
-import { UserOnboarding } from "dtos/UsersDTO";
 import { PrismaClient } from "@prisma/client";
 import { AddressOnboarding } from "dtos/AddressDTO";
+import { UserOnboarding } from "dtos/UsersDTO";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
 const prisma = new PrismaClient();
