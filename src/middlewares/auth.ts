@@ -6,7 +6,7 @@ import { getUserStatus } from "models/UserModel";
 
 /**
  * *Middleware* de autenticação. Verifica se um JWT é disponibilizado pelo usuário.
- * 
+ *
  * Se não houver JWT presente ou o mesmo for inválido, interrompe a requisição.
  */
 export async function authentication(

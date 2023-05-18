@@ -29,17 +29,14 @@ export class RPrismaError extends RubError {
     let httpCode: number;
     let message: string;
 
-    switch (pError.code) {
-      case "P2002":
-        const target: string[] = pError?.meta?.target as string[];
-        const targetStr = target.join("-").toUpperCase();
-        httpCode = 400;
-        message = `Unique constraint failed: ${targetStr}`;
-        break;
-      default:
-        httpCode = 500;
-        message = `Prisma client internal error`;
-        break;
+    if (pError.code === "P2002") {
+      const target: string[] = pError?.meta?.target as string[];
+      const targetStr = target.join("-").toUpperCase();
+      httpCode = 400;
+      message = `Unique constraint failed: ${targetStr}`;
+    } else {
+      httpCode = 500;
+      message = `Prisma client internal error`;
     }
 
     super(httpCode, message);

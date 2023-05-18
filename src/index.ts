@@ -1,5 +1,5 @@
 import "dotenv/config";
-import express, { NextFunction, Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { handleError } from "handlers/errors/ErrorHandler";
 import { DateTime } from "luxon";
 import { authentication } from "middlewares/auth";
@@ -26,11 +26,9 @@ app.use("/login", LoginRoute);
 app.use("/account", AccountRoute);
 app.listen(process.env.PORT || 3344);
 
-app.use(
-  async (error: Error, req: Request, res: Response, next: NextFunction) => {
-    handleError(error, res);
-  },
-);
+app.use(async (error: Error, req: Request, res: Response) => {
+  handleError(error, res);
+});
 
 // https
 //   .createServer(

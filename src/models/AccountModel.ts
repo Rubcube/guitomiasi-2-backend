@@ -13,10 +13,7 @@ export const ACCOUNT_DEFAULT_OPTIONS = {
  * Recupera uma conta do banco de dados a partir de seu ID.
  * Também pode retornar usuário associado à conta.
  */
-export async function getAccount(
-  accountID: string,
-  includeUser: boolean = true,
-) {
+export async function getAccount(accountID: string, includeUser = true) {
   return await prisma.account.findUnique({
     where: { id: accountID },
     include: { user: includeUser },

@@ -3,13 +3,13 @@ import { RubError } from "./RubError";
 
 /**
  * *Handler* de erros centralizados. É chamado toda vez que a função `next`
- * recebe como parâmetro uma instância da classe `Error`. 
+ * recebe como parâmetro uma instância da classe `Error`.
  */
 export function handleError(err: Error, res: Response) {
   if (err instanceof RubError) {
     const { message, httpCode: statusCode, ...errorInfo } = err;
-    res.status(err.httpCode).json({
-      message: err.message,
+    res.status(statusCode).json({
+      message: message,
       ...errorInfo,
     });
   } else {

@@ -15,7 +15,7 @@ export function validateSchema(
   origin: schemaOrigin = "BODY",
 ) {
   return function (req: Request, res: Response, next: NextFunction) {
-    let reqParse: SafeParseReturnType<any, any>;
+    let reqParse: SafeParseReturnType<unknown, unknown>;
     if (origin === "BODY") {
       reqParse = schema.safeParse(req.body);
     } else {

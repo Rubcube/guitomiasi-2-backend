@@ -15,30 +15,26 @@ export async function create(
   address: AddressOnboarding,
   bcrypt_transaction_password: string,
 ) {
-  try {
-    return await prisma.userAuth.create({
-      data: {
-        bcrypt_user_password,
-        user_info: {
-          create: userInfo,
-        },
-        address: {
-          create: address,
-        },
-        accounts: {
-          create: {
-            bcrypt_transaction_password,
-            ...ACCOUNT_DEFAULT_OPTIONS,
-          },
+  return await prisma.userAuth.create({
+    data: {
+      bcrypt_user_password,
+      user_info: {
+        create: userInfo,
+      },
+      address: {
+        create: address,
+      },
+      accounts: {
+        create: {
+          bcrypt_transaction_password,
+          ...ACCOUNT_DEFAULT_OPTIONS,
         },
       },
-      include: {
-        accounts: true,
-      },
-    });
-  } catch (e) {
-    throw e;
-  }
+    },
+    include: {
+      accounts: true,
+    },
+  });
 }
 
 export async function getUserStatus(id: string) {
