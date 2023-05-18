@@ -2,8 +2,12 @@ import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 import { hash } from "bcrypt";
 import { Onboarding } from "dtos/OnboardingDTO";
 import { NextFunction, Request, Response } from "express";
-import { RInternalError, RubError } from "handlers/errors/RubError";
-import { sign } from "jsonwebtoken";
+import {
+  INTERNAL_ERROR,
+  RPrismaError,
+  RubError,
+} from "handlers/errors/RubError";
+import { JsonWebTokenError, sign } from "jsonwebtoken";
 import * as UserModel from "models/UserModel";
 
 /**
@@ -42,21 +46,12 @@ export async function create(req: Request, res: Response, next: NextFunction) {
 
     return res.status(201).json(responseJson);
   } catch (e) {
-    let err = e as Error;
-
-    if ("clientVersion" in err) {
-      const prismaErr = err as PrismaClientKnownRequestError;
-      if (prismaErr.code === "P2002") {
-        return next(
-          new RubError(
-            422,
-            "New user violates unique key constraint",
-            "ONBOARDING-VIOLATION-UNIQUE-CONSTRAINT",
-          ),
-        );
-      }
+    if (e instanceof PrismaClientKnownRequestError) {
+      return next(new RPrismaError(e));
+    } else if (e instanceof JsonWebTokenError) {
+      return next(new RubError(500, "Failed to sign JWT Token"));
     }
 
-    return next(new RInternalError());
+    return next(INTERNAL_ERROR);
   }
 }

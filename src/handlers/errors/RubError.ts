@@ -1,3 +1,4 @@
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { ZodError } from "zod";
 import { FieldError, fromZodIssue } from "./FieldError";
 
@@ -23,8 +24,30 @@ export class RSchemaError extends RubError {
   }
 }
 
-export class RInternalError extends RubError {
-  constructor() {
-    super(500, "An internal error ocurred", "INTERNAL_ERROR");
+export class RPrismaError extends RubError {
+  constructor(pError: PrismaClientKnownRequestError) {
+    let httpCode: number;
+    let message: string;
+
+    switch (pError.code) {
+      case "P2002":
+        const target: string[] = pError?.meta?.target as string[];
+        const targetStr = target.join("-").toUpperCase();
+        httpCode = 400;
+        message = `Unique constraint failed: ${targetStr}`;
+        break;
+      default:
+        httpCode = 500;
+        message = `Prisma client internal error`;
+        break;
+    }
+
+    super(httpCode, message);
   }
 }
+
+export const INTERNAL_ERROR = new RubError(
+  500,
+  "An internal error occurred",
+  "INTERNAL_ERROR",
+);

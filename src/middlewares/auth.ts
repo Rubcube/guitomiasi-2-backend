@@ -1,9 +1,14 @@
 import { UserStatus } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import { RInternalError, RubError } from "handlers/errors/RubError";
+import { INTERNAL_ERROR, RubError } from "handlers/errors/RubError";
 import { JsonWebTokenError, TokenExpiredError, verify } from "jsonwebtoken";
 import { getUserStatus } from "models/UserModel";
 
+/**
+ * *Middleware* de autenticação. Verifica se um JWT é disponibilizado pelo usuário.
+ * 
+ * Se não houver JWT presente ou o mesmo for inválido, interrompe a requisição.
+ */
 export async function authentication(
   req: Request,
   res: Response,
@@ -52,7 +57,7 @@ export async function authentication(
         new RubError(403, "JWT authentication failed", "AUTH-JWT-ERROR"),
       );
     } else {
-      return next(new RInternalError());
+      return next(INTERNAL_ERROR);
     }
   }
 }

@@ -4,6 +4,12 @@ import { SafeParseReturnType, ZodTypeAny } from "zod";
 
 type schemaOrigin = "BODY" | "QUERY";
 
+/**
+ * Gerador de *middleware* de validação de schema. Verifica se o *body* ou *query*
+ * da requisição feita pode ser validado por um determinado schema definido
+ * utilizando ZObject da biblioteca ZodJS. Caso não seja validado, interrompe
+ * a requisição e retorna um erro 422.
+ */
 export function validateSchema(
   schema: ZodTypeAny,
   origin: schemaOrigin = "BODY",

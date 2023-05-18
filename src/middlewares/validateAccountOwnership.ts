@@ -2,6 +2,11 @@ import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
 import * as AccountModel from "models/AccountModel";
 
+/**
+ * Valida que o usuário que fez a requisição (`id` é recuperado a partir do JWT)
+ * é dono da conta referenciada pelo parâmetro `accountId`. Esse *middleware* é
+ * para validar ou não o uso de rotas associadas à conta.
+ */
 export async function validateAccountOwnership(
   req: Request,
   res: Response,
