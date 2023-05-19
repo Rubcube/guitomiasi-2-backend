@@ -4,6 +4,10 @@ import { RubError } from "handlers/errors/RubError";
 
 const prisma = new PrismaClient();
 
+const TRANSFER_PAGINATION_OPTIONS = {
+  pageSize: 10,
+};
+
 export const ACCOUNT_DEFAULT_OPTIONS = {
   agency: 1,
   balance: 100,
@@ -20,48 +24,89 @@ export async function getAccount(accountID: string, includeUser = true) {
   });
 }
 
+type getTransfersParams = {
+  accountID: string;
+  page?: number;
+  start?: Date;
+  end?: Date;
+};
+
 /**
  * Recupera lista de transferências recebidas e realizadas
  * por uma determinada conta a partir do banco de dados.
  */
-export async function getTransfers(
-  accountID: string,
-  start?: Date,
-  end?: Date,
-) {
-  const account = await prisma.account.findUnique({
-    where: { id: accountID },
-    include: {
-      sent_transfers: {
-        where: {
+export async function getTransfers({
+  accountID,
+  page = 0,
+  start,
+  end,
+}: getTransfersParams) {
+  const transfers = await prisma.transfer.findMany({
+    where: {
+      OR: [
+        {
+          account_id_from: accountID,
+          OR: [
+            {
+              transfer_status: TransferStatus.DONE,
+              updated_at: { lte: end, gte: start },
+            },
+            {
+              transfer_status: TransferStatus.SCHEDULED,
+              time_to_transfer: { lte: end, gte: start },
+            },
+          ],
+        },
+        {
+          account_id_to: accountID,
           transfer_status: TransferStatus.DONE,
           updated_at: { lte: end, gte: start },
         },
-        orderBy: [{ updated_at: "desc" }],
-        select: {
-          id: true,
-          value: true,
-          updated_at: true,
-        },
-      },
-      received_transfers: {
-        where: {
-          transfer_status: TransferStatus.DONE,
-          updated_at: { lte: end, gte: start },
-        },
-        orderBy: [{ updated_at: "desc" }],
-        select: {
-          id: true,
-          value: true,
-          updated_at: true,
-        },
-      },
+      ],
+    },
+    orderBy: { updated_at: "desc" },
+    skip: page * TRANSFER_PAGINATION_OPTIONS.pageSize,
+    take: TRANSFER_PAGINATION_OPTIONS.pageSize,
+    select: {
+      id: true,
+      account_id_from: true,
+      account_id_to: true,
+      value: true,
+      updated_at: true,
+      time_to_transfer: true,
+      transfer_status: true,
     },
   });
 
+  const sent = transfers.filter(
+    transfer => transfer.account_id_from === accountID,
+  );
+
+  const received = transfers.filter(
+    transfer => transfer.account_id_to === accountID,
+  );
+
+  // If transfer is scheduled, substitute `time_to_transfer` instead of `updated_at`
+  const mappedSent = sent.map(sentTransfer => ({
+    id: sentTransfer.id,
+    status: sentTransfer.transfer_status,
+    value: sentTransfer.value,
+    time:
+      sentTransfer.transfer_status === "DONE"
+        ? sentTransfer.updated_at
+        : sentTransfer.time_to_transfer,
+  }));
+
+  const mappedReceived = received.map(receivedTransfer => ({
+    id: receivedTransfer.id,
+    status: TransferStatus.DONE,
+    value: receivedTransfer.value,
+    time: receivedTransfer.updated_at,
+  }));
+
   return {
-    sent: account!.sent_transfers,
-    received: account!.received_transfers,
+    sent: mappedSent,
+    received: mappedReceived,
   };
 }
 
@@ -177,4 +222,36 @@ export async function makeTransfer(
 
     throw e;
   }
+}
+
+/**
+ * Tenta realizar o agendamento de uma transferência.
+ */
+export async function scheduleTransfer(
+  account_id_from: string,
+  account_number_to: number,
+  value: Decimal,
+  time_to_transfer: Date,
+) {
+  const account_to = await prisma.account.findUnique({
+    where: { account_number: account_number_to },
+  });
+
+  if (account_to === null) {
+    throw new RubError(
+      404,
+      "CREDITED-ACCOUNT-NOT-FOUND",
+      "Can't execute a transfer to an account that don't exist",
+    );
+  }
+
+  return await prisma.transfer.create({
+    data: {
+      account_id_from,
+      account_id_to: account_to.id,
+      value,
+      transfer_status: TransferStatus.SCHEDULED,
+      time_to_transfer,
+    },
+  });
 }

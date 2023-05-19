@@ -1,6 +1,5 @@
 import * as AccountController from "controllers/AccountController";
-import { DateRangeSchema } from "dtos/DateDTO";
-import { TransferInSchema } from "dtos/TransferDTO";
+import { TransferInSchema, TransferOutSchema } from "dtos/TransferDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
 import { validateAccountOwnership } from "middlewares/validateAccountOwnership";
@@ -16,7 +15,7 @@ const ValidatedRoute = Router({
 ValidatedRoute.get("/balance", AccountController.getBalance);
 ValidatedRoute.get(
   "/transfers",
-  validateSchema(DateRangeSchema, "QUERY"),
+  validateSchema(TransferOutSchema, "QUERY"),
   AccountController.getTransfers,
 );
 ValidatedRoute.get("/transfers/:transferId", AccountController.getTransfer);

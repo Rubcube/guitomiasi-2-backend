@@ -1,9 +1,9 @@
-import { Account, TransferStatus } from "@prisma/client";
+import { Account, Transfer, TransferStatus } from "@prisma/client";
 import { compare } from "bcrypt";
-import { DateRange } from "dtos/DateDTO";
-import { TransferIn } from "dtos/TransferDTO";
+import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
+import { DateTime } from "luxon";
 import * as AccountModel from "models/AccountModel";
 import moment from "moment";
 
@@ -24,9 +24,14 @@ export async function getBalance(req: Request, res: Response) {
  */
 export async function getTransfers(req: Request, res: Response) {
   const accountID = req.params.accountId;
-  const { start, end }: DateRange = res.locals.parsedQuery;
+  const { page, start, end }: TransferOut = res.locals.parsedQuery;
 
-  const transfers = await AccountModel.getTransfers(accountID, start, end);
+  const transfers = await AccountModel.getTransfers({
+    accountID,
+    page,
+    start,
+    end,
+  });
 
   return res.status(200).json(transfers);
 }
@@ -141,17 +146,46 @@ export async function postTransfer(
   }
 
   try {
-    const transfer = await AccountModel.makeTransfer(
-      debitedAccountId,
-      transferRequest.account_number_to,
-      transferRequest.value,
-    );
+    const currentDay = DateTime.now().startOf("day");
+    const dayOfTransfer = transferRequest.time_to_transfer
+      ? DateTime.fromJSDate(transferRequest.time_to_transfer).startOf("day")
+      : currentDay;
 
-    res.status(201).json({
-      transfer_status: transfer.transfer_status,
-      time_of_transfer: transfer.updated_at,
-      transfered_value: transfer.value,
-    });
+    const daysUntilTransfer = dayOfTransfer.diff(currentDay, "day");
+
+    let generatedTransfer: Transfer;
+
+    if (daysUntilTransfer.days > 0) {
+      generatedTransfer = await AccountModel.scheduleTransfer(
+        debitedAccountId,
+        transferRequest.account_number_to,
+        transferRequest.value,
+        dayOfTransfer.toJSDate(),
+      );
+    } else if (daysUntilTransfer.days == 0) {
+      generatedTransfer = await AccountModel.makeTransfer(
+        debitedAccountId,
+        transferRequest.account_number_to,
+        transferRequest.value,
+      );
+    } else {
+      throw new RubError(
+        400,
+        "Can't schedule a transfer in a past date",
+        "TRANSFER-SCHEDULE-DATE-INVALID",
+      );
+    }
+
+    const returnObj = {
+      transfer_status: generatedTransfer.transfer_status,
+      transfer_time:
+        generatedTransfer.transfer_status === "DONE"
+          ? generatedTransfer.updated_at
+          : generatedTransfer.time_to_transfer,
+      transfered_value: generatedTransfer.value,
+    };
+
+    res.status(201).json(returnObj);
   } catch (e) {
     return next(e);
   }
