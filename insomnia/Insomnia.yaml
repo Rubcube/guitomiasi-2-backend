@@ -1,29 +1,35 @@
 _type: export
 __export_format: 4
-__export_date: 2023-05-17T14:54:10.346Z
-__export_source: insomnia.desktop.app:v2023.2.1
+__export_date: 2023-05-19T15:45:49.857Z
+__export_source: insomnia.desktop.app:v2023.2.2
 resources:
-  - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
+  - _id: req_e54de3e0553f44e0ae965932c6325805
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684334478528
-    created: 1684181567401
-    url: "{{ _.loginEndpoint }}"
-    name: Login
+    modified: 1684503322092
+    created: 1684500334493
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Agendar transferência
     description: ""
     method: POST
     body:
       mimeType: application/json
       text: |-
         {
-        	"document": "{{ _.sissy_roche.document }}",
-        	"password": "{{ _.sissy_roche.password }}"
+        	"account_number_to": 1,
+        	"value": 1,
+        	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
+        	"time_to_transfer": "2023-05-20"
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
-    authentication: {}
-    metaSortKey: -1684181799883.5
+    authentication:
+      type: bearer
+      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      prefix: " "
+    metaSortKey: -1684500334493
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -63,6 +69,35 @@ resources:
     description: ""
     scope: design
     _type: workspace
+  - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684334478528
+    created: 1684181567401
+    url: "{{ _.loginEndpoint }}"
+    name: Login
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "{{ _.sissy_roche.document }}",
+        	"password": "{{ _.sissy_roche.password }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1684181799883.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_43a86d5b38324333ac047d07adfb1db0
     parentId: fld_fa8cb03041884f5d885679e1d135b964
     modified: 1684334482047
@@ -90,15 +125,22 @@ resources:
     _type: request
   - _id: req_db4fdf75237c4986a212c9e2e8a3afcc
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684334483278
+    modified: 1684506679933
     created: 1684181829659
-    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id
-      }}/transfers?start=2023-01-01&end=2023-01-31"
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Extrato (filtrado)
     description: ""
     method: GET
     body: {}
-    parameters: []
+    parameters:
+      - id: pair_a50f2394e5004b80a1959d85727c75f1
+        name: start
+        value: 2023-01-02
+        description: ""
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-01-02
+        description: ""
     headers: []
     authentication:
       type: bearer
@@ -141,7 +183,7 @@ resources:
     _type: request
   - _id: req_589f3586dd8249398e22c3e85ac79f07
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684334813299
+    modified: 1684501905830
     created: 1684243639551
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Realizar transferência
@@ -151,7 +193,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"account_number_to": 2,
+        	"account_number_to": 1,
         	"value": 1,
         	"transactional_password": "{{ _.sissy_roche.transactional_password }}"
         }
@@ -266,15 +308,22 @@ resources:
     _type: request
   - _id: req_fb40b7b09191460aa6fe05ebb8a734d6
     parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684334499840
+    modified: 1684422507941
     created: 1684158816705
-    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id
-      }}/transfers?start=2023-01-01&end=2023-05-31"
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Extrato (filtrado)
     description: ""
     method: GET
     body: {}
-    parameters: []
+    parameters:
+      - id: pair_a6599630dbdc481698f5fe7a4b49150a
+        name: start
+        value: 2023-05-16T14:40:00.000-03:00
+        description: ""
+      - id: pair_9aa0c4963fae49c58bf18aca79bd1f40
+        name: end
+        value: 2023-05-17T14:40:00.000-03:00
+        description: ""
     headers: []
     authentication:
       type: bearer
@@ -317,7 +366,7 @@ resources:
     _type: request
   - _id: req_8f276fd2519340189317426faa8176f4
     parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684334402824
+    modified: 1684508210453
     created: 1684327097278
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Realizar transferência
@@ -826,7 +875,7 @@ resources:
     _type: request
   - _id: req_36fa9186889443ab9ac079bb32464bd0
     parentId: fld_b954d67ad47b4ab9b2268bcf28db8427
-    modified: 1684165954496
+    modified: 1684340083072
     created: 1683652733437
     url: 0.0.0.0:3344/onboarding
     name: Onboard - Usuário [INVÁLIDO]
