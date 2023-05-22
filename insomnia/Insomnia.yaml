@@ -1,35 +1,29 @@
 _type: export
 __export_format: 4
-__export_date: 2023-05-19T15:45:49.857Z
+__export_date: 2023-05-22T13:06:15.877Z
 __export_source: insomnia.desktop.app:v2023.2.2
 resources:
-  - _id: req_e54de3e0553f44e0ae965932c6325805
+  - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684503322092
-    created: 1684500334493
-    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
-    name: Agendar transferência
+    modified: 1684757952508
+    created: 1684181567401
+    url: "{{ _.loginEndpoint }}"
+    name: Login
     description: ""
     method: POST
     body:
       mimeType: application/json
       text: |-
         {
-        	"account_number_to": 1,
-        	"value": 1,
-        	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
-        	"time_to_transfer": "2023-05-20"
+        	"document": "{{ _.sissy_roche.document }}",
+        	"password": "{{ _.sissy_roche.password }}"
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
-    authentication:
-      type: bearer
-      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
-      prefix: " "
-    metaSortKey: -1684500334493
+    authentication: {}
+    metaSortKey: -1684652172379.5625
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -40,9 +34,9 @@ resources:
     _type: request
   - _id: fld_fa8cb03041884f5d885679e1d135b964
     parentId: fld_a83e9f54106f48cfbfebb02f88491bcb
-    modified: 1684334469383
+    modified: 1684757910170
     created: 1684181559410
-    name: Sissy Roche
+    name: Sissy Roche (->)
     description: ""
     environment: {}
     environmentPropertyOrder: null
@@ -69,27 +63,104 @@ resources:
     description: ""
     scope: design
     _type: workspace
-  - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
-    parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684334478528
-    created: 1684181567401
-    url: "{{ _.loginEndpoint }}"
-    name: Login
+  - _id: req_a5033135f4b645e79985e5b9246fb47e
+    parentId: fld_5cb16fff91a5496b9c0fceb535323b59
+    modified: 1684759164505
+    created: 1684181718699
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/balance"
+    name: Válido
     description: ""
-    method: POST
-    body:
-      mimeType: application/json
-      text: |-
-        {
-        	"document": "{{ _.sissy_roche.document }}",
-        	"password": "{{ _.sissy_roche.password }}"
-        }
+    method: GET
+    body: {}
     parameters: []
-    headers:
-      - name: Content-Type
-        value: application/json
-    authentication: {}
-    metaSortKey: -1684181799883.5
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757185230
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_5cb16fff91a5496b9c0fceb535323b59
+    parentId: fld_fa8cb03041884f5d885679e1d135b964
+    modified: 1684757953550
+    created: 1684755874110
+    name: Consulta de saldo
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684600321514.3438
+    _type: request_group
+  - _id: req_e461693938034402ae95c00f26f78079
+    parentId: fld_5cb16fff91a5496b9c0fceb535323b59
+    modified: 1684757250307
+    created: 1684757089491
+    url: "{{ _.accountEndpoint }}/aad149d3-316b-4603-9849-31024838164c/balance"
+    name: Conta inexistente
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757089491
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_425060dc116846aea34adf72754523e7
+    parentId: fld_5cb16fff91a5496b9c0fceb535323b59
+    modified: 1684757082964
+    created: 1684757009995
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/balance"
+    name: Conta não pertencente
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757009995
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_31a770aa5f3e43449b3039f118529795
+    parentId: fld_5cb16fff91a5496b9c0fceb535323b59
+    modified: 1684756259351
+    created: 1684755893559
+    url: "{{ _.accountEndpoint }}/5bf1421e-6ec5-4688-89fc-97a1be271ce1/balance"
+    name: Conta bloqueada
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684755893559
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -99,11 +170,11 @@ resources:
     settingFollowRedirects: global
     _type: request
   - _id: req_43a86d5b38324333ac047d07adfb1db0
-    parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684334482047
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684759178163
     created: 1684181770108
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
-    name: Extrato
+    name: Sem filtro
     description: ""
     method: GET
     body: {}
@@ -111,10 +182,9 @@ resources:
     headers: []
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.sissy_roche.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181777551.875
+    metaSortKey: -1684757641847
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -123,31 +193,36 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_db4fdf75237c4986a212c9e2e8a3afcc
+  - _id: fld_e6c9ccd32b074b6b8089fec2380e213d
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684506679933
+    modified: 1684757541841
+    created: 1684757536372
+    name: Extrato
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684548470649.125
+    _type: request_group
+  - _id: req_db4fdf75237c4986a212c9e2e8a3afcc
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684759459265
     created: 1684181829659
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
-    name: Extrato (filtrado)
+    name: Com data de início
     description: ""
     method: GET
     body: {}
     parameters:
       - id: pair_a50f2394e5004b80a1959d85727c75f1
         name: start
-        value: 2023-01-02
-        description: ""
-      - id: pair_c2fb09b1b815489a905ea73dfc758aae
-        name: end
-        value: 2023-01-02
+        value: 2023-05-22T09:00:00.000+03:00
         description: ""
     headers: []
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.sissy_roche.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181748125.4375
+    metaSortKey: -1684757641797
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -156,12 +231,105 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_a5033135f4b645e79985e5b9246fb47e
-    parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684333647770
-    created: 1684181718699
-    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/balance"
-    name: Retornando saldo da conta
+  - _id: req_c4c49d24ca2a44d7a1135ad638220bf1
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684759464997
+    created: 1684757795910
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Com data de fim
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-05-22T09:00:00.000+03:00
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757413513.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_35e011de2caa43db9edba36aa8163513
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684759470282
+    created: 1684757808235
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Com data de início e fim
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-06-22T09:00:00.000+03:00
+        description: ""
+      - id: pair_4932d677860b41d5b6284ee907e8688f
+        name: start
+        value: 2023-05-22T09:00:00.000+03:00
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757299371.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_1158d03cca9248c18dadeb3bb3c5db5d
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684759475756
+    created: 1684757828458
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Intervalo inválido
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-05-22T09:00:00.000+03:00
+        description: ""
+      - id: pair_4932d677860b41d5b6284ee907e8688f
+        name: start
+        value: 2023-06-22T09:00:00.000+03:00
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757242300.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b8d91a85b7ae4b5c9ee9ad6ab582146e
+    parentId: fld_d15bdf4990394718ae013293dc4351e0
+    modified: 1684759062419
+    created: 1684238124471
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers/{{
+      _.sissy_roche.transfer_example_id }}"
+    name: Transferência em detalhes
     description: ""
     method: GET
     body: {}
@@ -169,10 +337,9 @@ resources:
     headers: []
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.sissy_roche.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181718699
+    metaSortKey: -1684757915648
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -181,9 +348,19 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_589f3586dd8249398e22c3e85ac79f07
+  - _id: fld_d15bdf4990394718ae013293dc4351e0
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684501905830
+    modified: 1684759064590
+    created: 1684757894651
+    name: Transferência em detalhes
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684496619783.9062
+    _type: request_group
+  - _id: req_589f3586dd8249398e22c3e85ac79f07
+    parentId: fld_feb608cf735746eea6dcb0dc42c035b5
+    modified: 1684757937748
     created: 1684243639551
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Realizar transferência
@@ -216,18 +393,37 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_b8d91a85b7ae4b5c9ee9ad6ab582146e
+  - _id: fld_feb608cf735746eea6dcb0dc42c035b5
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684333869437
-    created: 1684238124471
-    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers/{{
-      _.sissy_roche.transfer_example_id }}"
-    name: Transferência em detalhes
+    modified: 1684757934743
+    created: 1684757932858
+    name: Executar transferência
     description: ""
-    method: GET
-    body: {}
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684392918053.4688
+    _type: request_group
+  - _id: req_e54de3e0553f44e0ae965932c6325805
+    parentId: fld_feb608cf735746eea6dcb0dc42c035b5
+    modified: 1684757938961
+    created: 1684500334493
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Agendar transferência
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"account_number_to": 1,
+        	"value": 1,
+        	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
+        	"time_to_transfer": "2023-05-20"
+        }
     parameters: []
-    headers: []
+    headers:
+      - name: Content-Type
+        value: application/json
     authentication:
       type: bearer
       token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
@@ -242,10 +438,44 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_6fd4949995ea4051bc746335d90bec7d
-    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684334347561
-    created: 1684157925711
+  - _id: req_a8d3dd8fb9704814bf8065483bb3948c
+    parentId: fld_feb608cf735746eea6dcb0dc42c035b5
+    modified: 1684760300615
+    created: 1684760264310
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Agendar transferência (data inválida)
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"account_number_to": 1,
+        	"value": 1,
+        	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
+        	"time_to_transfer": "2023-05-01"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684181567251
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_6ea5eaa73c6640308ba483dc0ab3bd9e
+    parentId: fld_060e9b2f98344e41892387f5c12268e4
+    modified: 1684758305082
+    created: 1684758277273
     url: "{{ _.loginEndpoint }}"
     name: Login
     description: ""
@@ -262,7 +492,7 @@ resources:
       - name: Content-Type
         value: application/json
     authentication: {}
-    metaSortKey: -1684181093483.3438
+    metaSortKey: -1684652172379.5625
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -271,22 +501,22 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: fld_7a853cfac3334a8b929f4b4bfb08b1a9
+  - _id: fld_060e9b2f98344e41892387f5c12268e4
     parentId: fld_a83e9f54106f48cfbfebb02f88491bcb
-    modified: 1684334470443
-    created: 1684181447083
-    name: Fredericka Fredi
+    modified: 1684758288994
+    created: 1684758277255
+    name: Fredericka Fredi (<-)
     description: ""
     environment: {}
     environmentPropertyOrder: null
-    metaSortKey: -1684181496172.9375
+    metaSortKey: -1684181496197.9375
     _type: request_group
-  - _id: req_64ed31b37ed34b8398cd024b85e0d1e6
-    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684333659772
-    created: 1684161152806
-    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
-    name: Extrato
+  - _id: req_c9831a766f574fc9b6463b9921f78466
+    parentId: fld_06594cf953e84b838b9ae30708994941
+    modified: 1684759610286
+    created: 1684759593847
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/balance"
+    name: Válido
     description: ""
     method: GET
     body: {}
@@ -294,10 +524,9 @@ resources:
     headers: []
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.fredericka_fredi.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181093433.3438
+    metaSortKey: -1684757185230
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -306,31 +535,70 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_fb40b7b09191460aa6fe05ebb8a734d6
-    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684422507941
-    created: 1684158816705
+  - _id: fld_06594cf953e84b838b9ae30708994941
+    parentId: fld_060e9b2f98344e41892387f5c12268e4
+    modified: 1684759597526
+    created: 1684759593845
+    name: Consulta de saldo
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684600321514.3438
+    _type: request_group
+  - _id: req_b1add6ecd91a4c21b03a7ce77e265176
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684758548898
+    created: 1684758277264
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
-    name: Extrato (filtrado)
+    name: Sem filtro
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757641847
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_403e81bf24e440e582eb6592cdf2fe73
+    parentId: fld_060e9b2f98344e41892387f5c12268e4
+    modified: 1684758277262
+    created: 1684758277262
+    name: Extrato
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684548470649.125
+    _type: request_group
+  - _id: req_29501815e7b9409c9a557a05b121ce5b
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684758648788
+    created: 1684758277264
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Com data de início
     description: ""
     method: GET
     body: {}
     parameters:
-      - id: pair_a6599630dbdc481698f5fe7a4b49150a
+      - id: pair_a50f2394e5004b80a1959d85727c75f1
         name: start
-        value: 2023-05-16T14:40:00.000-03:00
-        description: ""
-      - id: pair_9aa0c4963fae49c58bf18aca79bd1f40
-        name: end
-        value: 2023-05-17T14:40:00.000-03:00
+        value: 2023-05-22T09:00:00.000+03:00
         description: ""
     headers: []
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.fredericka_fredi.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181093383.3438
+    metaSortKey: -1684757641797
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -339,12 +607,105 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_fdba317eb82a4fd897578125a2442a14
-    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684333666147
-    created: 1683896006133
-    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/balance"
-    name: Retornando saldo de conta
+  - _id: req_3db4f636ccfc4234a554ea3f9fed2a2e
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684758663230
+    created: 1684758277265
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Com data de fim
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-05-22T09:00:00.000+03:00
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757413513.5
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_9a564b1116824012bffdf834379fe12f
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684758674322
+    created: 1684758277266
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Com data de início e fim
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-06-22T09:00:00.000+03:00
+        description: ""
+      - id: pair_4932d677860b41d5b6284ee907e8688f
+        name: start
+        value: 2023-05-22T09:00:00.000+03:00
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757299371.75
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_dba54c891a5546759da2c3f1ebc2af3e
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684758687997
+    created: 1684758277267
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Intervalo inválido
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c2fb09b1b815489a905ea73dfc758aae
+        name: end
+        value: 2023-05-22T09:00:00.000+03:00
+        description: ""
+      - id: pair_4932d677860b41d5b6284ee907e8688f
+        name: start
+        value: 2023-06-22T09:00:00.000+03:00
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757242300.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b6d0879a6b9b4ec6a01d7030ab0f2925
+    parentId: fld_d662e4968ad6420a8d4efab50db70dd2
+    modified: 1684758921730
+    created: 1684758277269
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers/{{
+      _.fredericka_fredi.transfer_example_id }}"
+    name: Transferência em detalhes
     description: ""
     method: GET
     body: {}
@@ -352,10 +713,9 @@ resources:
     headers: []
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.fredericka_fredi.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181093333.3438
+    metaSortKey: -1684757915648
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -364,10 +724,20 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_8f276fd2519340189317426faa8176f4
-    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684508210453
-    created: 1684327097278
+  - _id: fld_d662e4968ad6420a8d4efab50db70dd2
+    parentId: fld_060e9b2f98344e41892387f5c12268e4
+    modified: 1684758277268
+    created: 1684758277268
+    name: Transferência em detalhes
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684444768918.6875
+    _type: request_group
+  - _id: req_2b087c3ec5d345e49bc142c02f981c6e
+    parentId: fld_0f61b7c2ed064dae851c86d099085ecb
+    modified: 1684760087376
+    created: 1684758277271
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Realizar transferência
     description: ""
@@ -387,10 +757,9 @@ resources:
         id: pair_d9f2faefa5e14134882c76b0e5c1812c
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.fredericka_fredi.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684181093283.3438
+    metaSortKey: -1684181567351
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -399,33 +768,76 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_eaf6d4bf4f3d4953b0f72a6fb3afb6e4
-    parentId: fld_7a853cfac3334a8b929f4b4bfb08b1a9
-    modified: 1684334459985
-    created: 1684327562199
+  - _id: fld_0f61b7c2ed064dae851c86d099085ecb
+    parentId: fld_060e9b2f98344e41892387f5c12268e4
+    modified: 1684758277270
+    created: 1684758277270
+    name: Executar transferência
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684392918053.4688
+    _type: request_group
+  - _id: req_1ce58b5c29e04abfb180d0d0aefd58de
+    parentId: fld_0f61b7c2ed064dae851c86d099085ecb
+    modified: 1684760126822
+    created: 1684758277272
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
-    name: Realizar transferência loop
+    name: Agendar transferência
     description: ""
     method: POST
     body:
       mimeType: application/json
       text: >-
         {
-        	"account_number_to": 1,
+        	"account_number_to": 2,
         	"value": 1,
-        	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}"
+        	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}",
+        	"time_to_transfer": "2023-05-23"
         }
     parameters: []
     headers:
       - name: Content-Type
         value: application/json
-        id: pair_d9f2faefa5e14134882c76b0e5c1812c
     authentication:
       type: bearer
-      token: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
-        'b64::JC50b2tlbg==::46b', 'never', 60 %}"
+      token: "{{ _.fredericka_fredi.jwt_token }}"
       prefix: " "
-    metaSortKey: -1684165525146.1719
+    metaSortKey: -1684181567301
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_0dd27c9258a44acc968774eb4f4d508b
+    parentId: fld_0f61b7c2ed064dae851c86d099085ecb
+    modified: 1684760275244
+    created: 1684760275244
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Agendar transferência (data inválida)
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: >-
+        {
+        	"account_number_to": 2,
+        	"value": 1,
+        	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}",
+        	"time_to_transfer": "2023-05-01"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684157859582
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -1020,7 +1432,7 @@ resources:
     _type: api_spec
   - _id: env_4d1c8b67a2b84778913c143f3d64c6dd
     parentId: env_22ac494303a347fe8a892f81b6f1fc54
-    modified: 1684334212869
+    modified: 1684759319967
     created: 1684332979493
     name: RubCamp 2
     data:
@@ -1029,7 +1441,7 @@ resources:
       accountEndpoint: "{{ _.baseUrl }}/account"
       sissy_roche:
         account_id: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
-          'b64::JC5hY2NvdW50c19pZFswXQ==::46b', 'never', 60 %}"
+          'b64::JC5hY2NvdW50c19pZFsxXQ==::46b', 'never', 60 %}"
         account_number: 2
         document: "96586245613"
         password: IsFtwy@jY4g*I
@@ -1037,16 +1449,20 @@ resources:
         transfer_example_id: "{% response 'body',
           'req_43a86d5b38324333ac047d07adfb1db0', 'b64::JC5zZW50WzBdLmlk::46b',
           'never', 60 %}"
+        jwt_token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
+          'b64::JC50b2tlbg==::46b', 'never', 60 %}"
       fredericka_fredi:
-        account_id: "{% response 'body', 'req_6fd4949995ea4051bc746335d90bec7d',
+        account_id: "{% response 'body', 'req_6ea5eaa73c6640308ba483dc0ab3bd9e',
           'b64::JC5hY2NvdW50c19pZFswXQ==::46b', 'never', 60 %}"
         account_number: 1
         document: "81071419706"
         password: llTvdp$j!b5zvXnK
         transactional_password: "2377"
         transfer_example_id: "{% response 'body',
-          'req_64ed31b37ed34b8398cd024b85e0d1e6',
-          'b64::JC5yZWNlaXZlZFswXQ==::46b', 'never', 60 %}"
+          'req_b1add6ecd91a4c21b03a7ce77e265176',
+          'b64::JC5yZWNlaXZlZFswXS5pZA==::46b', 'never', 60 %}"
+        jwt_token: "{% response 'body', 'req_6ea5eaa73c6640308ba483dc0ab3bd9e',
+          'b64::JC50b2tlbg==::46b', 'never', 60 %}"
     dataPropertyOrder:
       "&":
         - baseUrl
@@ -1061,6 +1477,7 @@ resources:
         - password
         - transactional_password
         - transfer_example_id
+        - jwt_token
       "&~|fredericka_fredi":
         - account_id
         - account_number
@@ -1068,6 +1485,7 @@ resources:
         - password
         - transactional_password
         - transfer_example_id
+        - jwt_token
     color: null
     isPrivate: false
     metaSortKey: 1684332979493
