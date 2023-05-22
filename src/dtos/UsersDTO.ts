@@ -22,15 +22,32 @@ export const UserLoginSchema = z.object({
   password: userPassword,
 });
 
-export const UserOutSchema = z.object({
-  id: z.string().uuid(),
-  name: userName,
-  document: userDocument,
-  email: userEmail,
-  phone: userPhone,
-  birthday: z.date().optional(),
-});
+/**
+ * Schema ZodJS para receber objeto visando ATUALIZAR os
+ * dados de um cliente já presente no Banco de Dados.
+ */
+export const UserPutSchema = z
+  .object({
+    name: userName.optional(),
+    email: userName.optional(),
+    phone: userPhone.optional(),
+    birthday: parsedDate.optional(),
+  })
+  .superRefine((obj, ctx) => {
+    const atLeastOneDefined = Object.values(obj).some(v => v !== undefined);
+
+    if (atLeastOneDefined) {
+      return obj;
+    } else {
+      ctx.addIssue({
+        code: "invalid_type",
+        path: ["any"],
+        expected: "object",
+        received: "undefined",
+      });
+    }
+  });
 
 export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;
 export type UserLogin = z.infer<typeof UserLoginSchema>;
-export type UserOutSchema = z.infer<typeof UserOutSchema>;
+export type UserPut = z.infer<typeof UserPutSchema>;

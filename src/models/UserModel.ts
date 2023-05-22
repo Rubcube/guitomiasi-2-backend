@@ -1,6 +1,6 @@
 import { Account, Address, PrismaClient, UserInfo } from "@prisma/client";
 import { AddressOnboarding } from "dtos/AddressDTO";
-import { UserOnboarding } from "dtos/UsersDTO";
+import { UserOnboarding, UserPut } from "dtos/UsersDTO";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
 const prisma = new PrismaClient();
@@ -97,4 +97,11 @@ export async function getUserInfo(id: string) {
     accounts: accountsMapped,
     address: userAddress,
   };
+}
+
+export async function putUserInfo(id: string, newUserInfo: UserPut) {
+  return await prisma.userInfo.update({
+    where: { id },
+    data: { ...newUserInfo },
+  });
 }
