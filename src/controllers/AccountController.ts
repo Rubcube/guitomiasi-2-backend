@@ -88,6 +88,7 @@ export async function getTransfer(
     status: transfer.transfer_status,
     value: transfer.value,
     time_of_transfer: timeOfTransfer,
+    direction: isReceiver ? "IN" : "OUT",
     from: {
       number: transfer.debited_account.account_number,
       agency: transfer.debited_account.agency,
