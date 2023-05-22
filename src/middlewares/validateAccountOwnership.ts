@@ -31,6 +31,12 @@ export async function validateAccountOwnership(
     );
   }
 
+  if (account.account_status !== "ACTIVE") {
+    return next(
+      new RubError(403, "This account is not active", "ACCOUNT-NOT-ACTIVE"),
+    );
+  }
+
   res.locals.account = account;
   next();
 }
