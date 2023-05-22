@@ -1,4 +1,4 @@
-import { PrismaClient, TransferStatus } from "@prisma/client";
+import { Prisma, PrismaClient, TransferStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { RubError } from "handlers/errors/RubError";
 
@@ -26,6 +26,7 @@ export async function getAccount(accountID: string, includeUser = true) {
 
 type getTransfersParams = {
   accountID: string;
+  direction?: "IN" | "OUT";
   page?: number;
   start?: Date;
   end?: Date;
@@ -37,32 +38,46 @@ type getTransfersParams = {
  */
 export async function getTransfers({
   accountID,
+  direction,
   page = 0,
   start,
   end,
 }: getTransfersParams) {
+  const transfersOutQuery: Prisma.TransferWhereInput = {
+    account_id_from: accountID,
+    OR: [
+      {
+        transfer_status: TransferStatus.DONE,
+        updated_at: { lte: end, gte: start },
+      },
+      {
+        transfer_status: TransferStatus.SCHEDULED,
+        time_to_transfer: { lte: end, gte: start },
+      },
+    ],
+  };
+  const transfersInQuery: Prisma.TransferWhereInput = {
+    account_id_to: accountID,
+    transfer_status: TransferStatus.DONE,
+    updated_at: { lte: end, gte: start },
+  };
+  const bothQuery: Prisma.TransferWhereInput[] = [
+    transfersOutQuery,
+    transfersInQuery,
+  ];
+  let usedQuery;
+
+  if (direction === "IN") {
+    usedQuery = [transfersInQuery];
+  } else if (direction === "OUT") {
+    usedQuery = [transfersOutQuery];
+  } else {
+    usedQuery = bothQuery;
+  }
+
   const transfers = await prisma.transfer.findMany({
     where: {
-      OR: [
-        {
-          account_id_from: accountID,
-          OR: [
-            {
-              transfer_status: TransferStatus.DONE,
-              updated_at: { lte: end, gte: start },
-            },
-            {
-              transfer_status: TransferStatus.SCHEDULED,
-              time_to_transfer: { lte: end, gte: start },
-            },
-          ],
-        },
-        {
-          account_id_to: accountID,
-          transfer_status: TransferStatus.DONE,
-          updated_at: { lte: end, gte: start },
-        },
-      ],
+      OR: usedQuery,
     },
     orderBy: { updated_at: "desc" },
     skip: page * TRANSFER_PAGINATION_OPTIONS.pageSize,
@@ -78,35 +93,19 @@ export async function getTransfers({
     },
   });
 
-  const sent = transfers.filter(
-    transfer => transfer.account_id_from === accountID,
-  );
-
-  const received = transfers.filter(
-    transfer => transfer.account_id_to === accountID,
-  );
-
-  // If transfer is scheduled, substitute `time_to_transfer` instead of `updated_at`
-  const mappedSent = sent.map(sentTransfer => ({
-    id: sentTransfer.id,
-    status: sentTransfer.transfer_status,
-    value: sentTransfer.value,
+  const mappedTransfers = transfers.map(transfer => ({
+    id: transfer.id,
+    status: transfer.transfer_status,
+    value: transfer.value,
+    direction: transfer.account_id_from === accountID ? "OUT" : "IN",
     time:
-      sentTransfer.transfer_status === "DONE"
-        ? sentTransfer.updated_at
-        : sentTransfer.time_to_transfer,
-  }));
-
-  const mappedReceived = received.map(receivedTransfer => ({
-    id: receivedTransfer.id,
-    status: TransferStatus.DONE,
-    value: receivedTransfer.value,
-    time: receivedTransfer.updated_at,
+      transfer.transfer_status === "DONE"
+        ? transfer.updated_at
+        : transfer.time_to_transfer,
   }));
 
   return {
-    sent: mappedSent,
-    received: mappedReceived,
+    transfers: mappedTransfers,
   };
 }
 

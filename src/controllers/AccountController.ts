@@ -24,10 +24,11 @@ export async function getBalance(req: Request, res: Response) {
  */
 export async function getTransfers(req: Request, res: Response) {
   const accountID = req.params.accountId;
-  const { page, start, end }: TransferOut = res.locals.parsedQuery;
+  const { direction, page, start, end }: TransferOut = res.locals.parsedQuery;
 
   const transfers = await AccountModel.getTransfers({
     accountID,
+    direction,
     page,
     start,
     end,

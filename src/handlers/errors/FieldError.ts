@@ -43,7 +43,7 @@ export function fromZodIssue(zIssue: ZodIssue): FieldError {
     } as FieldError;
   }
 
-  if (zIssue.code === "custom") {
+  if (zIssue.code === "custom" || zIssue.code === "invalid_enum_value") {
     return {
       fieldName: zIssue.path,
       issue: "VALUE",
