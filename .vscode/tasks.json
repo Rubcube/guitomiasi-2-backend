@@ -21,26 +21,6 @@
       "runOptions": {
         "runOn": "folderOpen"
       }
-    },
-    {
-      "label": "ESLint: watch in workspace folder",
-      "type": "shell",
-      "problemMatcher": ["$eslint-stylish"],
-      "command": "yarn",
-      "args": ["lint"],
-      "presentation": {
-        "reveal": "never",
-        "echo": false,
-        "focus": false,
-        "panel": "dedicated"
-      },
-      "runOptions": {
-        "runOn": "folderOpen"
-      },
-      "options": {
-        "configFile": ".eslintrc.js",
-        "ignorePath": ".eslintignore"
-      }
     }
   ]
 }
