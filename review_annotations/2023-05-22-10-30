@@ -1,0 +1,21 @@
+Gabriel Ferreira:
+! Evitar retorno de array fora de objeto, preferir arrays dentro de outros objetos (currentPage, lastPage)
+
+Luiz Vieira:
+! Preferir um retorno com mais informações do que múltiplos retornos
+
+Guilherme Tomiasi:
+! Apresentar direção da transferência como atributo do objeto. Não separar em dois vetores.
+! Implementar filtro de in e out
+
+Guilherme Pacianotto:
+? Utilizar código 404 ao invés de 403 para não vazar informações sobre contas existentes no Banco de Dados.
+
+Lucas Reis:
+! Fazer paginação, atributos de navegação, saída e entrada.
+! Tratar transação detalhada, tipo de transação, etc.
+! Atualizar Insomnia para utilizar JWT automaticamente.
+> Preparar um roteiro para a apresentação.
+
+Filipe Nava:
+
