@@ -1,6 +1,6 @@
 _type: export
 __export_format: 4
-__export_date: 2023-05-22T13:06:15.877Z
+__export_date: 2023-05-22T17:20:33.390Z
 __export_source: insomnia.desktop.app:v2023.2.2
 resources:
   - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
@@ -171,7 +171,7 @@ resources:
     _type: request
   - _id: req_43a86d5b38324333ac047d07adfb1db0
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684759178163
+    modified: 1684769430187
     created: 1684181770108
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Sem filtro
@@ -205,7 +205,7 @@ resources:
     _type: request_group
   - _id: req_db4fdf75237c4986a212c9e2e8a3afcc
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684759459265
+    modified: 1684775917126
     created: 1684181829659
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Com data de início
@@ -215,7 +215,7 @@ resources:
     parameters:
       - id: pair_a50f2394e5004b80a1959d85727c75f1
         name: start
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-05-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -233,7 +233,7 @@ resources:
     _type: request
   - _id: req_c4c49d24ca2a44d7a1135ad638220bf1
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684759464997
+    modified: 1684775919915
     created: 1684757795910
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Com data de fim
@@ -243,7 +243,7 @@ resources:
     parameters:
       - id: pair_c2fb09b1b815489a905ea73dfc758aae
         name: end
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-06-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -261,7 +261,7 @@ resources:
     _type: request
   - _id: req_35e011de2caa43db9edba36aa8163513
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684759470282
+    modified: 1684775924317
     created: 1684757808235
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Com data de início e fim
@@ -271,11 +271,11 @@ resources:
     parameters:
       - id: pair_c2fb09b1b815489a905ea73dfc758aae
         name: end
-        value: 2023-06-22T09:00:00.000+03:00
+        value: 2023-06-01T00:00:00.000-03:00
         description: ""
       - id: pair_4932d677860b41d5b6284ee907e8688f
         name: start
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-05-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -293,7 +293,7 @@ resources:
     _type: request
   - _id: req_1158d03cca9248c18dadeb3bb3c5db5d
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684759475756
+    modified: 1684775929228
     created: 1684757828458
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Intervalo inválido
@@ -303,11 +303,11 @@ resources:
     parameters:
       - id: pair_c2fb09b1b815489a905ea73dfc758aae
         name: end
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-05-01T00:00:00.000-03:00
         description: ""
       - id: pair_4932d677860b41d5b6284ee907e8688f
         name: start
-        value: 2023-06-22T09:00:00.000+03:00
+        value: 2023-06-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -315,6 +315,34 @@ resources:
       token: "{{ _.sissy_roche.jwt_token }}"
       prefix: " "
     metaSortKey: -1684757242300.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_8952d97fa57e42509db06b46682b3e20
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684775175956
+    created: 1684769438249
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Direção
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_11bc8d644ef94ecf808a1ad8ad9a8081
+        name: direction
+        value: OUT
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757242250.875
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -350,17 +378,17 @@ resources:
     _type: request
   - _id: fld_d15bdf4990394718ae013293dc4351e0
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684759064590
+    modified: 1684768477351
     created: 1684757894651
     name: Transferência em detalhes
     description: ""
     environment: {}
     environmentPropertyOrder: null
-    metaSortKey: -1684496619783.9062
+    metaSortKey: -1684522545216.5156
     _type: request_group
   - _id: req_589f3586dd8249398e22c3e85ac79f07
     parentId: fld_feb608cf735746eea6dcb0dc42c035b5
-    modified: 1684757937748
+    modified: 1684763632892
     created: 1684243639551
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Realizar transferência
@@ -370,7 +398,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"account_number_to": 1,
+        	"account_number_to": {{ _.fredericka_fredi.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.sissy_roche.transactional_password }}"
         }
@@ -405,7 +433,7 @@ resources:
     _type: request_group
   - _id: req_e54de3e0553f44e0ae965932c6325805
     parentId: fld_feb608cf735746eea6dcb0dc42c035b5
-    modified: 1684757938961
+    modified: 1684764375722
     created: 1684500334493
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Agendar transferência
@@ -415,10 +443,10 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"account_number_to": 1,
+        	"account_number_to": {{ _.fredericka_fredi.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
-        	"time_to_transfer": "2023-05-20"
+        	"time_to_transfer": "2023-05-31"
         }
     parameters: []
     headers:
@@ -440,7 +468,7 @@ resources:
     _type: request
   - _id: req_a8d3dd8fb9704814bf8065483bb3948c
     parentId: fld_feb608cf735746eea6dcb0dc42c035b5
-    modified: 1684760300615
+    modified: 1684763663542
     created: 1684760264310
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Agendar transferência (data inválida)
@@ -450,7 +478,7 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"account_number_to": 1,
+        	"account_number_to": {{ _.fredericka_fredi.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
         	"time_to_transfer": "2023-05-01"
@@ -581,7 +609,7 @@ resources:
     _type: request_group
   - _id: req_29501815e7b9409c9a557a05b121ce5b
     parentId: fld_403e81bf24e440e582eb6592cdf2fe73
-    modified: 1684758648788
+    modified: 1684775837727
     created: 1684758277264
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Com data de início
@@ -591,7 +619,7 @@ resources:
     parameters:
       - id: pair_a50f2394e5004b80a1959d85727c75f1
         name: start
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-05-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -609,7 +637,7 @@ resources:
     _type: request
   - _id: req_3db4f636ccfc4234a554ea3f9fed2a2e
     parentId: fld_403e81bf24e440e582eb6592cdf2fe73
-    modified: 1684758663230
+    modified: 1684775881787
     created: 1684758277265
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Com data de fim
@@ -619,7 +647,7 @@ resources:
     parameters:
       - id: pair_c2fb09b1b815489a905ea73dfc758aae
         name: end
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-06-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -637,7 +665,7 @@ resources:
     _type: request
   - _id: req_9a564b1116824012bffdf834379fe12f
     parentId: fld_403e81bf24e440e582eb6592cdf2fe73
-    modified: 1684758674322
+    modified: 1684775875235
     created: 1684758277266
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Com data de início e fim
@@ -647,11 +675,11 @@ resources:
     parameters:
       - id: pair_c2fb09b1b815489a905ea73dfc758aae
         name: end
-        value: 2023-06-22T09:00:00.000+03:00
+        value: 2023-06-01T00:00:00.000-03:00
         description: ""
       - id: pair_4932d677860b41d5b6284ee907e8688f
         name: start
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-05-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -669,7 +697,7 @@ resources:
     _type: request
   - _id: req_dba54c891a5546759da2c3f1ebc2af3e
     parentId: fld_403e81bf24e440e582eb6592cdf2fe73
-    modified: 1684758687997
+    modified: 1684775904031
     created: 1684758277267
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Intervalo inválido
@@ -679,11 +707,11 @@ resources:
     parameters:
       - id: pair_c2fb09b1b815489a905ea73dfc758aae
         name: end
-        value: 2023-05-22T09:00:00.000+03:00
+        value: 2023-05-01T00:00:00.000-03:00
         description: ""
       - id: pair_4932d677860b41d5b6284ee907e8688f
         name: start
-        value: 2023-06-22T09:00:00.000+03:00
+        value: 2023-06-01T00:00:00.000-03:00
         description: ""
     headers: []
     authentication:
@@ -691,6 +719,34 @@ resources:
       token: "{{ _.fredericka_fredi.jwt_token }}"
       prefix: " "
     metaSortKey: -1684757242300.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_334cea08a62d4dafaf88cb117c544be4
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684769536233
+    created: 1684769502343
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Direção
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_e4b04237895a4dbba14e140088c7e73f
+        name: direction
+        value: IN
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757242250.875
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -736,7 +792,7 @@ resources:
     _type: request_group
   - _id: req_2b087c3ec5d345e49bc142c02f981c6e
     parentId: fld_0f61b7c2ed064dae851c86d099085ecb
-    modified: 1684760087376
+    modified: 1684764444975
     created: 1684758277271
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Realizar transferência
@@ -746,7 +802,7 @@ resources:
       mimeType: application/json
       text: >-
         {
-        	"account_number_to": 2,
+        	"account_number_to": {{ _.fredericka_fredi.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}"
         }
@@ -780,7 +836,7 @@ resources:
     _type: request_group
   - _id: req_1ce58b5c29e04abfb180d0d0aefd58de
     parentId: fld_0f61b7c2ed064dae851c86d099085ecb
-    modified: 1684760126822
+    modified: 1684763687210
     created: 1684758277272
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Agendar transferência
@@ -790,7 +846,7 @@ resources:
       mimeType: application/json
       text: >-
         {
-        	"account_number_to": 2,
+        	"account_number_to": {{ _.sissy_roche.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}",
         	"time_to_transfer": "2023-05-23"
@@ -814,7 +870,7 @@ resources:
     _type: request
   - _id: req_0dd27c9258a44acc968774eb4f4d508b
     parentId: fld_0f61b7c2ed064dae851c86d099085ecb
-    modified: 1684760275244
+    modified: 1684763693244
     created: 1684760275244
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Agendar transferência (data inválida)
@@ -824,7 +880,7 @@ resources:
       mimeType: application/json
       text: >-
         {
-        	"account_number_to": 2,
+        	"account_number_to": {{ _.sissy_roche.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}",
         	"time_to_transfer": "2023-05-01"
@@ -1432,7 +1488,7 @@ resources:
     _type: api_spec
   - _id: env_4d1c8b67a2b84778913c143f3d64c6dd
     parentId: env_22ac494303a347fe8a892f81b6f1fc54
-    modified: 1684759319967
+    modified: 1684775986455
     created: 1684332979493
     name: RubCamp 2
     data:
@@ -1447,8 +1503,8 @@ resources:
         password: IsFtwy@jY4g*I
         transactional_password: "5775"
         transfer_example_id: "{% response 'body',
-          'req_43a86d5b38324333ac047d07adfb1db0', 'b64::JC5zZW50WzBdLmlk::46b',
-          'never', 60 %}"
+          'req_43a86d5b38324333ac047d07adfb1db0',
+          'b64::JC50cmFuc2ZlcnNbMF0uaWQ=::46b', 'never', 60 %}"
         jwt_token: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
           'b64::JC50b2tlbg==::46b', 'never', 60 %}"
       fredericka_fredi:
@@ -1460,7 +1516,7 @@ resources:
         transactional_password: "2377"
         transfer_example_id: "{% response 'body',
           'req_b1add6ecd91a4c21b03a7ce77e265176',
-          'b64::JC5yZWNlaXZlZFswXS5pZA==::46b', 'never', 60 %}"
+          'b64::JC50cmFuc2ZlcnNbMF0uaWQ=::46b', 'never', 60 %}"
         jwt_token: "{% response 'body', 'req_6ea5eaa73c6640308ba483dc0ab3bd9e',
           'b64::JC50b2tlbg==::46b', 'never', 60 %}"
     dataPropertyOrder:
