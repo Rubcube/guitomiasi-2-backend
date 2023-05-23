@@ -1,5 +1,5 @@
 import { UserInfo } from "@prisma/client";
-import { UserPut } from "dtos/UsersDTO";
+import { UserPatch } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import * as UserModel from "models/UserModel";
 
@@ -26,10 +26,10 @@ export async function patchInfo(
   next: NextFunction,
 ) {
   const userId: string = res.locals.parsedJWTToken.id;
-  const newInfo: UserPut = res.locals.parsedBody;
+  const newInfo: UserPatch = res.locals.parsedBody;
 
   try {
-    const newUserRaw = await UserModel.putUserInfo(userId, newInfo);
+    const newUserRaw = await UserModel.patchUserInfo(userId, newInfo);
     const { ...newUser }: Omit<UserInfo, "created_at"> = newUserRaw;
     res.status(201).json(newUser);
   } catch (e) {

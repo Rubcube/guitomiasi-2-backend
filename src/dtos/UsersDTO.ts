@@ -26,7 +26,7 @@ export const UserLoginSchema = z.object({
  * Schema ZodJS para receber objeto visando ATUALIZAR os
  * dados de um cliente já presente no Banco de Dados.
  */
-export const UserPutSchema = z
+export const UserPatchSchema = z
   .object({
     name: userName.optional(),
     email: userName.optional(),
@@ -50,4 +50,4 @@ export const UserPutSchema = z
 
 export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;
 export type UserLogin = z.infer<typeof UserLoginSchema>;
-export type UserPut = z.infer<typeof UserPutSchema>;
+export type UserPatch = z.infer<typeof UserPatchSchema>;

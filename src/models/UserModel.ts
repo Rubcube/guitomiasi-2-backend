@@ -1,6 +1,6 @@
 import { Account, Address, PrismaClient, UserInfo } from "@prisma/client";
 import { AddressOnboarding } from "dtos/AddressDTO";
-import { UserOnboarding, UserPut } from "dtos/UsersDTO";
+import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
 const prisma = new PrismaClient();
@@ -99,7 +99,13 @@ export async function getUserInfo(id: string) {
   };
 }
 
-export async function putUserInfo(id: string, newUserInfo: UserPut) {
+/**
+ * Realiza o PATCH de algumas informações de usuário
+ * @param id UUID do usuário que terá suas informações alteradas
+ * @param newUserInfo Novas informações de usuário
+ * @returns Novo objeto de usuário
+ */
+export async function patchUserInfo(id: string, newUserInfo: UserPatch) {
   return await prisma.userInfo.update({
     where: { id },
     data: { ...newUserInfo },
