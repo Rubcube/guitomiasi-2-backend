@@ -1,6 +1,7 @@
 import { Account, Address, PrismaClient, UserInfo } from "@prisma/client";
 import { AddressOnboarding, AddressPatch } from "dtos/AddressDTO";
 import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
+import { Omitter } from "utils/index";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
 const prisma = new PrismaClient();
@@ -79,21 +80,18 @@ export async function getUserInfo(id: string) {
   const userAccounts = allUserInfo!.accounts as Account[];
   const userAddressRaw = allUserInfo!.address as Address;
 
-  const {
-    ...userInfo
-  }: Omit<Omit<UserInfo, "created_at">, "updated_at"> = userInfoRaw;
+  const userInfo = Omitter(userInfoRaw, ["created_at", "updated_at"]);
 
   const accountsMapped = userAccounts.map(account => ({
     id: account.id,
     number: account.account_number,
     agency: account.agency,
   }));
-  const {
-    owner_id: _3,
-    created_at: _4,
-    updated_at: _5,
-    ...userAddress
-  } = userAddressRaw;
+  const userAddress = Omitter(userAddressRaw, [
+    "owner_id",
+    "created_at",
+    "updated_at",
+  ]);
 
   return {
     user: userInfo,

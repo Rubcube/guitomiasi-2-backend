@@ -1,8 +1,8 @@
-import { Address, UserInfo } from "@prisma/client";
 import { AddressPatch } from "dtos/AddressDTO";
 import { UserPatch } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import * as UserModel from "models/UserModel";
+import { Omitter } from "utils/index";
 
 /**
  * Retorna informações do usuário logado.
@@ -31,7 +31,7 @@ export async function patchInfo(
 
   try {
     const newUserRaw = await UserModel.patchUserInfo(userId, newInfo);
-    const { ...newUser }: Omit<UserInfo, "created_at"> = newUserRaw;
+    const newUser = Omitter(newUserRaw, "created_at");
     res.status(201).json(newUser);
   } catch (e) {
     next(e);
@@ -55,7 +55,7 @@ export async function patchAddress(
       userId,
       newAddressInfo,
     );
-    const { ...newAddress }: Omit<Address, "created_at"> = newAddressRaw;
+    const newAddress = Omitter(newAddressRaw, "created_at");
     res.status(201).json(newAddress);
   } catch (e) {
     next(e);
