@@ -1,4 +1,9 @@
-import { Prisma, PrismaClient, TransferStatus } from "@prisma/client";
+import {
+  AccountStatus,
+  Prisma,
+  PrismaClient,
+  TransferStatus,
+} from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { RubError } from "handlers/errors/RubError";
 
@@ -12,6 +17,11 @@ export const ACCOUNT_DEFAULT_OPTIONS = {
   agency: 1,
   balance: 100,
 };
+
+/**
+ * Número de tentativas de transferência até bloqueio da conta.
+ */
+export const ACCOUNT_MAXIMUM_ATTEMPTS = 3;
 
 /**
  * Recupera uma conta do banco de dados a partir de seu ID.
@@ -252,5 +262,41 @@ export async function scheduleTransfer(
       transfer_status: TransferStatus.SCHEDULED,
       time_to_transfer,
     },
+  });
+}
+
+/**
+ * Incrementa número de tentativas de transação de uma determinada conta.
+ * Isso é feito quando a senha transacional inserida não é correta.
+ * Caso haja 3 tentativas incorretas, a conta é bloqueada.
+ * @returns Status da conta
+ */
+export async function incrementAttempt(id: string) {
+  const newAccount = await prisma.account.update({
+    where: { id },
+    data: { attempts: { increment: 1 } },
+  });
+
+  let newStatus = newAccount.account_status;
+  if (newAccount.attempts === 3) {
+    newStatus = AccountStatus.BLOCKED;
+  }
+
+  return (
+    await prisma.account.update({
+      where: { id },
+      data: { account_status: newStatus },
+    })
+  ).account_status;
+}
+
+/**
+ * Reseta número de tentativas de transação de uma determinada conta.
+ * É chamada sempre que o usuário ACERTA a senha transacional.
+ */
+export async function resetAttempts(id: string) {
+  await prisma.account.update({
+    where: { id },
+    data: { attempts: 0 },
   });
 }

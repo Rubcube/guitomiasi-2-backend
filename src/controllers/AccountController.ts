@@ -1,4 +1,9 @@
-import { Account, Transfer, TransferStatus } from "@prisma/client";
+import {
+  Account,
+  AccountStatus,
+  Transfer,
+  TransferStatus,
+} from "@prisma/client";
 import { compare } from "bcrypt";
 import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
@@ -128,6 +133,20 @@ export async function postTransfer(
     res.locals.account.account_number === transferRequest.account_number_to;
 
   if (!passwordIsCorrect) {
+    const newAccountStatus = await AccountModel.incrementAttempt(
+      debitedAccountId,
+    );
+
+    if (newAccountStatus === AccountStatus.BLOCKED) {
+      return next(
+        new RubError(
+          403,
+          "Too many incorrect attempts, account is now blocked",
+          "TOO_MANY_ATTEMPTS",
+        ),
+      );
+    }
+
     return next(
       new RubError(
         403,
@@ -135,6 +154,8 @@ export async function postTransfer(
         "ACCOUNT_INCORRECT_TRANSACTIONAL_PASSWORD",
       ),
     );
+  } else {
+    await AccountModel.resetAttempts(debitedAccountId);
   }
 
   if (loopTransfer) {
