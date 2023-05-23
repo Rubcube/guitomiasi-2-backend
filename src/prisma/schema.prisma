@@ -73,6 +73,7 @@ model Account {
   balance                     Decimal       @db.Money
   owner_id                    String        @db.Uuid
   account_status              AccountStatus @default(ACTIVE)
+  attempts                    Int           @default(0) @db.SmallInt
   created_at                  DateTime      @default(now()) @db.Timestamp()
   updated_at                  DateTime      @updatedAt @db.Timestamp()
   // ================================================================================
