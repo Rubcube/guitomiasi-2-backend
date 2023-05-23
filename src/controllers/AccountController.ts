@@ -8,7 +8,7 @@ import { compare } from "bcrypt";
 import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
-import { DateTime } from "luxon";
+import { DateTime, Settings } from "luxon";
 import * as AccountModel from "models/AccountModel";
 import moment from "moment";
 
@@ -182,7 +182,9 @@ export async function postTransfer(
   try {
     const currentDay = DateTime.now().startOf("day");
     const dayOfTransfer = transferRequest.time_to_transfer
-      ? DateTime.fromJSDate(transferRequest.time_to_transfer).startOf("day")
+      ? DateTime.fromJSDate(transferRequest.time_to_transfer)
+          .setZone(Settings.defaultZone)
+          .startOf("day")
       : currentDay;
 
     const daysUntilTransfer = dayOfTransfer.diff(currentDay, "day");

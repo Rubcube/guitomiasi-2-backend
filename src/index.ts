@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express, { NextFunction, Request, Response } from "express";
 import { handleError } from "handlers/errors/ErrorHandler";
-import { DateTime } from "luxon";
+import { Settings } from "luxon";
 import { authentication } from "middlewares/auth";
 import AccountRoute from "routes/AccountRoute";
 import LoginRoute from "routes/LoginRoute";
@@ -11,7 +11,7 @@ import UserRoute from "routes/UserRoute";
 // const key = fs.readFileSync("kc/key.pem");
 // const cert = fs.readFileSync("kc/cert.pem");
 
-DateTime.local().setZone("America/Sao_Paulo");
+Settings.defaultZone = "America/Sao_Paulo";
 
 const app = express();
 
