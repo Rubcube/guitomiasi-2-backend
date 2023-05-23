@@ -1,3 +1,4 @@
+import { UserInfo } from "@prisma/client";
 import { UserPut } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import * as UserModel from "models/UserModel";
@@ -19,13 +20,17 @@ export async function getInfo(req: Request, res: Response, next: NextFunction) {
 /**
  * Realiza a atualização das informações do usuário logado.
  */
-export async function putInfo(req: Request, res: Response, next: NextFunction) {
+export async function patchInfo(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
   const userId: string = res.locals.parsedJWTToken.id;
   const newInfo: UserPut = res.locals.parsedBody;
 
   try {
     const newUserRaw = await UserModel.putUserInfo(userId, newInfo);
-    const { created_at: _1, ...newUser } = newUserRaw;
+    const { ...newUser }: Omit<UserInfo, "created_at"> = newUserRaw;
     res.status(201).json(newUser);
   } catch (e) {
     next(e);

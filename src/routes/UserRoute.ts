@@ -9,7 +9,11 @@ import { validateSchema } from "middlewares/validateSchema";
  */
 const ValidatedRoute = Router();
 ValidatedRoute.get("/", UserController.getInfo);
-ValidatedRoute.put("/", validateSchema(UserPutSchema), UserController.putInfo);
+ValidatedRoute.patch(
+  "/",
+  validateSchema(UserPutSchema),
+  UserController.patchInfo,
+);
 
 const UserRoute = Router();
 UserRoute.use("/", authentication, ValidatedRoute);
