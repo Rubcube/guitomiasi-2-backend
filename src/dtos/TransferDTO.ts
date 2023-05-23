@@ -16,8 +16,9 @@ export const TransferInSchema = z.object({
 
 export const TransferOutSchema = z
   .object({
-    direction: z.enum(["IN", "OUT"]).optional(),
-    page: z.coerce.number().gte(0).optional(),
+    status: z.enum(["DONE", "SCHEDULED"]).default("DONE"),
+    direction: z.enum(["IN", "OUT", "BOTH"]).default("BOTH"),
+    page: z.coerce.number().gte(0).default(0),
     start: parsedDate.optional(),
     end: parsedDate.optional(),
   })

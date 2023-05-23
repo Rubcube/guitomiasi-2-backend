@@ -36,8 +36,8 @@ export async function getAccount(accountID: string, includeUser = true) {
 
 type getTransfersParams = {
   accountID: string;
-  direction?: "IN" | "OUT";
-  page?: number;
+  direction: "IN" | "OUT" | "BOTH";
+  page: number;
   start?: Date;
   end?: Date;
 };
@@ -49,45 +49,31 @@ type getTransfersParams = {
 export async function getTransfers({
   accountID,
   direction,
-  page = 0,
+  page,
   start,
   end,
 }: getTransfersParams) {
-  const transfersOutQuery: Prisma.TransferWhereInput = {
+  const whereOutQuery: Prisma.TransferWhereInput = {
     account_id_from: accountID,
-    OR: [
-      {
-        transfer_status: TransferStatus.DONE,
-        updated_at: { lte: end, gte: start },
-      },
-      {
-        transfer_status: TransferStatus.SCHEDULED,
-        time_to_transfer: { lte: end, gte: start },
-      },
-    ],
   };
-  const transfersInQuery: Prisma.TransferWhereInput = {
+  const whereInQuery: Prisma.TransferWhereInput = {
     account_id_to: accountID,
-    transfer_status: TransferStatus.DONE,
-    updated_at: { lte: end, gte: start },
   };
-  const bothQuery: Prisma.TransferWhereInput[] = [
-    transfersOutQuery,
-    transfersInQuery,
-  ];
-  let usedQuery;
+  let usedWhereQuery;
 
   if (direction === "IN") {
-    usedQuery = [transfersInQuery];
+    usedWhereQuery = [whereInQuery];
   } else if (direction === "OUT") {
-    usedQuery = [transfersOutQuery];
+    usedWhereQuery = [whereOutQuery];
   } else {
-    usedQuery = bothQuery;
+    usedWhereQuery = [whereInQuery, whereOutQuery];
   }
 
   const transfers = await prisma.transfer.findMany({
     where: {
-      OR: usedQuery,
+      OR: usedWhereQuery,
+      transfer_status: TransferStatus.DONE,
+      updated_at: { lte: end, gte: start },
     },
     orderBy: { updated_at: "desc" },
     skip: page * TRANSFER_PAGINATION_OPTIONS.pageSize,
@@ -98,24 +84,53 @@ export async function getTransfers({
       account_id_to: true,
       value: true,
       updated_at: true,
-      time_to_transfer: true,
-      transfer_status: true,
     },
   });
 
-  const mappedTransfers = transfers.map(transfer => ({
-    id: transfer.id,
-    status: transfer.transfer_status,
-    value: transfer.value,
-    direction: transfer.account_id_from === accountID ? "OUT" : "IN",
-    time:
-      transfer.transfer_status === "DONE"
-        ? transfer.updated_at
-        : transfer.time_to_transfer,
-  }));
+  return {
+    transfers: transfers.map(transfer => ({
+      id: transfer.id,
+      value: transfer.value,
+      direction: transfer.account_id_from === accountID ? "OUT" : "IN",
+      time: transfer.updated_at,
+    })),
+  };
+}
+
+/**
+ * Retorna todas as transferências AGENDADAS
+ * por uma determinada conta.
+ */
+export async function getScheduledTransfers({
+  accountID,
+  page,
+  start,
+  end,
+}: Omit<getTransfersParams, "direction">) {
+  const transfers = await prisma.transfer.findMany({
+    where: {
+      account_id_from: accountID,
+      transfer_status: TransferStatus.SCHEDULED,
+      time_to_transfer: { lte: end, gte: start },
+    },
+    orderBy: { updated_at: "desc" },
+    skip: page * TRANSFER_PAGINATION_OPTIONS.pageSize,
+    take: TRANSFER_PAGINATION_OPTIONS.pageSize,
+    select: {
+      id: true,
+      account_id_from: true,
+      account_id_to: true,
+      value: true,
+      time_to_transfer: true,
+    },
+  });
 
   return {
-    transfers: mappedTransfers,
+    transfers: transfers.map(transfer => ({
+      id: transfer.id,
+      value: transfer.value,
+      time: transfer.time_to_transfer,
+    })),
   };
 }
 

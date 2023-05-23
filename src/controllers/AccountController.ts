@@ -29,15 +29,26 @@ export async function getBalance(req: Request, res: Response) {
  */
 export async function getTransfers(req: Request, res: Response) {
   const accountID = req.params.accountId;
-  const { direction, page, start, end }: TransferOut = res.locals.parsedQuery;
+  const { status, direction, page, start, end }: TransferOut =
+    res.locals.parsedQuery;
+  let transfers;
 
-  const transfers = await AccountModel.getTransfers({
-    accountID,
-    direction,
-    page,
-    start,
-    end,
-  });
+  if (status === "DONE") {
+    transfers = await AccountModel.getTransfers({
+      accountID,
+      direction,
+      page,
+      start,
+      end,
+    });
+  } else {
+    transfers = await AccountModel.getScheduledTransfers({
+      accountID,
+      page,
+      start,
+      end,
+    });
+  }
 
   return res.status(200).json(transfers);
 }
