@@ -1,5 +1,5 @@
 import { Account, Address, PrismaClient, UserInfo } from "@prisma/client";
-import { AddressOnboarding } from "dtos/AddressDTO";
+import { AddressOnboarding, AddressPatch } from "dtos/AddressDTO";
 import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
 
@@ -79,7 +79,10 @@ export async function getUserInfo(id: string) {
   const userAccounts = allUserInfo!.accounts as Account[];
   const userAddressRaw = allUserInfo!.address as Address;
 
-  const { created_at: _1, updated_at: _2, ...userInfo } = userInfoRaw;
+  const {
+    ...userInfo
+  }: Omit<Omit<UserInfo, "created_at">, "updated_at"> = userInfoRaw;
+
   const accountsMapped = userAccounts.map(account => ({
     id: account.id,
     number: account.account_number,
@@ -109,5 +112,21 @@ export async function patchUserInfo(id: string, newUserInfo: UserPatch) {
   return await prisma.userInfo.update({
     where: { id },
     data: { ...newUserInfo },
+  });
+}
+
+/**
+ * Realiza o PATCH de algumas informações de endereço de um usuário
+ * @param owner_id UUID do usuário que terá seu endereço alterado
+ * @param newAddressInfo Novas informações de endereço
+ * @returns Novo objeto de endereço
+ */
+export async function patchUserAddress(
+  owner_id: string,
+  newAddressInfo: AddressPatch,
+) {
+  return await prisma.address.update({
+    where: { owner_id },
+    data: { ...newAddressInfo },
   });
 }

@@ -1,4 +1,5 @@
-import { UserInfo } from "@prisma/client";
+import { Address, UserInfo } from "@prisma/client";
+import { AddressPatch } from "dtos/AddressDTO";
 import { UserPatch } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import * as UserModel from "models/UserModel";
@@ -32,6 +33,30 @@ export async function patchInfo(
     const newUserRaw = await UserModel.patchUserInfo(userId, newInfo);
     const { ...newUser }: Omit<UserInfo, "created_at"> = newUserRaw;
     res.status(201).json(newUser);
+  } catch (e) {
+    next(e);
+  }
+}
+
+/**
+ * Endpoint para realizar um PATCH de um endereço.
+ * Atualiza o endereço do usuário logado.
+ */
+export async function patchAddress(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const userId: string = res.locals.parsedJWTToken.id;
+  const newAddressInfo: AddressPatch = res.locals.parsedBody;
+
+  try {
+    const newAddressRaw = await UserModel.patchUserAddress(
+      userId,
+      newAddressInfo,
+    );
+    const { ...newAddress }: Omit<Address, "created_at"> = newAddressRaw;
+    res.status(201).json(newAddress);
   } catch (e) {
     next(e);
   }
