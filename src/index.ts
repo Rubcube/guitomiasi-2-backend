@@ -3,6 +3,8 @@ import express, { NextFunction, Request, Response } from "express";
 import { handleError } from "handlers/errors/ErrorHandler";
 import { Settings } from "luxon";
 import { authentication } from "middlewares/auth";
+import * as TransferModel from "models/TransferModel";
+import cron from "node-cron";
 import AccountRoute from "routes/AccountRoute";
 import LoginRoute from "routes/LoginRoute";
 import OnboardingRoute from "routes/OnboardingRoute";
@@ -32,6 +34,19 @@ app.use(async (error: Error, req: Request, res: Response, _: NextFunction) => {
   handleError(error, res);
 });
 
+cron.schedule(
+  "0 1 * * * ",
+  async function () {
+    const allScheduled = await TransferModel.getScheduledTransfers();
+    for await (const scheduled of allScheduled) {
+      await TransferModel.executeScheduledTransfer(scheduled);
+    }
+  },
+  {
+    scheduled: true,
+    timezone: "America/Sao_Paulo",
+  },
+);
 // https
 //   .createServer(
 //     {
