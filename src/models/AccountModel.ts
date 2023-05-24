@@ -1,13 +1,7 @@
-import {
-  AccountStatus,
-  Prisma,
-  PrismaClient,
-  TransferStatus,
-} from "@prisma/client";
+import { AccountStatus, Prisma, TransferStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { RubError } from "handlers/errors/RubError";
-
-const prisma = new PrismaClient();
+import { prisma } from "prisma";
 
 const TRANSFER_PAGINATION_OPTIONS = {
   pageSize: 10,

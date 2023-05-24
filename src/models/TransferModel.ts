@@ -1,6 +1,7 @@
-import { PrismaClient, TransferStatus } from "@prisma/client";
+import { TransferStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { DateTime } from "luxon";
+import { prisma } from "prisma";
 
 type ScheduledTransfer = {
   id: string;
@@ -8,8 +9,6 @@ type ScheduledTransfer = {
   account_id_to: string;
   value: Decimal;
 };
-
-const prisma = new PrismaClient();
 
 export async function getScheduledTransfers() {
   const today = DateTime.now();

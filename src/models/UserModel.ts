@@ -1,16 +1,9 @@
-import {
-  Account,
-  Address,
-  Prisma,
-  PrismaClient,
-  UserInfo,
-} from "@prisma/client";
+import { Account, Address, Prisma, UserInfo } from "@prisma/client";
 import { AddressOnboarding, AddressPatch } from "dtos/AddressDTO";
 import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
+import { prisma } from "prisma";
 import { Omitter } from "utils/index";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
-
-const prisma = new PrismaClient();
 
 /**
  * Realiza o cadastro de informações pessoais do usuário,
