@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { parsedDate } from "zodTypes";
+import { validateNotEmpty } from "zodTypes/customValidators";
 import {
   userDocument,
   userEmail,
@@ -28,25 +29,13 @@ export const UserLoginSchema = z.object({
  */
 export const UserPatchSchema = z
   .object({
-    name: userName.optional(),
-    email: userName.optional(),
-    phone: userPhone.optional(),
-    birthday: parsedDate.optional(),
+    name: userName,
+    email: userName,
+    phone: userPhone,
+    birthday: parsedDate,
   })
-  .superRefine((obj, ctx) => {
-    const atLeastOneDefined = Object.values(obj).some(v => v !== undefined);
-
-    if (atLeastOneDefined) {
-      return obj;
-    } else {
-      ctx.addIssue({
-        code: "invalid_type",
-        path: ["any"],
-        expected: "object",
-        received: "undefined",
-      });
-    }
-  });
+  .partial()
+  .superRefine(validateNotEmpty);
 
 export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;
 export type UserLogin = z.infer<typeof UserLoginSchema>;

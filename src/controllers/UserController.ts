@@ -1,5 +1,5 @@
 import { AddressPatch } from "dtos/AddressDTO";
-import { UserPatch } from "dtos/UsersDTO";
+import { Patch } from "dtos/PatchDTO";
 import { NextFunction, Request, Response } from "express";
 import * as UserModel from "models/UserModel";
 import { Omitter } from "utils/index";
@@ -27,12 +27,23 @@ export async function patchInfo(
   next: NextFunction,
 ) {
   const userId: string = res.locals.parsedJWTToken.id;
-  const newInfo: UserPatch = res.locals.parsedBody;
+  const { user: newUserInfo, address: newAddressInfo }: Patch =
+    res.locals.parsedBody;
 
   try {
-    const newUserRaw = await UserModel.patchUserInfo(userId, newInfo);
+    const newUserRaw = await UserModel.patchUserInfo(userId, newUserInfo);
     const newUser = Omitter(newUserRaw, "created_at");
-    res.status(201).json(newUser);
+
+    const newAddressRaw = await UserModel.patchUserAddress(
+      userId,
+      newAddressInfo,
+    );
+    const newAddress = Omitter(newAddressRaw, "created_at");
+
+    res.status(201).json({
+      user: newUser,
+      address: newAddress,
+    });
   } catch (e) {
     next(e);
   }

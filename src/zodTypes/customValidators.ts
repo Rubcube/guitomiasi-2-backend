@@ -50,3 +50,21 @@ export function validateCNPJ(docString: string) {
     digits[12] === firstVerifierDigit && digits[13] === secondVerifierDigit
   );
 }
+
+/**
+ * Valida que objeto contém pelo menos um campo definido.
+ */
+export function validateNotEmpty(obj: object, ctx: Zod.RefinementCtx) {
+  const atLeastOneDefined = Object.values(obj).some(v => v !== undefined);
+
+  if (atLeastOneDefined) {
+    return obj;
+  } else {
+    ctx.addIssue({
+      code: "invalid_type",
+      path: ["any"],
+      expected: "object",
+      received: "undefined",
+    });
+  }
+}

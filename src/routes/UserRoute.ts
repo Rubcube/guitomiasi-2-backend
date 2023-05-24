@@ -1,6 +1,5 @@
 import * as UserController from "controllers/UserController";
-import { AddressPatchSchema } from "dtos/AddressDTO";
-import { UserPatchSchema } from "dtos/UsersDTO";
+import { PatchSchema } from "dtos/PatchDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
 import { validateSchema } from "middlewares/validateSchema";
@@ -12,13 +11,8 @@ const ValidatedRoute = Router();
 ValidatedRoute.get("/", UserController.getInfo);
 ValidatedRoute.patch(
   "/",
-  validateSchema(UserPatchSchema),
+  validateSchema(PatchSchema),
   UserController.patchInfo,
-);
-ValidatedRoute.patch(
-  "/address",
-  validateSchema(AddressPatchSchema),
-  UserController.patchAddress,
 );
 
 const UserRoute = Router();

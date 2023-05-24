@@ -106,7 +106,7 @@ export async function getUserInfo(id: string) {
  * @param newUserInfo Novas informações de usuário
  * @returns Novo objeto de usuário
  */
-export async function patchUserInfo(id: string, newUserInfo: UserPatch) {
+export async function patchUserInfo(id: string, newUserInfo?: UserPatch) {
   return await prisma.userInfo.update({
     where: { id },
     data: { ...newUserInfo },
@@ -121,7 +121,7 @@ export async function patchUserInfo(id: string, newUserInfo: UserPatch) {
  */
 export async function patchUserAddress(
   owner_id: string,
-  newAddressInfo: AddressPatch,
+  newAddressInfo?: AddressPatch,
 ) {
   return await prisma.address.update({
     where: { owner_id },
