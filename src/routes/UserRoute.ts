@@ -1,5 +1,5 @@
 import * as UserController from "controllers/UserController";
-import { PatchSchema } from "dtos/PatchDTO";
+import { PatchSchema, UserPasswordPatchSchema } from "dtos/PatchDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
 import { validateSchema } from "middlewares/validateSchema";
@@ -13,6 +13,11 @@ ValidatedRoute.patch(
   "/",
   validateSchema(PatchSchema),
   UserController.patchInfo,
+);
+ValidatedRoute.patch(
+  "/password/reset",
+  validateSchema(UserPasswordPatchSchema),
+  UserController.patchUserPassword,
 );
 
 const UserRoute = Router();

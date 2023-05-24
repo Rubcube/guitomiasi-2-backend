@@ -1,4 +1,10 @@
-import { Account, Address, PrismaClient, UserInfo } from "@prisma/client";
+import {
+  Account,
+  Address,
+  Prisma,
+  PrismaClient,
+  UserInfo,
+} from "@prisma/client";
 import { AddressOnboarding, AddressPatch } from "dtos/AddressDTO";
 import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
 import { Omitter } from "utils/index";
@@ -50,9 +56,14 @@ export async function getUserStatus(id: string) {
   return user.user_status;
 }
 
-export async function getAuth(document: string) {
+/**
+ * Retorna informações de autenticação do usuário
+ * @param whereUnique Atributos **unique** usados como busca
+ * @returns Objeto com informações de autenticação do usuário
+ */
+export async function getAuth(whereUnique: Prisma.UserInfoWhereUniqueInput) {
   const user = await prisma.userInfo.findUnique({
-    where: { document },
+    where: whereUnique,
     select: { id: true },
   });
 
@@ -61,6 +72,22 @@ export async function getAuth(document: string) {
   return await prisma.userAuth.findUnique({
     where: { id: user.id },
     include: { user_info: true, accounts: true, address: true },
+  });
+}
+
+/**
+ * Atualiza o hash da senha de usuário para um determinado usuário
+ * @param whereUnique Atributos **unique** usados como busca
+ * @param newPasswordHash Novo hash de senha de usuário
+ * @returns Objeto contendo novas informações de autenticação do usuário
+ */
+export async function updateUserPassword(
+  whereUnique: Prisma.UserInfoWhereUniqueInput,
+  newPasswordHash: string,
+) {
+  return await prisma.userAuth.update({
+    where: whereUnique,
+    data: { bcrypt_user_password: newPasswordHash },
   });
 }
 

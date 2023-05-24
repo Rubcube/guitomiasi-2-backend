@@ -1,6 +1,7 @@
-import { AddressPatch } from "dtos/AddressDTO";
-import { Patch } from "dtos/PatchDTO";
+import { compare, hash } from "bcrypt";
+import { Patch, UserPasswordPatch } from "dtos/PatchDTO";
 import { NextFunction, Request, Response } from "express";
+import { RubError } from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
 import { Omitter } from "utils/index";
 
@@ -50,24 +51,36 @@ export async function patchInfo(
 }
 
 /**
- * Endpoint para realizar um PATCH de um endereço.
- * Atualiza o endereço do usuário logado.
+ * Endpoint utilizado para alterar uma senha de um usuário logado.
  */
-export async function patchAddress(
+export async function patchUserPassword(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   const userId: string = res.locals.parsedJWTToken.id;
-  const newAddressInfo: AddressPatch = res.locals.parsedBody;
+  const patchData: UserPasswordPatch = res.locals.parsedBody;
+
+  const userAuth = await UserModel.getAuth({ id: userId });
+  const passwordIsCorrect = await compare(
+    patchData.old_password,
+    userAuth!.bcrypt_user_password,
+  );
 
   try {
-    const newAddressRaw = await UserModel.patchUserAddress(
-      userId,
-      newAddressInfo,
-    );
-    const newAddress = Omitter(newAddressRaw, "created_at");
-    res.status(201).json(newAddress);
+    if (passwordIsCorrect) {
+      const newHash = await hash(patchData.new_password, 10);
+      await UserModel.updateUserPassword({ id: userId }, newHash);
+      return res.status(201).json({
+        message: "Password was changed successfully!",
+      });
+    } else {
+      throw new RubError(
+        400,
+        "It was not possible to change password",
+        "PASSWORD-RESET-ERROR",
+      );
+    }
   } catch (e) {
     next(e);
   }

@@ -18,7 +18,7 @@ export async function loginUser(
 ) {
   const { document, password }: UserLogin = res.locals.parsedBody;
 
-  const fetchedUser = await UserModel.getAuth(document);
+  const fetchedUser = await UserModel.getAuth({ document });
 
   if (fetchedUser === null) {
     return next(
