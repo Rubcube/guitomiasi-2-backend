@@ -1,8 +1,8 @@
 import { UserStatus } from "@prisma/client";
 import { NextFunction, Request, Response } from "express";
-import { INTERNAL_ERROR, RubError } from "handlers/errors/RubError";
-import { JsonWebTokenError, TokenExpiredError, verify } from "jsonwebtoken";
+import { RubError } from "handlers/errors/RubError";
 import { getUserStatus } from "models/UserModel";
+import { parseJWT } from "services/jwt";
 
 /**
  * *Middleware* de autenticação. Verifica se um JWT é disponibilizado pelo usuário.
@@ -21,12 +21,7 @@ export async function authentication(
   }
 
   try {
-    const token = Array.isArray(fetchedToken) ? fetchedToken[0] : fetchedToken;
-    const parsedToken = verify(token, process.env.SECRET_JWT as string);
-
-    if (typeof parsedToken === "string") {
-      return next(new Error("Unable to retrieve JWT payload"));
-    }
+    const parsedToken = parseJWT<{ id: string }>(fetchedToken);
 
     // Check for user status
     const userCurrentStatus = await getUserStatus(parsedToken.id);
@@ -35,29 +30,13 @@ export async function authentication(
       res.locals.parsedJWTToken = parsedToken;
       next();
     } else {
-      return next(
-        new RubError(
-          403,
-          "User is not currently active",
-          "AUTH-USER-NOT-ACTIVE",
-        ),
+      throw new RubError(
+        403,
+        "User is not currently active",
+        "AUTH-USER-NOT-ACTIVE",
       );
     }
   } catch (e) {
-    if (e instanceof TokenExpiredError) {
-      return next(
-        new RubError(
-          403,
-          "User was not authorized because the JWT is expired",
-          "AUTH-JWT-EXPIRED",
-        ),
-      );
-    } else if (e instanceof JsonWebTokenError) {
-      return next(
-        new RubError(403, "JWT authentication failed", "AUTH-JWT-ERROR"),
-      );
-    } else {
-      return next(INTERNAL_ERROR);
-    }
+    return next(e);
   }
 }

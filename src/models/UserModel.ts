@@ -1,6 +1,7 @@
-import { Account, Address, Prisma, UserInfo } from "@prisma/client";
+import { Account, Address, Prisma, UserInfo, UserStatus } from "@prisma/client";
 import { AddressOnboarding, AddressPatch } from "dtos/AddressDTO";
 import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
+import { RubError } from "handlers/errors/RubError";
 import { prisma } from "prisma";
 import { Omitter } from "utils/index";
 import { ACCOUNT_DEFAULT_OPTIONS } from "./AccountModel";
@@ -34,6 +35,28 @@ export async function create(
     include: {
       accounts: true,
     },
+  });
+}
+
+export async function verifyUserEmail(email: string) {
+  const userId = (
+    await prisma.userInfo.findUnique({
+      where: { email },
+      select: { id: true },
+    })
+  )?.id;
+
+  if (!userId) {
+    throw new RubError(
+      404,
+      "It was not possible to verify user email, there is no user associated with this email",
+      "EMAIL-NOT-FOUND",
+    );
+  }
+
+  return await prisma.userAuth.update({
+    where: { id: userId },
+    data: { user_status: UserStatus.ACTIVE },
   });
 }
 

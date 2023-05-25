@@ -3,8 +3,8 @@ import { compare } from "bcrypt";
 import { UserLogin } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
-import { sign } from "jsonwebtoken";
 import * as UserModel from "models/UserModel";
+import { signJWT } from "services/jwt";
 
 /**
  * Rota utilizada para realizar o login de um USUÁRIO.
@@ -46,19 +46,13 @@ export async function loginUser(
   );
 
   if (passwordIsCorrect) {
-    const jwtToken = sign(
-      { id: fetchedUser.id },
-      process.env.SECRET_JWT as string,
-      { expiresIn: parseInt(process.env.JWT_EXPIRATION_TIME || "60") },
-    );
+    const jwtToken = signJWT({ id: fetchedUser.id });
 
-    const responseJson = {
+    return res.status(200).json({
       token: jwtToken,
       user_id: fetchedUser.id,
       accounts_id: fetchedUser.accounts.map(account => account.id),
-    };
-
-    return res.status(200).json(responseJson);
+    });
   } else {
     return next(
       new RubError(403, "Authentication failed", "LOGIN-AUTHENTICATION-FAILED"),

@@ -23,12 +23,13 @@ enum UserStatus {
   ACTIVE
   BLOCKED
   INACTIVE
+  NOT_VERIFIED
 }
 
 model UserAuth {
   id                   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   bcrypt_user_password String     @db.Char(60)
-  user_status          UserStatus @default(ACTIVE)
+  user_status          UserStatus @default(NOT_VERIFIED)
   created_at           DateTime   @default(now()) @db.Timestamp()
   updated_at           DateTime   @updatedAt @db.Timestamp()
   // ================================================================================

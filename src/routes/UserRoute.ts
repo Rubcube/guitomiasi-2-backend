@@ -21,6 +21,7 @@ ValidatedRoute.patch(
 );
 
 const UserRoute = Router();
+UserRoute.post("/verify/:jwt", UserController.verifyUserEmail);
 UserRoute.use("/", authentication, ValidatedRoute);
 
 export default UserRoute;

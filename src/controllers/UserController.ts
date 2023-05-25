@@ -3,7 +3,32 @@ import { Patch, UserPasswordPatch } from "dtos/PatchDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
+import { parseJWT } from "services/jwt";
+import { mailerTransport } from "services/mail";
 import { Omitter } from "utils/index";
+
+/**
+ * Endpoint para verificar o email de um usuário, com base em um JWT enviado.
+ */
+export async function verifyUserEmail(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const receivedJWT = req.params.jwt;
+
+  // Tentando realizar o parse do JWT
+  try {
+    const parsedToken = parseJWT<{ email: string }>(receivedJWT);
+
+    await UserModel.verifyUserEmail(parsedToken.email);
+    return res.status(201).json({
+      message: "User email verified successfully",
+    });
+  } catch (e) {
+    next(e);
+  }
+}
 
 /**
  * Retorna informações do usuário logado.
@@ -71,6 +96,14 @@ export async function patchUserPassword(
     if (passwordIsCorrect) {
       const newHash = await hash(patchData.new_password, 10);
       await UserModel.updateUserPassword({ id: userId }, newHash);
+
+      mailerTransport.sendMail({
+        from: "noreply@rubbank.com",
+        to: userAuth?.user_info?.email,
+        subject: "Password changed!",
+        text: "Your password was changed.",
+      });
+
       return res.status(201).json({
         message: "Password was changed successfully!",
       });

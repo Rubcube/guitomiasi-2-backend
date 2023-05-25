@@ -12,7 +12,7 @@ account_mock = account_mock.astype({'transaction_password': 'string'})
 # Endpoint
 url = "http://0.0.0.0:3344/onboarding"
 
-for i in range(len(user_mock)):
+for i in range(1):
     user = user_mock.loc[i].to_dict()
     address = address_mock.loc[i].to_dict()
     account = account_mock.loc[i].to_dict()
@@ -22,7 +22,3 @@ for i in range(len(user_mock)):
         user_mock = user_mock.drop(i)
         address_mock = address_mock.drop(i)
         account_mock = account_mock.drop(i)
-
-user_mock.to_csv("./userMock2.csv", index=False)
-address_mock.to_csv("./addressMock2.csv", index=False)
-account_mock.to_csv("./accountMock2.csv", index=False)

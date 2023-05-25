@@ -7,8 +7,9 @@ import {
   RPrismaError,
   RubError,
 } from "handlers/errors/RubError";
-import { JsonWebTokenError, sign } from "jsonwebtoken";
+import { JsonWebTokenError } from "jsonwebtoken";
 import * as UserModel from "models/UserModel";
+import { sendVerificationMail } from "services/mail";
 
 /**
  * Realiza o *onboarding* de um usuário com base nas suas informações pessoais,
@@ -32,17 +33,12 @@ export async function create(req: Request, res: Response, next: NextFunction) {
       bcrypt_transaction_password,
     );
 
-    const jwtToken = sign(
-      { id: newUser.id },
-      process.env.SECRET_JWT as string,
-      { expiresIn: parseInt(process.env.JWT_EXPIRATION_TIME || "60") },
-    );
-
     const responseJson = {
-      token: jwtToken,
       user_id: newUser.id,
       accounts_id: newUser.accounts.map(account => account.id),
     };
+
+    sendVerificationMail(user.email);
 
     return res.status(201).json(responseJson);
   } catch (e) {
