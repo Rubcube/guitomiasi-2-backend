@@ -1,11 +1,353 @@
 _type: export
 __export_format: 4
-__export_date: 2023-05-22T17:20:33.390Z
+__export_date: 2023-05-25T12:38:54.345Z
 __export_source: insomnia.desktop.app:v2023.2.2
 resources:
+  - _id: req_ecf6e7d92d494955ad9deefa4b5e9ea3
+    parentId: fld_b22743306b44410e8feb55a8580010a7
+    modified: 1685018146527
+    created: 1684865196397
+    url: "{{ _.userEndpoint }}/password/reset"
+    name: Atualizando senha de usuário (PATCH)
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"old_password": "{{ _.sissy_roche.password }}",
+        	"new_password": "G92!am@ca#"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1685018133804
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_b22743306b44410e8feb55a8580010a7
+    parentId: fld_eefb78fb3d95425e854aced519390034
+    modified: 1685018140404
+    created: 1685018140404
+    name: Senhas
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1685018140404
+    _type: request_group
+  - _id: fld_eefb78fb3d95425e854aced519390034
+    parentId: fld_b3fcdf0331bb4d929d01f460d3598429
+    modified: 1685018119716
+    created: 1685018119716
+    name: Atualizando informações
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1685018119716
+    _type: request_group
+  - _id: fld_b3fcdf0331bb4d929d01f460d3598429
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1684778249094
+    created: 1684778249094
+    name: Sprint 4
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1684778249094
+    _type: request_group
+  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
+    parentId: null
+    modified: 1684332678588
+    created: 1684332678588
+    name: RubCamp 2
+    description: ""
+    scope: design
+    _type: workspace
+  - _id: req_a6b3fa326bb84758adb24165974218fb
+    parentId: fld_b22743306b44410e8feb55a8580010a7
+    modified: 1685018147874
+    created: 1685017977136
+    url: "{{ _.userEndpoint }}/password/reset"
+    name: "[INVÁLIDO] Atualizando senha de usuário (PATCH)"
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"old_password": "{{ _.sissy_roche.password }}",
+        	"new_password": "abcd"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1685018133754
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_5835658be4e44e8dba854be238172fc1
+    parentId: fld_b22743306b44410e8feb55a8580010a7
+    modified: 1685018179495
+    created: 1685018093327
+    url: "{{ _.userEndpoint }}/password/reset"
+    name: "[INCORRETA] Atualizando senha de usuário (PATCH)"
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"old_password": "{{ _.sissy_roche.password }}",
+        	"new_password": "G92!am@ca#"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1685018133704
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_5a5905ff3a054b49abbdf28d4e88563d
+    parentId: fld_b22743306b44410e8feb55a8580010a7
+    modified: 1685018151566
+    created: 1685016325492
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/password/reset"
+    name: Atualizando senha de conta (PATCH)
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"old_password": "{{ _.sissy_roche.transactional_password }}",
+        	"new_password": "7557"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1685018133654
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_68324463a9154cbeaa583dd57b67508d
+    parentId: fld_b22743306b44410e8feb55a8580010a7
+    modified: 1685018200437
+    created: 1685018195305
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/password/reset"
+    name: "[INVÁLIDO] Atualizando senha de conta (PATCH)"
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"old_password": "{{ _.sissy_roche.transactional_password }}",
+        	"new_password": "abcd"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684898268473.3906
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b26aafa8a47e4220bcac4fac42581cc0
+    parentId: fld_b22743306b44410e8feb55a8580010a7
+    modified: 1685018212858
+    created: 1685018206274
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/password/reset"
+    name: "[INCORRETA] Atualizando senha de conta (PATCH)"
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"old_password": "{{ _.sissy_roche.transactional_password }}",
+        	"new_password": "7557"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684838335883.086
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_9ee924cea2204698a3d16e22f2627acf
+    parentId: fld_1bfc1c8ecc4944a6828dec290a70537b
+    modified: 1685018240766
+    created: 1684947211637
+    url: "{{ _.userEndpoint }}/"
+    name: Atualizando informações (PATCH)
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {
+        		"name": "Sissy Roche"
+        	},
+        	"address": {
+        		"street": "Street 1023"
+        	}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684778403292.7812
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_1bfc1c8ecc4944a6828dec290a70537b
+    parentId: fld_eefb78fb3d95425e854aced519390034
+    modified: 1685018127204
+    created: 1685018127204
+    name: Usuário & Endereço
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1685018127204
+    _type: request_group
+  - _id: req_71bb4fab6162451a87c36c24fa0c7c25
+    parentId: fld_1bfc1c8ecc4944a6828dec290a70537b
+    modified: 1685018134974
+    created: 1685017862919
+    url: "{{ _.userEndpoint }}/"
+    name: "[INVÁLIDO] Atualizando informações (PATCH"
+    description: ""
+    method: PATCH
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"user": {},
+        	"address": {}
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684778403242.7812
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_b9fcef6a642a4dd3bad37b66242d4436
+    parentId: fld_d25dacc743464405aff2e9c80ebb3194
+    modified: 1685018110453
+    created: 1684778254056
+    url: "{{ _.userEndpoint }}/"
+    name: Recebendo informações de usuário (GET)
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684778254056
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_d25dacc743464405aff2e9c80ebb3194
+    parentId: fld_b3fcdf0331bb4d929d01f460d3598429
+    modified: 1685018108532
+    created: 1685018108532
+    name: Recebendo informações
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1685018108532
+    _type: request_group
   - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1684757952508
+    modified: 1684947474188
     created: 1684181567401
     url: "{{ _.loginEndpoint }}"
     name: Login
@@ -34,13 +376,13 @@ resources:
     _type: request
   - _id: fld_fa8cb03041884f5d885679e1d135b964
     parentId: fld_a83e9f54106f48cfbfebb02f88491bcb
-    modified: 1684757910170
+    modified: 1684940274045
     created: 1684181559410
     name: Sissy Roche (->)
     description: ""
     environment: {}
     environmentPropertyOrder: null
-    metaSortKey: -1684181496222.9375
+    metaSortKey: -1684181496147.9375
     _type: request_group
   - _id: fld_a83e9f54106f48cfbfebb02f88491bcb
     parentId: wrk_25dd0da716614e2cabf0bac47af435f3
@@ -55,14 +397,6 @@ resources:
         - addressEndpoint
     metaSortKey: -1684157914981
     _type: request_group
-  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
-    parentId: null
-    modified: 1684332678588
-    created: 1684332678588
-    name: RubCamp 2
-    description: ""
-    scope: design
-    _type: workspace
   - _id: req_a5033135f4b645e79985e5b9246fb47e
     parentId: fld_5cb16fff91a5496b9c0fceb535323b59
     modified: 1684759164505
@@ -171,7 +505,7 @@ resources:
     _type: request
   - _id: req_43a86d5b38324333ac047d07adfb1db0
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684769430187
+    modified: 1684860365490
     created: 1684181770108
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Sem filtro
@@ -351,6 +685,34 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_3af919fba7dd4fd09657e1de07b7db57
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1684861847039
+    created: 1684860162431
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Agendadas
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_c13f99528fc942f6a515f6b8de7f8d4f
+        name: status
+        value: SCHEDULED
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757242200.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_b8d91a85b7ae4b5c9ee9ad6ab582146e
     parentId: fld_d15bdf4990394718ae013293dc4351e0
     modified: 1684759062419
@@ -433,7 +795,7 @@ resources:
     _type: request_group
   - _id: req_e54de3e0553f44e0ae965932c6325805
     parentId: fld_feb608cf735746eea6dcb0dc42c035b5
-    modified: 1684764375722
+    modified: 1684863085332
     created: 1684500334493
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Agendar transferência
@@ -446,7 +808,7 @@ resources:
         	"account_number_to": {{ _.fredericka_fredi.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
-        	"time_to_transfer": "2023-05-31"
+        	"time_to_transfer": "2023-05-25T00:00:00.000Z"
         }
     parameters: []
     headers:
@@ -531,13 +893,13 @@ resources:
     _type: request
   - _id: fld_060e9b2f98344e41892387f5c12268e4
     parentId: fld_a83e9f54106f48cfbfebb02f88491bcb
-    modified: 1684758288994
+    modified: 1684940276783
     created: 1684758277255
     name: Fredericka Fredi (<-)
     description: ""
     environment: {}
     environmentPropertyOrder: null
-    metaSortKey: -1684181496197.9375
+    metaSortKey: -1684181496097.9375
     _type: request_group
   - _id: req_c9831a766f574fc9b6463b9921f78466
     parentId: fld_06594cf953e84b838b9ae30708994941
@@ -575,7 +937,7 @@ resources:
     _type: request_group
   - _id: req_b1add6ecd91a4c21b03a7ce77e265176
     parentId: fld_403e81bf24e440e582eb6592cdf2fe73
-    modified: 1684758548898
+    modified: 1684860147223
     created: 1684758277264
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Sem filtro
@@ -609,7 +971,7 @@ resources:
     _type: request_group
   - _id: req_29501815e7b9409c9a557a05b121ce5b
     parentId: fld_403e81bf24e440e582eb6592cdf2fe73
-    modified: 1684775837727
+    modified: 1684860141320
     created: 1684758277264
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Com data de início
@@ -755,6 +1117,34 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
+  - _id: req_63f0d69a8e51425aa6d7a5f982443350
+    parentId: fld_403e81bf24e440e582eb6592cdf2fe73
+    modified: 1684860781132
+    created: 1684860150487
+    url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
+    name: Agendadas
+    description: ""
+    method: GET
+    body: {}
+    parameters:
+      - id: pair_44690c073bff420c8896aeb2e09d4828
+        name: status
+        value: SCHEDULED
+        description: ""
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.fredericka_fredi.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757242200.875
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_b6d0879a6b9b4ec6a01d7030ab0f2925
     parentId: fld_d662e4968ad6420a8d4efab50db70dd2
     modified: 1684758921730
@@ -792,7 +1182,7 @@ resources:
     _type: request_group
   - _id: req_2b087c3ec5d345e49bc142c02f981c6e
     parentId: fld_0f61b7c2ed064dae851c86d099085ecb
-    modified: 1684764444975
+    modified: 1684845157170
     created: 1684758277271
     url: "{{ _.accountEndpoint }}/{{ _.fredericka_fredi.account_id }}/transfers"
     name: Realizar transferência
@@ -802,7 +1192,7 @@ resources:
       mimeType: application/json
       text: >-
         {
-        	"account_number_to": {{ _.fredericka_fredi.account_number }},
+        	"account_number_to": {{ _.sissy_roche.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.fredericka_fredi.transactional_password }}"
         }
@@ -1488,13 +1878,14 @@ resources:
     _type: api_spec
   - _id: env_4d1c8b67a2b84778913c143f3d64c6dd
     parentId: env_22ac494303a347fe8a892f81b6f1fc54
-    modified: 1684775986455
+    modified: 1684778282861
     created: 1684332979493
     name: RubCamp 2
     data:
       baseUrl: 0.0.0.0:3344
       loginEndpoint: "{{ _.baseUrl }}/login"
       accountEndpoint: "{{ _.baseUrl }}/account"
+      userEndpoint: "{{ _.baseUrl }}/user"
       sissy_roche:
         account_id: "{% response 'body', 'req_8e7cec9b5b7c4bda9733c6887ab9c1ca',
           'b64::JC5hY2NvdW50c19pZFsxXQ==::46b', 'never', 60 %}"
@@ -1524,6 +1915,7 @@ resources:
         - baseUrl
         - loginEndpoint
         - accountEndpoint
+        - userEndpoint
         - sissy_roche
         - fredericka_fredi
       "&~|sissy_roche":
