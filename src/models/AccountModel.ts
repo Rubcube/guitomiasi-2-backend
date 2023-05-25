@@ -309,3 +309,15 @@ export async function resetAttempts(id: string) {
     data: { attempts: 0 },
   });
 }
+
+/**
+ * Atualiza o hash da senha transacional de uma determinada conta
+ * @param id UUID da conta que terá seu hash alterado
+ * @param newPasswordHash Novo hash de senha transacional
+ */
+export async function patchPassword(id: string, newPasswordHash: string) {
+  return await prisma.account.update({
+    where: { id },
+    data: { bcrypt_transaction_password: newPasswordHash },
+  });
+}

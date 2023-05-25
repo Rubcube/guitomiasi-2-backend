@@ -4,7 +4,8 @@ import {
   Transfer,
   TransferStatus,
 } from "@prisma/client";
-import { compare } from "bcrypt";
+import { compare, hash } from "bcrypt";
+import { AccountPatch } from "dtos/AccountDTO";
 import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
@@ -224,5 +225,40 @@ export async function postTransfer(
     res.status(201).json(returnObj);
   } catch (e) {
     return next(e);
+  }
+}
+
+/**
+ * Endpoint para alterar a senha transacional a partir da anterior
+ */
+export async function patchPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const accountId: string = res.locals.account.id;
+  const accountTransactionalPasswordHash: string =
+    res.locals.account.bcrypt_transaction_password;
+  const { old_password, new_password }: AccountPatch = res.locals.parsedBody;
+
+  const passwordIsCorrect = await compare(
+    old_password,
+    accountTransactionalPasswordHash,
+  );
+
+  if (passwordIsCorrect) {
+    const newPasswordHash = await hash(new_password, 10);
+
+    await AccountModel.patchPassword(accountId, newPasswordHash);
+    return res.status(201).json({
+      message: "Transactional password changed successfully",
+    });
+  } else {
+    return next(
+      new RubError(
+        400,
+        "It was not possible to change the transactional password",
+      ),
+    );
   }
 }

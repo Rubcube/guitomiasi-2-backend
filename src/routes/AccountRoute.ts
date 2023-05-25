@@ -1,4 +1,5 @@
 import * as AccountController from "controllers/AccountController";
+import { AccountPatchSchema } from "dtos/AccountDTO";
 import { TransferInSchema, TransferOutSchema } from "dtos/TransferDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
@@ -23,6 +24,11 @@ ValidatedRoute.post(
   "/transfers",
   validateSchema(TransferInSchema),
   AccountController.postTransfer,
+);
+ValidatedRoute.patch(
+  "/password/reset",
+  validateSchema(AccountPatchSchema),
+  AccountController.patchPassword,
 );
 
 const AccountRoute = Router();
