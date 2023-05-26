@@ -1,11 +1,13 @@
 import { compare, hash } from "bcrypt";
 import { Patch, UserPasswordPatch } from "dtos/PatchDTO";
+import { UserNewPassword } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
 import { parseJWT } from "services/jwt";
-import { mailerTransport } from "services/mail";
+import { mailerTransport, sendResetPasswordMail } from "services/mail";
 import { Omitter } from "utils/index";
+import { userDocument } from "zodTypes/user";
 
 /**
  * Endpoint para verificar o email de um usuário, com base em um JWT enviado.
@@ -22,9 +24,7 @@ export async function verifyUserEmail(
     const parsedToken = parseJWT<{ email: string }>(receivedJWT);
 
     await UserModel.verifyUserEmail(parsedToken.email);
-    return res.status(201).json({
-      message: "User email verified successfully",
-    });
+    return res.status(200).send("Email verificado com sucesso!");
   } catch (e) {
     next(e);
   }
@@ -114,6 +114,60 @@ export async function patchUserPassword(
         "PASSWORD-RESET-ERROR",
       );
     }
+  } catch (e) {
+    next(e);
+  }
+}
+
+/**
+ * Endpoint para enviar um email para usuário que esqueceu sua senha.
+ */
+export async function forgotPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const document = userDocument.safeParse(req.params.document);
+
+  if (!document.success) {
+    return next(new RubError(400, "Document is not valid"));
+  }
+
+  const auth = await UserModel.getAuth({ document: document.data });
+
+  if (!auth) {
+    return next(
+      new RubError(400, "It was not possible to request password change"),
+    );
+  }
+
+  sendResetPasswordMail(auth.id, auth.user_info!.email);
+
+  return res
+    .status(200)
+    .send("An email was sent with the steps to reset your password.");
+}
+
+/**
+ * Endpoint para atribuir uma nova senha para um determinado usuário.
+ * Será utilizado um JWT enviado para o email do usuário para atestar
+ * que o mesmo é quem está atualizando sua própria senha.
+ */
+export async function newPassword(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  try {
+    const jwt = parseJWT<{ id: string; email: string }>(req.params.jwt);
+    const { password }: UserNewPassword = res.locals.parsedBody;
+
+    const newPasswordHash = await hash(password, 10);
+    await UserModel.updateUserPassword({ id: jwt.id }, newPasswordHash);
+
+    return res.status(201).json({
+      message: "Password was changed successfully!",
+    });
   } catch (e) {
     next(e);
   }

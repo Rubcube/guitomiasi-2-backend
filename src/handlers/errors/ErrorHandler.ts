@@ -6,6 +6,7 @@ import { RubError } from "./RubError";
  * recebe como parâmetro uma instância da classe `Error`.
  */
 export function handleError(err: Error, res: Response) {
+  console.error(err.stack ? err.stack : `${err.name}: ${err.message}`);
   if (err instanceof RubError) {
     const { message, httpCode: statusCode, ...errorInfo } = err;
     res.status(statusCode).json({

@@ -37,6 +37,15 @@ export const UserPatchSchema = z
   .partial()
   .superRefine(validateNotEmpty);
 
+/**
+ * Schema para atualizar a senha de usuário de um usuário
+ * que esqueceu a sua senha anterior.
+ */
+export const UserNewPasswordSchema = z.object({
+  password: userPassword,
+});
+
 export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;
 export type UserLogin = z.infer<typeof UserLoginSchema>;
 export type UserPatch = z.infer<typeof UserPatchSchema>;
+export type UserNewPassword = z.infer<typeof UserNewPasswordSchema>;

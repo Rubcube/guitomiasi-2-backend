@@ -1,5 +1,6 @@
 import * as UserController from "controllers/UserController";
 import { PatchSchema, UserPasswordPatchSchema } from "dtos/PatchDTO";
+import { UserNewPasswordSchema } from "dtos/UsersDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
 import { validateSchema } from "middlewares/validateSchema";
@@ -21,7 +22,13 @@ ValidatedRoute.patch(
 );
 
 const UserRoute = Router();
-UserRoute.post("/verify/:jwt", UserController.verifyUserEmail);
+UserRoute.get("/verify/:jwt", UserController.verifyUserEmail);
+UserRoute.get("/forgot/:document", UserController.forgotPassword);
+UserRoute.post(
+  "/password/new/:jwt",
+  validateSchema(UserNewPasswordSchema),
+  UserController.newPassword,
+);
 UserRoute.use("/", authentication, ValidatedRoute);
 
 export default UserRoute;
