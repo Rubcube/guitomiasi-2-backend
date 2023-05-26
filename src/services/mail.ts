@@ -1,3 +1,4 @@
+import { MailTrapConfig } from "config/mailtrap";
 import { createTransport } from "nodemailer";
 import { signJWT } from "./jwt";
 
@@ -7,11 +8,11 @@ import { signJWT } from "./jwt";
  * Utiliza um ambiente de teste, nenhum email é de fato enviado.
  */
 export const mailerTransport = createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 2525,
+  host: MailTrapConfig.host,
+  port: MailTrapConfig.port,
   auth: {
-    user: "942a2e305aa22f",
-    pass: "a9635a98d35a66",
+    user: MailTrapConfig.user,
+    pass: MailTrapConfig.pass,
   },
 });
 
@@ -43,6 +44,16 @@ export function sendVerificationMail(emailTo: string) {
   sendMail(
     emailTo,
     "Please verify your email",
-    `0.0.0.0:3344/verify/${emailedJWT}`,
+    `0.0.0.0:3344/user/verify/${emailedJWT}`,
+  );
+}
+
+export function sendResetPasswordMail(id: string, emailTo: string) {
+  const emailedJWT = signJWT({ id }, 3600);
+
+  sendMail(
+    emailTo,
+    "Password change requested",
+    `0.0.0.0:3344/user/password/new/${emailedJWT}`,
   );
 }

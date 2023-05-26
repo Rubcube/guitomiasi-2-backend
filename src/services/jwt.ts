@@ -1,3 +1,4 @@
+import { JWTConfig } from "config/jwt";
 import { INTERNAL_ERROR, RubError } from "handlers/errors/RubError";
 import {
   JsonWebTokenError,
@@ -13,11 +14,9 @@ import {
  * @returns *JSON Web Token*
  */
 export function signJWT(obj: object, seconds?: number) {
-  seconds = seconds
-    ? seconds
-    : parseInt(process.env.JWT_EXPIRATION_TIME || "3600");
+  seconds = seconds ? seconds : JWTConfig.DEFAULT_EXPIRATION_TIME;
 
-  return sign(obj, process.env.SECRET_JWT as string, {
+  return sign(obj, JWTConfig.SECRET_KEY, {
     expiresIn: seconds,
   });
 }
@@ -38,7 +37,7 @@ export function signJWT(obj: object, seconds?: number) {
  */
 export function parseJWT<T>(jwt: string) {
   try {
-    const parsed = verify(jwt, process.env.SECRET_JWT as string);
+    const parsed = verify(jwt, JWTConfig.SECRET_KEY);
     if (typeof parsed === "string") {
       throw new JsonWebTokenError("JWT could not be parsed");
     } else {

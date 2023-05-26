@@ -21,7 +21,8 @@
       "services/*": ["services/*"],
       "zodTypes/*": ["zodTypes/*"],
       "handlers/*": ["handlers/*"],
-      "utils/*": ["utils/*"]
+      "utils/*": ["utils/*"],
+      "configs/*": ["configs/*"]
     }
   },
   "include": ["src/**/*.ts"],
