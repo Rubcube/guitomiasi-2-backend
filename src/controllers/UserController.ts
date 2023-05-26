@@ -1,3 +1,4 @@
+import { UserStatus } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { Patch, UserPasswordPatch } from "dtos/PatchDTO";
 import { UserNewPassword } from "dtos/UsersDTO";
@@ -138,6 +139,19 @@ export async function forgotPassword(
   if (!auth) {
     return next(
       new RubError(400, "It was not possible to request password change"),
+    );
+  }
+
+  if (
+    auth.user_status === UserStatus.NOT_VERIFIED ||
+    auth.user_status === UserStatus.INACTIVE
+  ) {
+    return next(
+      new RubError(
+        403,
+        "User needs to be active and verified before attempting password change",
+        "PASSWORD_RESET-USER_STATUS_INVALID",
+      ),
     );
   }
 
