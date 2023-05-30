@@ -1,5 +1,6 @@
 import pandas as pd
 import requests
+import sys
 
 # Read user, address and account CSVs
 user_mock = pd.read_csv("./userMock.csv")
@@ -12,13 +13,18 @@ account_mock = account_mock.astype({'transaction_password': 'string'})
 # Endpoint
 url = "http://0.0.0.0:3344/onboarding"
 
-for i in range(1):
-    user = user_mock.loc[i].to_dict()
-    address = address_mock.loc[i].to_dict()
-    account = account_mock.loc[i].to_dict()
+def request_for_user_id(id):
+    user = user_mock.loc[id].to_dict()
+    address = address_mock.loc[id].to_dict()
+    account = account_mock.loc[id].to_dict()
     body = {'user': user, 'address': address, 'account': account}
     response = requests.post(url, json=body)
-    if response.status_code != 201:
-        user_mock = user_mock.drop(i)
-        address_mock = address_mock.drop(i)
-        account_mock = account_mock.drop(i)
+    return response.status_code
+    
+if __name__ == "__main__":
+    for i, arg in enumerate(sys.argv[1:], 0):
+        status = request_for_user_id(int(arg))
+        if (status == 201):
+            print(f"Sucesso para o id: {arg}")
+        else:
+            print(f"Falha para o id: {arg}")
