@@ -1,7 +1,7 @@
 import { UserStatus } from "@prisma/client";
 import { compare, hash } from "bcrypt";
-import { Patch, UserPasswordPatch } from "dtos/PatchDTO";
-import { UserNewPassword } from "dtos/UsersDTO";
+import { Patch } from "dtos";
+import { UserPasswordPatch } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
@@ -85,22 +85,28 @@ export async function patchUserPassword(
   next: NextFunction,
 ) {
   const userId: string = res.locals.parsedJWTToken.id;
+  const userEmail: string = res.locals.parsedJWTToken.email;
   const patchData: UserPasswordPatch = res.locals.parsedBody;
-
-  const userAuth = await UserModel.getAuth({ id: userId });
-  const passwordIsCorrect = await compare(
-    patchData.old_password,
-    userAuth!.bcrypt_user_password,
-  );
+  const hashed: boolean | undefined = res.locals.hashed;
 
   try {
-    if (passwordIsCorrect) {
+    let allow: boolean;
+    const userAuth = await UserModel.getAuth({ id: userId });
+    const hashInDatabase = userAuth!.bcrypt_user_password;
+    if (hashed) {
+      const oldPasswordHash = res.locals.parsedJWTToken.old_password;
+      allow = oldPasswordHash == hashInDatabase;
+    } else {
+      allow = await compare(patchData.old_password, hashInDatabase);
+    }
+
+    if (allow) {
       const newHash = await hash(patchData.new_password, 10);
       await UserModel.updateUserPassword({ id: userId }, newHash);
 
       mailerTransport.sendMail({
         from: "noreply@rubbank.com",
-        to: userAuth?.user_info?.email,
+        to: userEmail,
         subject: "Password changed!",
         text: "Your password was changed.",
       });
@@ -155,7 +161,11 @@ export async function forgotPassword(
     );
   }
 
-  sendResetPasswordMail(auth.id, auth.user_info!.email);
+  sendResetPasswordMail(
+    auth.id,
+    auth.user_info!.email,
+    auth.bcrypt_user_password,
+  );
 
   return res
     .status(200)
@@ -167,21 +177,22 @@ export async function forgotPassword(
  * Será utilizado um JWT enviado para o email do usuário para atestar
  * que o mesmo é quem está atualizando sua própria senha.
  */
-export async function newPassword(
+export async function appendNewPassword(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
   try {
-    const jwt = parseJWT<{ id: string; email: string }>(req.params.jwt);
-    const { password }: UserNewPassword = res.locals.parsedBody;
+    const jwt = parseJWT<{ id: string; email: string; old_password: string }>(
+      req.params.jwt,
+    );
+    const old_password = jwt.old_password;
 
-    const newPasswordHash = await hash(password, 10);
-    await UserModel.updateUserPassword({ id: jwt.id }, newPasswordHash);
+    res.locals.parsedJWTToken = jwt;
+    res.locals.parsedBody.old_password = old_password;
+    res.locals.hashed = true;
 
-    return res.status(201).json({
-      message: "Password was changed successfully!",
-    });
+    next();
   } catch (e) {
     next(e);
   }

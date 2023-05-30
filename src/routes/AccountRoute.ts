@@ -1,5 +1,5 @@
 import * as AccountController from "controllers/AccountController";
-import { AccountPatchSchema } from "dtos/AccountDTO";
+import { AccountPasswordPatchSchema } from "dtos/AccountDTO";
 import { TransferInSchema, TransferOutSchema } from "dtos/TransferDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
@@ -27,7 +27,7 @@ ValidatedRoute.post(
 );
 ValidatedRoute.patch(
   "/password/reset",
-  validateSchema(AccountPatchSchema),
+  validateSchema(AccountPasswordPatchSchema),
   AccountController.patchPassword,
 );
 

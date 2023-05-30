@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 export function validateCPF(docString: string) {
   const digits = docString.split("").map(value => parseInt(value));
   // If all digits are the same, invalidate
@@ -66,5 +68,26 @@ export function validateNotEmpty(obj: object, ctx: Zod.RefinementCtx) {
       expected: "object",
       received: "undefined",
     });
+  }
+}
+
+/**
+ * Valida que objeto contém old_password e new_password diferentes entre si.
+ */
+export function validatePasswordNotEqual(
+  obj: { old_password: string; new_password: string },
+  ctx: Zod.RefinementCtx,
+) {
+  const { old_password, new_password } = obj;
+  const isEqual = old_password == new_password;
+
+  if (isEqual) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["old_password", "new_password"],
+    });
+    return z.NEVER;
+  } else {
+    return obj;
   }
 }

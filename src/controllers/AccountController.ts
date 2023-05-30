@@ -5,7 +5,7 @@ import {
   TransferStatus,
 } from "@prisma/client";
 import { compare, hash } from "bcrypt";
-import { AccountPatch } from "dtos/AccountDTO";
+import { AccountPasswordPatch } from "dtos/AccountDTO";
 import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
@@ -239,7 +239,8 @@ export async function patchPassword(
   const accountId: string = res.locals.account.id;
   const accountTransactionalPasswordHash: string =
     res.locals.account.bcrypt_transaction_password;
-  const { old_password, new_password }: AccountPatch = res.locals.parsedBody;
+  const { old_password, new_password }: AccountPasswordPatch =
+    res.locals.parsedBody;
 
   const passwordIsCorrect = await compare(
     old_password,

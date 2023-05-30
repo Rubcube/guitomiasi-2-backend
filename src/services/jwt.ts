@@ -35,18 +35,21 @@ export function signJWT(obj: object, seconds?: number) {
  * @throws Caso o JWT esteja expirado
  * @returns *Payload* do JWT e objeto contido dentro do mesmo
  */
-export function parseJWT<T>(jwt: string) {
+export function parseJWT<T extends object>(jwt: string) {
   try {
     const parsed = verify(jwt, JWTConfig.SECRET_KEY);
     if (typeof parsed === "string") {
       throw new JsonWebTokenError("JWT could not be parsed");
     } else {
-      try {
-        const token = parsed as T & typeof parsed;
-        return token;
-      } catch (error) {
+      const token = parsed as T & typeof parsed;
+      const hasInvalidProperty = Object.entries(token).reduce(
+        (acc, val) => acc || val[1] == null, // val[1] é o valor associado à key (val[0])
+        false, // Inicia como false, se qualquer valor for == null, termina como true
+      );
+      if (hasInvalidProperty) {
         throw new JsonWebTokenError("JWT does not have the desired properties");
       }
+      return token;
     }
   } catch (e) {
     if (e instanceof TokenExpiredError) {

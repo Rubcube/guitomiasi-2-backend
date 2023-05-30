@@ -1,5 +1,5 @@
 import { Account, Address, Prisma, UserInfo, UserStatus } from "@prisma/client";
-import { AddressOnboarding, AddressPatch } from "dtos/AddressDTO";
+import { AddressOnboarding } from "dtos/AddressDTO";
 import { UserOnboarding, UserPatch } from "dtos/UsersDTO";
 import { RubError } from "handlers/errors/RubError";
 import { prisma } from "prisma";
@@ -164,7 +164,7 @@ export async function patchUserInfo(id: string, newUserInfo?: UserPatch) {
  */
 export async function patchUserAddress(
   owner_id: string,
-  newAddressInfo?: AddressPatch,
+  newAddressInfo?: AddressOnboarding,
 ) {
   return await prisma.address.update({
     where: { owner_id },
