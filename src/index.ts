@@ -9,6 +9,7 @@ import AccountRoute from "routes/AccountRoute";
 import LoginRoute from "routes/LoginRoute";
 import OnboardingRoute from "routes/OnboardingRoute";
 import UserRoute from "routes/UserRoute";
+import cors from 'cors';
 
 // const key = fs.readFileSync("kc/key.pem");
 // const cert = fs.readFileSync("kc/cert.pem");
@@ -33,6 +34,8 @@ app.listen(process.env.PORT || 3344);
 app.use(async (error: Error, req: Request, res: Response, _: NextFunction) => {
   handleError(error, res);
 });
+
+app.use(cors({ origin: true, credentials: true }));
 
 cron.schedule(
   "0 1 * * * ",
