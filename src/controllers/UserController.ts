@@ -117,7 +117,7 @@ export async function patchUserPassword(
     } else {
       throw new RubError(
         400,
-        "It was not possible to change password",
+        "Não foi possível resetar senha",
         "PASSWORD-RESET-ERROR",
       );
     }
@@ -137,14 +137,16 @@ export async function forgotPassword(
   const document = userDocument.safeParse(req.params.document);
 
   if (!document.success) {
-    return next(new RubError(400, "Document is not valid"));
+    return next(
+      new RubError(400, "Documento inserido (CPF, CNPJ) não é válido"),
+    );
   }
 
   const auth = await UserModel.getAuth({ document: document.data });
 
   if (!auth) {
     return next(
-      new RubError(400, "It was not possible to request password change"),
+      new RubError(400, "Não foi possível requisitar alteração de senha"),
     );
   }
 
@@ -155,7 +157,7 @@ export async function forgotPassword(
     return next(
       new RubError(
         403,
-        "User needs to be active and verified before attempting password change",
+        "Conta de usuário precisa estar ativa para realizar alteração de senha",
         "PASSWORD_RESET-USER_STATUS_INVALID",
       ),
     );

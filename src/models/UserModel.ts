@@ -49,7 +49,7 @@ export async function verifyUserEmail(email: string) {
   if (!userId) {
     throw new RubError(
       404,
-      "It was not possible to verify user email, there is no user associated with this email",
+      "Impossível verificar email: nenhum usuário associado a esse endereço de email",
       "EMAIL-NOT-FOUND",
     );
   }

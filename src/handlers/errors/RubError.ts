@@ -45,6 +45,6 @@ export class RPrismaError extends RubError {
 
 export const INTERNAL_ERROR = new RubError(
   500,
-  "An internal error occurred",
+  "Um erro interno ocorreu",
   "INTERNAL_ERROR",
 );

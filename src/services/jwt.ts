@@ -55,11 +55,11 @@ export function parseJWT<T extends object>(jwt: string) {
     if (e instanceof TokenExpiredError) {
       throw new RubError(
         403,
-        "JWT could not be validated, as it is expired",
+        "Falha na autenticação: token expirado",
         "JWT-EXPIRED",
       );
     } else if (e instanceof JsonWebTokenError) {
-      throw new RubError(403, "JWT parsing failed", "JWT-ERROR");
+      throw new RubError(403, "Falha na autenticação", "JWT-ERROR");
     } else {
       throw INTERNAL_ERROR;
     }

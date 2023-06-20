@@ -24,7 +24,7 @@ export async function loginUser(
     return next(
       new RubError(
         404,
-        "User is not present in the database",
+        "Usuário não presente na base de dados",
         "LOGIN-USER-NOT-FOUND",
       ),
     );
@@ -34,7 +34,7 @@ export async function loginUser(
     return next(
       new RubError(
         403,
-        "User is not currently active",
+        "Essa conta de usuário não está ativa atualmente",
         "LOGIN-USER-NOT-ACTIVE",
       ),
     );
@@ -55,7 +55,7 @@ export async function loginUser(
     });
   } else {
     return next(
-      new RubError(403, "Authentication failed", "LOGIN-AUTHENTICATION-FAILED"),
+      new RubError(403, "Falha na autenticação", "LOGIN-AUTHENTICATION-FAILED"),
     );
   }
 }

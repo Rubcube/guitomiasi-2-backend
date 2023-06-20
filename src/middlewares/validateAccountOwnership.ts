@@ -18,14 +18,16 @@ export async function validateAccountOwnership(
   const account = await AccountModel.getAccount(accountID, true);
 
   if (account === null) {
-    return next(new RubError(404, "Account don't exist", "ACCOUNT-NOT-FOUND"));
+    return next(
+      new RubError(404, "Conta de usuário não existe", "ACCOUNT-NOT-FOUND"),
+    );
   }
 
   if (account.user.id !== userID) {
     return next(
       new RubError(
         403,
-        "User does not have account ownership",
+        "Usuário não autorizado para fazer essa requisição",
         "ACCOUNT-NO-OWNERSHIP",
       ),
     );
@@ -33,7 +35,11 @@ export async function validateAccountOwnership(
 
   if (account.account_status !== "ACTIVE") {
     return next(
-      new RubError(403, "This account is not active", "ACCOUNT-NOT-ACTIVE"),
+      new RubError(
+        403,
+        "Conta de usuário não está ativa",
+        "ACCOUNT-NOT-ACTIVE",
+      ),
     );
   }
 

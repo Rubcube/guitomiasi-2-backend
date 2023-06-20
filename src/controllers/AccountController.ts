@@ -68,7 +68,7 @@ export async function getTransfer(
 
   if (!transfer) {
     return next(
-      new RubError(404, "Transfer don't exist", "TRANSFER-NOT-FOUND"),
+      new RubError(404, "Essa transferência não existe", "TRANSFER-NOT-FOUND"),
     );
   }
 
@@ -82,11 +82,7 @@ export async function getTransfer(
   const isReceiver = receiverAccount!.user.id === userId;
   if (!isSender && !isReceiver) {
     return next(
-      new RubError(
-        403,
-        "User is neither sender nor receiver",
-        "TRANSFER-FORBIDDEN-ACCESS",
-      ),
+      new RubError(403, "Usuário não autorizado", "TRANSFER-FORBIDDEN-ACCESS"),
     );
   }
 
@@ -153,7 +149,7 @@ export async function postTransfer(
       return next(
         new RubError(
           403,
-          "Too many incorrect attempts, account is now blocked",
+          "Devido ao excesso de tentativas incorretas de transferência, essa conta agora está bloqueada",
           "TOO_MANY_ATTEMPTS",
         ),
       );
@@ -162,7 +158,7 @@ export async function postTransfer(
     return next(
       new RubError(
         403,
-        "Inserted transactional password is not correct",
+        "Senha transacional incorreta",
         "ACCOUNT_INCORRECT_TRANSACTIONAL_PASSWORD",
       ),
     );
@@ -174,7 +170,7 @@ export async function postTransfer(
     return next(
       new RubError(
         403,
-        "An account can't make a transfer to itself",
+        "Não é possível realizar uma transferência para a conta remetente",
         "LOOP_TRANSFER",
       ),
     );
@@ -208,7 +204,7 @@ export async function postTransfer(
     } else {
       throw new RubError(
         400,
-        "Can't schedule a transfer in a past date",
+        "Não é possível agendar uma transferência para um tempo passado",
         "TRANSFER-SCHEDULE-DATE-INVALID",
       );
     }
@@ -256,10 +252,7 @@ export async function patchPassword(
     });
   } else {
     return next(
-      new RubError(
-        400,
-        "It was not possible to change the transactional password",
-      ),
+      new RubError(400, "Não foi possível alterar senha transacional"),
     );
   }
 }

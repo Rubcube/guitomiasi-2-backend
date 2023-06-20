@@ -187,8 +187,8 @@ export async function makeTransfer(
   if (account_to === null) {
     throw new RubError(
       404,
+      "Não foi possível realizar transferência: conta de destino não existe",
       "CREDITED-ACCOUNT-NOT-FOUND",
-      "Can't execute a transfer to an account that don't exist",
     );
   }
 
@@ -205,7 +205,7 @@ export async function makeTransfer(
       if (newBalance.isNegative()) {
         throw new RubError(
           500,
-          "Not enough money to make the transfer",
+          "Saldo insuficiente para realizar essa transferência",
           "TRANSFER-NOT-ENOUGH-BALANCE",
         );
       }
@@ -258,8 +258,8 @@ export async function scheduleTransfer(
   if (account_to === null) {
     throw new RubError(
       404,
+      "Não foi possível realizar transferência: conta de destino não existe",
       "CREDITED-ACCOUNT-NOT-FOUND",
-      "Can't execute a transfer to an account that don't exist",
     );
   }
 

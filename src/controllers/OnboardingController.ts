@@ -45,7 +45,9 @@ export async function create(req: Request, res: Response, next: NextFunction) {
     if (e instanceof PrismaClientKnownRequestError) {
       return next(new RPrismaError(e));
     } else if (e instanceof JsonWebTokenError) {
-      return next(new RubError(500, "Failed to sign JWT Token"));
+      return next(
+        new RubError(500, "Falha na autenticação", "JWT-SIGNING-FAILED"),
+      );
     }
 
     return next(INTERNAL_ERROR);

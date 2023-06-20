@@ -17,7 +17,7 @@ export async function authentication(
   const fetchedToken = req.headers["authorization"];
 
   if (!fetchedToken) {
-    return next(new RubError(401, "No JWT token was found", "AUTH-NO-TOKEN"));
+    return next(new RubError(401, "Falha na autenticação", "AUTH-NO-TOKEN"));
   }
 
   try {
@@ -32,7 +32,7 @@ export async function authentication(
     } else {
       throw new RubError(
         403,
-        "User is not currently active",
+        "Conta de Usuário não está ativa atualmente",
         "AUTH-USER-NOT-ACTIVE",
       );
     }
