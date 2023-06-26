@@ -171,3 +171,42 @@ export async function patchUserAddress(
     data: { ...newAddressInfo },
   });
 }
+
+/**
+ * Verifica se um determinado email está disponível para cadastro
+ * @param email Email a ser verificado
+ * @returns `true` se o email estiver disponível, `false` caso contrário
+ */
+export async function isEmailAvailable(email: string) {
+  const user = await prisma.userInfo.findUnique({
+    where: { email },
+  });
+
+  return user === null;
+}
+
+/**
+ * Verifica se um determinado documento está disponível para cadastro
+ * @param document Documento a ser verificado
+ * @returns `true` se o documento estiver disponível, `false` caso contrário
+ */
+export async function isDocumentAvailable(document: string) {
+  const user = await prisma.userInfo.findUnique({
+    where: { document },
+  });
+
+  return user === null;
+}
+
+/**
+ * Verifica se um determinado telefone está disponível para cadastro
+ * @param phone Telefone a ser verificado
+ * @returns `true` se o telefone estiver disponível, `false` caso contrário
+ */
+export async function isPhoneAvailable(phone: string) {
+  const user = await prisma.userInfo.findUnique({
+    where: { phone },
+  });
+
+  return user === null;
+}

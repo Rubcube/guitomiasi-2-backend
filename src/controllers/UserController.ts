@@ -1,8 +1,10 @@
 import { UserStatus } from "@prisma/client";
 import { compare, hash } from "bcrypt";
 import { Patch } from "dtos";
+import { OnboardingUserStepValidation } from "dtos/OnboardingDTO";
 import { UserPasswordPatch } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
+import { createFieldError, FieldError } from "handlers/errors/FieldError";
 import { RubError } from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
 import { parseJWT } from "services/jwt";
@@ -198,4 +200,43 @@ export async function appendNewPassword(
   } catch (e) {
     next(e);
   }
+}
+
+/**
+ * Endpoint para validar os dados de um usuário que está se cadastrando.
+s */
+export async function validateUserOnboardingData(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const userData: OnboardingUserStepValidation = res.locals.parsedBody;
+
+  const emailAvailable = await UserModel.isEmailAvailable(userData.email);
+  const documentAvailable = await UserModel.isDocumentAvailable(
+    userData.document,
+  );
+  const phoneAvailable = await UserModel.isPhoneAvailable(userData.phone);
+
+  if (!emailAvailable || !documentAvailable || !phoneAvailable) {
+    const schemaErrors: FieldError[] = [];
+
+    if (!emailAvailable) {
+      schemaErrors.push(createFieldError(["email"], "DUPLICATE"));
+    }
+
+    if (!documentAvailable) {
+      schemaErrors.push(createFieldError(["document"], "DUPLICATE"));
+    }
+
+    if (!phoneAvailable) {
+      schemaErrors.push(createFieldError(["phone"], "DUPLICATE"));
+    }
+
+    return res.status(400).json({ schemaErrors });
+  }
+
+  return res.status(200).json({
+    message: "Dados validados com sucesso!",
+  });
 }

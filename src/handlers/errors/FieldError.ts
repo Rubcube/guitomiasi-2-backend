@@ -5,7 +5,8 @@ type PossibleFieldIssues =
   | "FORMAT"
   | "LENGTH"
   | "VALUE"
-  | "UNKNOWN";
+  | "UNKNOWN"
+  | "DUPLICATE";
 
 export type FieldError = {
   fieldName: string[];
@@ -53,5 +54,15 @@ export function fromZodIssue(zIssue: ZodIssue): FieldError {
   return {
     fieldName: zIssue.path,
     issue: "UNKNOWN",
+  } as FieldError;
+}
+
+export function createFieldError(
+  fieldName: string[],
+  issue: PossibleFieldIssues,
+): FieldError {
+  return {
+    fieldName,
+    issue,
   } as FieldError;
 }
