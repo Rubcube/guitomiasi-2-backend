@@ -233,7 +233,7 @@ export async function validateUserOnboardingData(
       schemaErrors.push(createFieldError(["phone"], "DUPLICATE"));
     }
 
-    return res.status(400).json({ schemaErrors });
+    return res.status(422).json({ schemaErrors });
   }
 
   return res.status(200).json({
