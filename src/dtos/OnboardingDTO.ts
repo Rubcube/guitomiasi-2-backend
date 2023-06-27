@@ -5,18 +5,18 @@ import { AccountOnboardingSchema } from "./AccountDTO";
 import { AddressOnboardingSchema } from "./AddressDTO";
 import { UserOnboardingSchema } from "./UsersDTO";
 
+export const OnboardingSchema = z.object({
+  user: UserOnboardingSchema,
+  address: AddressOnboardingSchema,
+  account: AccountOnboardingSchema,
+});
+
 export const OnboardingUserStepValidationSchema = z.object({
   name: userName,
   email: userEmail,
   phone: userPhone,
   document: userDocument,
   birthday: parsedDate,
-});
-
-export const OnboardingSchema = z.object({
-  user: UserOnboardingSchema,
-  address: AddressOnboardingSchema,
-  account: AccountOnboardingSchema,
 });
 
 export type Onboarding = z.infer<typeof OnboardingSchema>;
