@@ -87,6 +87,7 @@ export async function getTransfers({
       value: transfer.value,
       direction: transfer.account_id_from === accountID ? "OUT" : "IN",
       time: transfer.updated_at,
+      status: TransferStatus.DONE,
     })),
   };
 }
@@ -124,6 +125,8 @@ export async function getScheduledTransfers({
       id: transfer.id,
       value: transfer.value,
       time: transfer.time_to_transfer,
+      direction: "OUT",
+      status: TransferStatus.SCHEDULED,
     })),
   };
 }
