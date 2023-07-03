@@ -28,6 +28,21 @@ export async function getAccount(accountID: string, includeUser = true) {
   });
 }
 
+/**
+ * Recupera uma conta do banco de dados a partir de seu número.
+ * @param accountNumber Número da conta
+ * @param includeUser Se verdadeiro, retorna também o usuário associado à conta
+ */
+export async function getAccountByNumber(
+  accountNumber: number,
+  includeUser = true,
+) {
+  return await prisma.account.findUnique({
+    where: { account_number: accountNumber },
+    include: { user: includeUser },
+  });
+}
+
 type getTransfersParams = {
   accountID: string;
   direction: "IN" | "OUT" | "BOTH";

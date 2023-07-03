@@ -1,5 +1,8 @@
 import * as AccountController from "controllers/AccountController";
-import { AccountPasswordPatchSchema } from "dtos/AccountDTO";
+import {
+  AccountPasswordPatchSchema,
+  VerifyAccountExistenceSchema,
+} from "dtos/AccountDTO";
 import { TransferInSchema, TransferOutSchema } from "dtos/TransferDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
@@ -32,6 +35,12 @@ ValidatedRoute.patch(
 );
 
 const AccountRoute = Router();
+AccountRoute.get(
+  "/:accountNumber",
+  authentication,
+  validateSchema(VerifyAccountExistenceSchema, "PARAMS"),
+  AccountController.getAssociatedUser,
+);
 AccountRoute.use(
   "/:accountId",
   authentication,

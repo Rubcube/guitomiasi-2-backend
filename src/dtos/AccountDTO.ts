@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { transactionPassword } from "zodTypes/account";
+import { accountNumber, transactionPassword } from "zodTypes/account";
 import { validatePasswordNotEqual } from "zodTypes/customValidators";
 
 export const AccountOnboardingSchema = z.object({
@@ -13,5 +13,12 @@ export const AccountPasswordPatchSchema = z
   })
   .superRefine(validatePasswordNotEqual);
 
+export const VerifyAccountExistenceSchema = z.object({
+  accountNumber: z.coerce.number().refine(accountNumber.parse),
+});
+
 export type AccountOnboarding = z.infer<typeof AccountOnboardingSchema>;
 export type AccountPasswordPatch = z.infer<typeof AccountPasswordPatchSchema>;
+export type VerifyAccountExistence = z.infer<
+  typeof VerifyAccountExistenceSchema
+>;

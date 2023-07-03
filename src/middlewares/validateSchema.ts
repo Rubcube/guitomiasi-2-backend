@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { RSchemaError } from "handlers/errors/RubError";
 import { SafeParseReturnType, ZodTypeAny } from "zod";
 
-type schemaOrigin = "BODY" | "QUERY";
+type schemaOrigin = "BODY" | "QUERY" | "PARAMS";
 
 /**
  * Gerador de *middleware* de validação de schema. Verifica se o *body* ou *query*
@@ -16,21 +16,34 @@ export function validateSchema(
 ) {
   return function (req: Request, res: Response, next: NextFunction) {
     let reqParse: SafeParseReturnType<unknown, unknown>;
-    if (origin === "BODY") {
-      reqParse = schema.safeParse(req.body);
-    } else {
-      reqParse = schema.safeParse(req.query);
+    switch (origin) {
+      case "BODY":
+        reqParse = schema.safeParse(req.body);
+        break;
+      case "QUERY":
+        reqParse = schema.safeParse(req.query);
+        break;
+      case "PARAMS":
+        reqParse = schema.safeParse(req.params);
+        break;
     }
 
     if (!reqParse.success) {
       return next(new RSchemaError(reqParse.error));
     }
 
-    if (origin === "BODY") {
-      res.locals.parsedBody = reqParse.data;
-    } else {
-      res.locals.parsedQuery = reqParse.data;
+    switch (origin) {
+      case "BODY":
+        res.locals.parsedBody = reqParse.data;
+        break;
+      case "QUERY":
+        res.locals.parsedQuery = reqParse.data;
+        break;
+      case "PARAMS":
+        res.locals.parsedParams = reqParse.data;
+        break;
     }
+
     next();
   };
 }

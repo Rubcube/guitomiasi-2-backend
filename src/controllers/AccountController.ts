@@ -5,12 +5,13 @@ import {
   TransferStatus,
 } from "@prisma/client";
 import { compare, hash } from "bcrypt";
-import { AccountPasswordPatch } from "dtos/AccountDTO";
+import { AccountPasswordPatch, VerifyAccountExistence } from "dtos/AccountDTO";
 import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
 import { DateTime, Settings } from "luxon";
 import * as AccountModel from "models/AccountModel";
+import * as UserModel from "models/UserModel";
 import moment from "moment";
 
 /**
@@ -257,4 +258,32 @@ export async function patchPassword(
       new RubError(400, "Não foi possível alterar senha transacional"),
     );
   }
+}
+
+export async function getAssociatedUser(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const { accountNumber }: VerifyAccountExistence = res.locals.parsedParams;
+
+  const account = await AccountModel.getAccountByNumber(accountNumber, false);
+
+  if (!account) {
+    return next(new RubError(404, "Conta não encontrada", "ACCOUNT-NOT-FOUND"));
+  }
+
+  if (account.account_status !== AccountStatus.ACTIVE) {
+    return next(
+      new RubError(403, "Conta destino não está ativa", "ACCOUNT-NOT-ACTIVE"),
+    );
+  }
+
+  const { user } = await UserModel.getUserInfo(account.owner_id);
+
+  return res.status(200).json({
+    name: user.name,
+    agency: account.agency,
+    account_number: account.account_number,
+  });
 }
