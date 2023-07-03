@@ -1,8 +1,50 @@
 _type: export
 __export_format: 4
-__export_date: 2023-06-27T12:16:31.328Z
-__export_source: insomnia.desktop.app:v2023.2.2
+__export_date: 2023-07-03T20:23:41.294Z
+__export_source: insomnia.desktop.app:v2023.3.0
 resources:
+  - _id: req_0ad42ec138204ba4af7a7190ffb532a4
+    parentId: fld_a69d1e1dad6545259c39d6b55fecd52c
+    modified: 1688409005063
+    created: 1688408489653
+    url: "{{ _.baseUrl }}/account/1"
+    name: New Request
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1688408489653
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_a69d1e1dad6545259c39d6b55fecd52c
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1688408488457
+    created: 1688408488457
+    name: Número da Conta -> Informação de Usuário
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1688408488457
+    _type: request_group
+  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
+    parentId: null
+    modified: 1684332678588
+    created: 1684332678588
+    name: RubCamp 2
+    description: ""
+    scope: design
+    _type: workspace
   - _id: req_2c322d35591c4903bcf35794c61d839c
     parentId: fld_9f78aaa9104a4dff8536796ec4a2ecc9
     modified: 1687786900745
@@ -47,14 +89,6 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1687442262102
     _type: request_group
-  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
-    parentId: null
-    modified: 1684332678588
-    created: 1684332678588
-    name: RubCamp 2
-    description: ""
-    scope: design
-    _type: workspace
   - _id: req_68d44b17969b4b339a4f9917a17a628d
     parentId: fld_9f78aaa9104a4dff8536796ec4a2ecc9
     modified: 1687786928095
@@ -85,7 +119,7 @@ resources:
     _type: request
   - _id: req_c0bd1be34ffc4f7da184b0db7346b15e
     parentId: fld_9f78aaa9104a4dff8536796ec4a2ecc9
-    modified: 1687784468657
+    modified: 1688407091537
     created: 1687442263171
     url: "{{ _.baseUrl }}/verify/user"
     name: Dados de usuário
@@ -95,10 +129,10 @@ resources:
       mimeType: application/json
       text: |-
         {
-        	"name": "Nome válido",
-        	"email": "Email@com2.com",
-        	"phone": "18001231111",
-        	"document": "84116624039",
+        	"name": "Guilherme Cesar Tomiasi",
+        	"email": "gtomiasi@gmail.com",
+        	"phone": "18991230790",
+        	"document": "46547941825",
         	"birthday": "2023-01-01"
         }
     parameters: []
@@ -117,7 +151,7 @@ resources:
     _type: request
   - _id: req_ecf6e7d92d494955ad9deefa4b5e9ea3
     parentId: fld_b22743306b44410e8feb55a8580010a7
-    modified: 1685361916235
+    modified: 1687963187285
     created: 1684865196397
     url: "{{ _.userEndpoint }}/password/reset"
     name: Atualizando senha de usuário (PATCH)
@@ -307,7 +341,7 @@ resources:
     _type: request
   - _id: req_b26aafa8a47e4220bcac4fac42581cc0
     parentId: fld_b22743306b44410e8feb55a8580010a7
-    modified: 1685018212858
+    modified: 1688043827718
     created: 1685018206274
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/password/reset"
     name: "[INCORRETA] Atualizando senha de conta (PATCH)"
@@ -513,7 +547,7 @@ resources:
     _type: request
   - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1687789149536
+    modified: 1688399486783
     created: 1684181567401
     url: "{{ _.loginEndpoint }}"
     name: Login
@@ -671,14 +705,18 @@ resources:
     _type: request
   - _id: req_43a86d5b38324333ac047d07adfb1db0
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684860365490
+    modified: 1688045098923
     created: 1684181770108
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Sem filtro
     description: ""
     method: GET
     body: {}
-    parameters: []
+    parameters:
+      - id: pair_deb4461ea3384a88ba0845ac7daef06d
+        name: page
+        value: "0"
+        description: ""
     headers: []
     authentication:
       type: bearer
@@ -703,6 +741,30 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1684548470649.125
     _type: request_group
+  - _id: req_023db9170e9c4299b803756eae5a9a80
+    parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
+    modified: 1688386762632
+    created: 1688386742991
+    url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
+    name: Alterando ordem
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1684757641822
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
   - _id: req_db4fdf75237c4986a212c9e2e8a3afcc
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
     modified: 1684775917126
@@ -825,18 +887,14 @@ resources:
     _type: request
   - _id: req_8952d97fa57e42509db06b46682b3e20
     parentId: fld_e6c9ccd32b074b6b8089fec2380e213d
-    modified: 1684775175956
+    modified: 1687972378019
     created: 1684769438249
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Direção
     description: ""
     method: GET
     body: {}
-    parameters:
-      - id: pair_11bc8d644ef94ecf808a1ad8ad9a8081
-        name: direction
-        value: OUT
-        description: ""
+    parameters: []
     headers: []
     authentication:
       type: bearer
@@ -996,7 +1054,7 @@ resources:
     _type: request
   - _id: req_a8d3dd8fb9704814bf8065483bb3948c
     parentId: fld_feb608cf735746eea6dcb0dc42c035b5
-    modified: 1684763663542
+    modified: 1688043866513
     created: 1684760264310
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Agendar transferência (data inválida)
@@ -1009,7 +1067,7 @@ resources:
         	"account_number_to": {{ _.fredericka_fredi.account_number }},
         	"value": 1,
         	"transactional_password": "{{ _.sissy_roche.transactional_password }}",
-        	"time_to_transfer": "2023-05-01"
+        	"time_to_transfer": "2023-07-01"
         }
     parameters: []
     headers:
