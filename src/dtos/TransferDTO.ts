@@ -18,6 +18,7 @@ export const TransferOutSchema = z
   .object({
     status: z.enum(["DONE", "SCHEDULED"]).default("DONE"),
     direction: z.enum(["IN", "OUT", "BOTH"]).default("BOTH"),
+    order: z.enum(["asc", "desc"]).default("desc"),
     page: z.coerce.number().gte(0).default(0),
     start: parsedDate.optional(),
     end: parsedDate.optional(),

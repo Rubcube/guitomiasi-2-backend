@@ -30,7 +30,7 @@ export async function getBalance(req: Request, res: Response) {
  */
 export async function getTransfers(req: Request, res: Response) {
   const accountID = req.params.accountId;
-  const { status, direction, page, start, end }: TransferOut =
+  const { status, direction, order, page, start, end }: TransferOut =
     res.locals.parsedQuery;
   let transfers;
 
@@ -38,6 +38,7 @@ export async function getTransfers(req: Request, res: Response) {
     transfers = await AccountModel.getTransfers({
       accountID,
       direction,
+      order,
       page,
       start,
       end,
@@ -45,6 +46,7 @@ export async function getTransfers(req: Request, res: Response) {
   } else {
     transfers = await AccountModel.getScheduledTransfers({
       accountID,
+      order,
       page,
       start,
       end,

@@ -31,6 +31,7 @@ export async function getAccount(accountID: string, includeUser = true) {
 type getTransfersParams = {
   accountID: string;
   direction: "IN" | "OUT" | "BOTH";
+  order: "asc" | "desc";
   page: number;
   start?: Date;
   end?: Date;
@@ -43,6 +44,7 @@ type getTransfersParams = {
 export async function getTransfers({
   accountID,
   direction,
+  order,
   page,
   start,
   end,
@@ -69,7 +71,7 @@ export async function getTransfers({
       transfer_status: TransferStatus.DONE,
       updated_at: { lte: end, gte: start },
     },
-    orderBy: { updated_at: "desc" },
+    orderBy: { updated_at: order },
     skip: page * TRANSFER_PAGINATION_OPTIONS.pageSize,
     take: TRANSFER_PAGINATION_OPTIONS.pageSize,
     select: {
@@ -98,6 +100,7 @@ export async function getTransfers({
  */
 export async function getScheduledTransfers({
   accountID,
+  order,
   page,
   start,
   end,
@@ -108,7 +111,7 @@ export async function getScheduledTransfers({
       transfer_status: TransferStatus.SCHEDULED,
       time_to_transfer: { lte: end, gte: start },
     },
-    orderBy: { updated_at: "desc" },
+    orderBy: { updated_at: order },
     skip: page * TRANSFER_PAGINATION_OPTIONS.pageSize,
     take: TRANSFER_PAGINATION_OPTIONS.pageSize,
     select: {
