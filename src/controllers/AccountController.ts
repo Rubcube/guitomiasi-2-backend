@@ -287,3 +287,25 @@ export async function getAssociatedUser(
     account_number: account.account_number,
   });
 }
+
+export async function getUserAccounts(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) {
+  const userID: string = res.locals.parsedJWTToken.id;
+
+  const accounts = await AccountModel.getAccounts(userID);
+
+  if (!accounts) {
+    return next(
+      new RubError(
+        404,
+        "Contas de usuário não encontradas",
+        "USER-NO-ACCOUNT-FOUND",
+      ),
+    );
+  }
+
+  return res.status(200).json(accounts);
+}

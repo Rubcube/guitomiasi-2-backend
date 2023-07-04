@@ -18,6 +18,28 @@ export const ACCOUNT_DEFAULT_OPTIONS = {
 export const ACCOUNT_MAXIMUM_ATTEMPTS = 3;
 
 /**
+ * Retorna todas as contas de um determinado usuário.
+ * @param userId ID do usuário
+ * @returns Lista de contas
+ */
+export async function getAccounts(userId: string) {
+  return await prisma.account.findMany({
+    where: {
+      owner_id: userId,
+      account_status: {
+        not: AccountStatus.INACTIVE,
+      },
+    },
+    select: {
+      id: true,
+      account_number: true,
+      agency: true,
+      account_status: true,
+    },
+  });
+}
+
+/**
  * Recupera uma conta do banco de dados a partir de seu ID.
  * Também pode retornar usuário associado à conta.
  */

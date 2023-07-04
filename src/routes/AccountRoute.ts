@@ -1,6 +1,7 @@
 import * as AccountController from "controllers/AccountController";
 import {
   AccountPasswordPatchSchema,
+  validateAccountOwnershipSchema,
   VerifyAccountExistenceSchema,
 } from "dtos/AccountDTO";
 import { TransferInSchema, TransferOutSchema } from "dtos/TransferDTO";
@@ -35,6 +36,7 @@ ValidatedRoute.patch(
 );
 
 const AccountRoute = Router();
+AccountRoute.get("/", authentication, AccountController.getUserAccounts);
 AccountRoute.get(
   "/:accountNumber",
   authentication,
@@ -44,6 +46,7 @@ AccountRoute.get(
 AccountRoute.use(
   "/:accountId",
   authentication,
+  validateSchema(validateAccountOwnershipSchema, "PARAMS"),
   validateAccountOwnership,
   ValidatedRoute,
 );
