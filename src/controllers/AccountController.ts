@@ -144,11 +144,9 @@ export async function postTransfer(
     res.locals.account.account_number === transferRequest.account_number_to;
 
   if (!passwordIsCorrect) {
-    const newAccountStatus = await AccountModel.incrementAttempt(
-      debitedAccountId,
-    );
+    const newAccount = await AccountModel.incrementAttempt(debitedAccountId);
 
-    if (newAccountStatus === AccountStatus.BLOCKED) {
+    if (newAccount.account_status === AccountStatus.BLOCKED) {
       return next(
         new RubError(
           403,
@@ -161,7 +159,9 @@ export async function postTransfer(
     return next(
       new RubError(
         403,
-        "Senha transacional incorreta",
+        `Senha transacional incorreta. Em ${
+          AccountModel.ACCOUNT_MAXIMUM_ATTEMPTS - newAccount.attempts
+        } tentativa(/s) errada(/s), sua conta será bloqueada.`,
         "ACCOUNT_INCORRECT_TRANSACTIONAL_PASSWORD",
       ),
     );

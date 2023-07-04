@@ -334,12 +334,11 @@ export async function incrementAttempt(id: string) {
     newStatus = AccountStatus.BLOCKED;
   }
 
-  return (
-    await prisma.account.update({
-      where: { id },
-      data: { account_status: newStatus },
-    })
-  ).account_status;
+  return await prisma.account.update({
+    where: { id },
+    data: { account_status: newStatus },
+    select: { account_status: true, attempts: true },
+  });
 }
 
 /**
