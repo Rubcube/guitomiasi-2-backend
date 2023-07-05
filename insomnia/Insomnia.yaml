@@ -1,14 +1,56 @@
 _type: export
 __export_format: 4
-__export_date: 2023-07-03T20:23:41.294Z
-__export_source: insomnia.desktop.app:v2023.3.0
+__export_date: 2023-07-05T18:57:44.632Z
+__export_source: insomnia.desktop.app:v2023.4.0
 resources:
+  - _id: req_867dab7d2cd2443b8b5b8494cfdbb55d
+    parentId: fld_079f4faec87948338eab4ca3a903c04c
+    modified: 1688476492758
+    created: 1688476466660
+    url: "{{ _.accountEndpoint }}/"
+    name: Todas as contas de um usuário
+    description: ""
+    method: GET
+    body: {}
+    parameters: []
+    headers: []
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1688476466660
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: fld_079f4faec87948338eab4ca3a903c04c
+    parentId: wrk_25dd0da716614e2cabf0bac47af435f3
+    modified: 1688476465716
+    created: 1688476465716
+    name: Multicontas
+    description: ""
+    environment: {}
+    environmentPropertyOrder: null
+    metaSortKey: -1688476465716
+    _type: request_group
+  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
+    parentId: null
+    modified: 1684332678588
+    created: 1684332678588
+    name: RubCamp 2
+    description: ""
+    scope: design
+    _type: workspace
   - _id: req_0ad42ec138204ba4af7a7190ffb532a4
     parentId: fld_a69d1e1dad6545259c39d6b55fecd52c
-    modified: 1688409005063
+    modified: 1688476454365
     created: 1688408489653
     url: "{{ _.baseUrl }}/account/1"
-    name: New Request
+    name: Obter informações de usuário a partir de conta
     description: ""
     method: GET
     body: {}
@@ -29,22 +71,14 @@ resources:
     _type: request
   - _id: fld_a69d1e1dad6545259c39d6b55fecd52c
     parentId: wrk_25dd0da716614e2cabf0bac47af435f3
-    modified: 1688408488457
+    modified: 1688476460332
     created: 1688408488457
-    name: Número da Conta -> Informação de Usuário
+    name: Transações
     description: ""
     environment: {}
     environmentPropertyOrder: null
     metaSortKey: -1688408488457
     _type: request_group
-  - _id: wrk_25dd0da716614e2cabf0bac47af435f3
-    parentId: null
-    modified: 1684332678588
-    created: 1684332678588
-    name: RubCamp 2
-    description: ""
-    scope: design
-    _type: workspace
   - _id: req_2c322d35591c4903bcf35794c61d839c
     parentId: fld_9f78aaa9104a4dff8536796ec4a2ecc9
     modified: 1687786900745
@@ -547,7 +581,7 @@ resources:
     _type: request
   - _id: req_8e7cec9b5b7c4bda9733c6887ab9c1ca
     parentId: fld_fa8cb03041884f5d885679e1d135b964
-    modified: 1688399486783
+    modified: 1688583345864
     created: 1684181567401
     url: "{{ _.loginEndpoint }}"
     name: Login
@@ -974,7 +1008,7 @@ resources:
     _type: request_group
   - _id: req_589f3586dd8249398e22c3e85ac79f07
     parentId: fld_feb608cf735746eea6dcb0dc42c035b5
-    modified: 1684763632892
+    modified: 1688487328267
     created: 1684243639551
     url: "{{ _.accountEndpoint }}/{{ _.sissy_roche.account_id }}/transfers"
     name: Realizar transferência
@@ -2053,19 +2087,22 @@ resources:
     settingRebuildPath: true
     settingFollowRedirects: global
     _type: request
-  - _id: req_a8684c3ecad849f4ae213ca96500f5e0
+  - _id: req_d4dd0c026ecb422d946866a914ab1f3e
     parentId: fld_27edea15ed484284ab677f41dc271a5c
-    modified: 1685106631877
-    created: 1685106594139
-    url: "{{ _.userEndpoint }}/forgot/{{ _.sissy_roche.document }}"
-    name: Enviar JWT para reset de senha
+    modified: 1688581217889
+    created: 1688581137986
+    url: "{{ _.accountEndpoint }}/user/{{ _.sissy_roche.document }}"
+    name: Contas de um usuário a partir de documento
     description: ""
     method: GET
     body: {}
     parameters: []
     headers: []
-    authentication: {}
-    metaSortKey: -1685106594139
+    authentication:
+      type: bearer
+      token: "{{ _.sissy_roche.jwt_token }}"
+      prefix: " "
+    metaSortKey: -1688581137986
     isPrivate: false
     settingStoreCookies: true
     settingSendCookies: true
@@ -2084,19 +2121,49 @@ resources:
     environmentPropertyOrder: null
     metaSortKey: -1683652946963
     _type: request_group
-  - _id: req_cbcebd8202364fb69d4dd54f9d470719
+  - _id: req_a8684c3ecad849f4ae213ca96500f5e0
     parentId: fld_27edea15ed484284ab677f41dc271a5c
-    modified: 1685465383157
-    created: 1685105598158
-    url: 0.0.0.0:3344/user/password/new/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1ZWE0ZDkzLTc5MGMtNGVkMi1hN2UzLTc2YWFmYTQzOWE4MSIsImVtYWlsIjoiU2lzc3kuUm9jaGVAeW9wbWFpbC5jb20iLCJvbGRfcGFzc3dvcmQiOiIkMmIkMTAkU0lQcWUvTC5mMFROV0lSUk41SzFKLksyRS4uRjVWRFI4aU9pMU5ndkViSllaQnoyMXBjcXUiLCJpYXQiOjE2ODU0NjUzNzMsImV4cCI6MTY4NTQ2ODk3M30.OlJxjAb64-0n5W990fO1T1leCR6jI9lyGT-PCwS2KHE
-    name: Alterar senha via JWT
+    modified: 1688565736991
+    created: 1685106594139
+    url: "{{ _.userEndpoint }}/forgot"
+    name: Gerar código para reset de senha
     description: ""
     method: POST
     body:
       mimeType: application/json
       text: |-
         {
-        	"new_password": "{{ _.sissy_roche.password }}"
+        	"document": "{{ _.sissy_roche.document }}"
+        }
+    parameters: []
+    headers:
+      - name: Content-Type
+        value: application/json
+    authentication: {}
+    metaSortKey: -1685106594139
+    isPrivate: false
+    settingStoreCookies: true
+    settingSendCookies: true
+    settingDisableRenderRequestBody: false
+    settingEncodeUrl: true
+    settingRebuildPath: true
+    settingFollowRedirects: global
+    _type: request
+  - _id: req_cbcebd8202364fb69d4dd54f9d470719
+    parentId: fld_27edea15ed484284ab677f41dc271a5c
+    modified: 1688565743133
+    created: 1685105598158
+    url: 0.0.0.0:3344/user/password/new
+    name: Alterar senha usando código
+    description: ""
+    method: POST
+    body:
+      mimeType: application/json
+      text: |-
+        {
+        	"document": "{{ _.sissy_roche.document }}",
+        	"new_password": "Senhafoda01@",
+        	"token": "pdW7Dvz%gTSj"
         }
     parameters: []
     headers:
@@ -2165,7 +2232,7 @@ resources:
     _type: api_spec
   - _id: env_4d1c8b67a2b84778913c143f3d64c6dd
     parentId: env_22ac494303a347fe8a892f81b6f1fc54
-    modified: 1685368452956
+    modified: 1688485533845
     created: 1684332979493
     name: RubCamp 2
     data:
