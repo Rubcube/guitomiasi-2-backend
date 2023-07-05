@@ -179,6 +179,14 @@ export async function forgotPassword(
     .send("An email was sent with the steps to reset your password.");
 }
 
+/**
+ * Endpoint para, a partir de um documento e um token, resetar a senha de um usuário.
+ * @throws `400` Caso:
+ * - O token não seja válido
+ * - O token já tenha sido utilizado
+ * - O usuário não exista
+ * @throws `500` Erro interno
+ */
 export async function resetPassword(
   req: Request,
   _res: Response,
@@ -209,6 +217,9 @@ export async function resetPassword(
 
     const newHash = await hash(new_password, 10);
     await UserModel.updateUserPassword({ id: associatedUser.id }, newHash);
+
+    // Atualizando o token para que ele não possa ser utilizado novamente
+    await UserModel.markPasswordResetAttemptAsUsed(associatedUser.id, token);
 
     return res.status(201).json({
       message: "Password was changed successfully!",

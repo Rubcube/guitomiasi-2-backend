@@ -5,7 +5,11 @@ import {
   TransferStatus,
 } from "@prisma/client";
 import { compare, hash } from "bcrypt";
-import { AccountPasswordPatch, VerifyAccountExistence } from "dtos/AccountDTO";
+import {
+  AccountPasswordPatch,
+  GetAssociatedUser,
+  GetUserAccounts,
+} from "dtos/AccountDTO";
 import { TransferIn, TransferOut } from "dtos/TransferDTO";
 import { NextFunction, Request, Response } from "express";
 import { RubError } from "handlers/errors/RubError";
@@ -13,6 +17,7 @@ import { DateTime, Settings } from "luxon";
 import * as AccountModel from "models/AccountModel";
 import * as UserModel from "models/UserModel";
 import moment from "moment";
+import { AuthenticatedResponseL } from "types/index";
 
 /**
  * Retorna saldo atual de uma determinada conta.
@@ -260,12 +265,15 @@ export async function patchPassword(
   }
 }
 
+/**
+ * Endpoint para retornar as informações de um usuário associado a determinada conta
+ */
 export async function getAssociatedUser(
   req: Request,
   res: Response,
   next: NextFunction,
 ) {
-  const { accountNumber }: VerifyAccountExistence = res.locals.parsedParams;
+  const { accountNumber }: GetAssociatedUser = res.locals.parsedParams;
 
   const account = await AccountModel.getAccountByNumber(accountNumber, false);
 
@@ -288,7 +296,10 @@ export async function getAssociatedUser(
   });
 }
 
-export async function getUserAccounts(
+/**
+ * Endpoint para retornar todas as contas de um usuário logado
+ */
+export async function getLoggedUserAccounts(
   req: Request,
   res: Response,
   next: NextFunction,
@@ -305,6 +316,41 @@ export async function getUserAccounts(
         "USER-NO-ACCOUNT-FOUND",
       ),
     );
+  }
+
+  return res.status(200).json(accounts);
+}
+
+/**
+ * Endpoint para retornar todas as contas de um determinado usuário a partir de seu documento
+ */
+export async function getUserAccounts(
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+) {
+  const res = _res as AuthenticatedResponseL<
+    undefined,
+    undefined,
+    GetUserAccounts
+  >;
+  const error = new RubError(
+    400,
+    "Não foi possível encontrar contas do usuário associado a esse documento.",
+  );
+
+  const { document }: GetUserAccounts = res.locals.parsedParams;
+
+  const user = await UserModel.getAuth({ document });
+
+  if (!user) {
+    return next(error);
+  }
+
+  const accounts = await AccountModel.getAccounts(user.id);
+
+  if (!accounts) {
+    return next(error);
   }
 
   return res.status(200).json(accounts);

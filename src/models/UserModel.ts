@@ -226,6 +226,12 @@ export async function createPasswordResetAttempt(id: string, token: string) {
   });
 }
 
+/**
+ * Verifica se existe um token de reset de senha associado a um usuário
+ * @param id ID do usuário que requisitou o reset de senha
+ * @param token Token enviado por email para reset de senha
+ * @returns Instância de `PasswordReset`, caso exista.
+ */
 export async function getPasswordResetAttempt(id: string, token: string) {
   return await prisma.passwordReset.findUnique({
     where: {
@@ -234,5 +240,26 @@ export async function getPasswordResetAttempt(id: string, token: string) {
         token,
       },
     },
+  });
+}
+
+/**
+ * Marca um `PasswordReset` como usado para que não possa ser reutilizado.
+ * @param id ID do usuário que requisitou o reset de senha
+ * @param token Token enviado por email para reset de senha
+ * @returns Instância atualizada
+ */
+export async function markPasswordResetAttemptAsUsed(
+  id: string,
+  token: string,
+) {
+  return await prisma.passwordReset.update({
+    where: {
+      unique_user_token: {
+        user_id: id,
+        token,
+      },
+    },
+    data: { used: true },
   });
 }
