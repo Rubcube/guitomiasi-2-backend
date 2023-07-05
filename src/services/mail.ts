@@ -14,8 +14,9 @@ const emailTemplate = Handlebars.compile(templateFile);
 interface EmailTemplateContext {
   title: string;
   main_message: string;
-  button_href: string;
-  button_text: string;
+  button_href?: string;
+  button_text?: string;
+  code_text?: string;
 }
 
 /**
@@ -88,24 +89,17 @@ export function sendVerificationMail(emailTo: string) {
 
 /**
  * Envia um email de **reset** de senha para um determinado email.
- * @param id ID do usuário a ter sua senha resetada
  * @param emailTo Email do usuário a ter sua senha resetada
+ * @param resetPasswordToken Token de reset de senha, com 12 caracteres
  */
 export function sendResetPasswordMail(
-  id: string,
   emailTo: string,
-  currentPasswordHash: string,
+  resetPasswordToken: string,
 ) {
-  const emailedJWT = signJWT(
-    { id, email: emailTo, old_password: currentPasswordHash },
-    3600,
-  );
-
   sendMailTemplate(emailTo, "Password change requested", {
     title: "Solicitação de troca de senha",
     main_message:
-      "Uma solicitação de troca de senha foi enviada ao nosso serviço. Se você não realizou essa solicitação, ignore essa mensagem de email. Para prosseguir, clique no botão abaixo.",
-    button_href: `${PathConfig.BASE_PATH}/user/password/new/${emailedJWT}`,
-    button_text: "Trocar senha",
+      "Uma solicitação de troca de senha foi enviada ao nosso serviço. Se você não realizou essa solicitação, ignore essa mensagem de email. Para prosseguir, insira o código abaixo no aplicativo:",
+    code_text: resetPasswordToken,
   });
 }

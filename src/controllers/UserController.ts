@@ -1,16 +1,22 @@
 import { UserStatus } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime";
 import { compare, hash } from "bcrypt";
 import { Patch } from "dtos";
 import { OnboardingUserStepValidation } from "dtos/OnboardingDTO";
-import { UserPasswordPatch } from "dtos/UsersDTO";
+import { UserNewPassword, UserPasswordPatch } from "dtos/UsersDTO";
 import { NextFunction, Request, Response } from "express";
 import { createFieldError, FieldError } from "handlers/errors/FieldError";
-import { RubError } from "handlers/errors/RubError";
+import {
+  INTERNAL_ERROR,
+  RPrismaError,
+  RubError,
+} from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
+import RandExp from "randexp";
 import { parseJWT } from "services/jwt";
 import { mailerTransport, sendResetPasswordMail } from "services/mail";
+import { AuthenticatedResponseL, ResponseL } from "types/index";
 import { Omitter } from "utils/index";
-import { userDocument } from "zodTypes/user";
 
 /**
  * Endpoint para verificar o email de um usuário, com base em um JWT enviado.
@@ -83,26 +89,23 @@ export async function patchInfo(
  */
 export async function patchUserPassword(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
+  const res = _res as AuthenticatedResponseL<UserPasswordPatch>;
   const userId: string = res.locals.parsedJWTToken.id;
   const userEmail: string = res.locals.parsedJWTToken.email;
   const patchData: UserPasswordPatch = res.locals.parsedBody;
-  const hashed: boolean | undefined = res.locals.hashed;
 
   try {
-    let allow: boolean;
     const userAuth = await UserModel.getAuth({ id: userId });
     const hashInDatabase = userAuth!.bcrypt_user_password;
-    if (hashed) {
-      const oldPasswordHash = res.locals.parsedJWTToken.old_password;
-      allow = oldPasswordHash == hashInDatabase;
-    } else {
-      allow = await compare(patchData.old_password, hashInDatabase);
-    }
+    const isPasswordEqual = await compare(
+      patchData.old_password,
+      hashInDatabase,
+    );
 
-    if (allow) {
+    if (isPasswordEqual) {
       const newHash = await hash(patchData.new_password, 10);
       await UserModel.updateUserPassword({ id: userId }, newHash);
 
@@ -133,18 +136,12 @@ export async function patchUserPassword(
  */
 export async function forgotPassword(
   req: Request,
-  res: Response,
+  res: Response = {} as ResponseL<{ document: string }>,
   next: NextFunction,
 ) {
-  const document = userDocument.safeParse(req.params.document);
+  const { document } = res.locals.parsedBody;
 
-  if (!document.success) {
-    return next(
-      new RubError(400, "Documento inserido (CPF, CNPJ) não é válido"),
-    );
-  }
-
-  const auth = await UserModel.getAuth({ document: document.data });
+  const auth = await UserModel.getAuth({ document });
 
   if (!auth) {
     return next(
@@ -165,40 +162,63 @@ export async function forgotPassword(
     );
   }
 
-  sendResetPasswordMail(
-    auth.id,
-    auth.user_info!.email,
-    auth.bcrypt_user_password,
-  );
+  const generatedToken = new RandExp(/^[a-zA-Z0-9@#$%^&+=]{12}$/).gen();
+  try {
+    await UserModel.createPasswordResetAttempt(auth.id, generatedToken);
+  } catch (e) {
+    if (e instanceof PrismaClientKnownRequestError) {
+      return next(new RPrismaError(e));
+    } else {
+      return next(INTERNAL_ERROR);
+    }
+  }
+  sendResetPasswordMail(auth.user_info!.email, generatedToken);
 
   return res
     .status(200)
     .send("An email was sent with the steps to reset your password.");
 }
 
-/**
- * Endpoint para atribuir uma nova senha para um determinado usuário.
- * Será utilizado um JWT enviado para o email do usuário para atestar
- * que o mesmo é quem está atualizando sua própria senha.
- */
-export async function appendNewPassword(
+export async function resetPassword(
   req: Request,
-  res: Response,
+  _res: Response,
   next: NextFunction,
 ) {
+  const res = _res as ResponseL<UserNewPassword>;
+  const { document, new_password, token } = res.locals.parsedBody;
+  const error = new RubError(
+    400,
+    "Não foi possível resetar senha, verifique se o token inserido é válido.",
+  );
+
   try {
-    const jwt = parseJWT<{ id: string; email: string; old_password: string }>(
-      req.params.jwt,
+    const associatedUser = await UserModel.getAuth({ document });
+
+    if (!associatedUser) {
+      return next(error);
+    }
+
+    const entry = await UserModel.getPasswordResetAttempt(
+      associatedUser.id,
+      token,
     );
-    const old_password = jwt.old_password;
 
-    res.locals.parsedJWTToken = jwt;
-    res.locals.parsedBody.old_password = old_password;
-    res.locals.hashed = true;
+    if (!entry || (entry && entry.used)) {
+      return next(error);
+    }
 
-    next();
+    const newHash = await hash(new_password, 10);
+    await UserModel.updateUserPassword({ id: associatedUser.id }, newHash);
+
+    return res.status(201).json({
+      message: "Password was changed successfully!",
+    });
   } catch (e) {
-    next(e);
+    if (e instanceof PrismaClientKnownRequestError) {
+      return next(new RPrismaError(e));
+    } else {
+      return next(INTERNAL_ERROR);
+    }
   }
 }
 

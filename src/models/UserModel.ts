@@ -210,3 +210,29 @@ export async function isPhoneAvailable(phone: string) {
 
   return user === null;
 }
+
+/**
+ * Cria uma tentativa de reset de senha, associando um token a um usuário.
+ * @param id ID do usuário que requisitou o reset de senha
+ * @param token Token enviado por email para reset de senha
+ * @returns Instância de `PasswordReset`
+ */
+export async function createPasswordResetAttempt(id: string, token: string) {
+  return await prisma.passwordReset.create({
+    data: {
+      user_id: id,
+      token,
+    },
+  });
+}
+
+export async function getPasswordResetAttempt(id: string, token: string) {
+  return await prisma.passwordReset.findUnique({
+    where: {
+      unique_user_token: {
+        user_id: id,
+        token,
+      },
+    },
+  });
+}

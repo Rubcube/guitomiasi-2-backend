@@ -325,13 +325,13 @@
           font-weight: inherit;
           line-height: inherit;
         }
-        .btn-primary table td:hover {
-          background-color: #34495e !important; 
-        }
-        .btn-primary a:hover {
+        .btn-primary {
           background-color: #34495e !important;
-          border-color: #34495e !important; 
-        } 
+          padding: 16px;
+          color: #ffffff;
+          border-radius: 8px;
+          margin: 0 auto;
+        }
       }
 
     </style>
@@ -354,21 +354,12 @@
                       <td>
                         {{#if title}}<h2>{{title}}</h2>{{/if}}
                         <p>{{main_message}}</p>
-                        <table role="presentation" border="0" cellpadding="0" cellspacing="0" class="btn btn-primary">
-                          <tbody>
-                            <tr>
-                              <td align="left">
-                                <table role="presentation" border="0" cellpadding="0" cellspacing="0">
-                                  <tbody>
-                                    <tr>
-                                      <td> <a href={{button_href}} target="_blank">{{button_text}}</a> </td>
-                                    </tr>
-                                  </tbody>
-                                </table>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
+                        {{#if button_text}}
+                          <button class="btn-primary" href={{button_href}} target="_blank">{{button_text}}</button>
+                        {{/if}}
+                        {{#if code_text}}
+                          <p style="text-align: center; font-size: 48px; padding-top: 20px">{{code_text}}</p>
+                        {{/if}}
                       </td>
                     </tr>
                   </table>

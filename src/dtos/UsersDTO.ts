@@ -10,6 +10,7 @@ import {
   userName,
   userPassword,
   userPhone,
+  userResetPasswordToken,
 } from "zodTypes/user";
 
 export const UserOnboardingSchema = z.object({
@@ -44,7 +45,13 @@ export const UserPasswordPatchSchema = z
   .superRefine(validatePasswordNotEqual);
 
 export const UserNewPasswordSchema = z.object({
+  document: userDocument,
   new_password: userPassword,
+  token: userResetPasswordToken,
+});
+
+export const UserForgotPasswordSchema = z.object({
+  document: userDocument,
 });
 
 export type UserOnboarding = z.infer<typeof UserOnboardingSchema>;
@@ -52,3 +59,4 @@ export type UserLogin = z.infer<typeof UserLoginSchema>;
 export type UserPatch = z.infer<typeof UserPatchSchema>;
 export type UserPasswordPatch = z.infer<typeof UserPasswordPatchSchema>;
 export type UserNewPassword = z.infer<typeof UserNewPasswordSchema>;
+export type UserForgotPassword = z.infer<typeof UserForgotPasswordSchema>;

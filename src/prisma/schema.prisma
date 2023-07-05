@@ -27,15 +27,16 @@ enum UserStatus {
 }
 
 model UserAuth {
-  id                   String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  bcrypt_user_password String     @db.Char(60)
-  user_status          UserStatus @default(NOT_VERIFIED)
-  created_at           DateTime   @default(now()) @db.Timestamp()
-  updated_at           DateTime   @updatedAt @db.Timestamp()
+  id                   String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bcrypt_user_password String          @db.Char(60)
+  user_status          UserStatus      @default(NOT_VERIFIED)
+  created_at           DateTime        @default(now()) @db.Timestamp()
+  updated_at           DateTime        @updatedAt @db.Timestamp()
   // ================================================================================
   address              Address?
   user_info            UserInfo?
   accounts             Account[]
+  PasswordReset        PasswordReset[]
 }
 
 model Address {
@@ -95,4 +96,18 @@ model Transfer {
   // ================================================================================
   debited_account  Account        @relation(name: "debits", fields: [account_id_from], references: [id])
   credited_account Account        @relation(name: "credits", fields: [account_id_to], references: [id])
+}
+
+model PasswordReset {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String   @db.Uuid
+  token      String   @db.Char(12)
+  used       Boolean  @default(false) @db.Boolean
+  created_at DateTime @default(now()) @db.Timestamp()
+  updated_at DateTime @updatedAt @db.Timestamp()
+  // ================================================================================
+  user       UserAuth @relation(fields: [user_id], references: [id])
+
+  // ================================================================================
+  @@unique([user_id, token], name: "unique_user_token")
 }

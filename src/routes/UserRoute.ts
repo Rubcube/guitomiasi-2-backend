@@ -1,6 +1,10 @@
 import * as UserController from "controllers/UserController";
 import { PatchSchema } from "dtos";
-import { UserNewPasswordSchema, UserPasswordPatchSchema } from "dtos/UsersDTO";
+import {
+  UserForgotPasswordSchema,
+  UserNewPasswordSchema,
+  UserPasswordPatchSchema,
+} from "dtos/UsersDTO";
 import { Router } from "express";
 import { authentication } from "middlewares/auth";
 import { validateSchema } from "middlewares/validateSchema";
@@ -23,17 +27,16 @@ ValidatedRoute.patch(
 
 const UserRoute = Router();
 UserRoute.get("/verify/:jwt", UserController.verifyUserEmail);
-UserRoute.get("/forgot/:document", UserController.forgotPassword);
-
-// Ao invés de utilizar um endpoint próprio, utiliza o mesmo endpoint que altera senha
-// para um usuário já logado. Isso é feito para reaproveitamento de código e
-// permitir a invalidação do JWT. O endpoint patchUserPassword é afetada pelo estado
-// do res.locals;
 UserRoute.post(
-  "/password/new/:jwt",
+  "/forgot",
+  validateSchema(UserForgotPasswordSchema),
+  UserController.forgotPassword,
+);
+
+UserRoute.post(
+  "/password/new",
   validateSchema(UserNewPasswordSchema),
-  UserController.appendNewPassword,
-  UserController.patchUserPassword,
+  UserController.resetPassword,
 );
 UserRoute.use("/", authentication, ValidatedRoute);
 

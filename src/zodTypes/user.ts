@@ -25,3 +25,6 @@ export const userPassword = z
     /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
     "PASSWORD-INVALID-FORMAT",
   );
+export const userResetPasswordToken = z
+  .string()
+  .regex(/^[a-zA-Z0-9@#$%^&+=]{12}$/, "TOKEN-INVALID-FORMAT");

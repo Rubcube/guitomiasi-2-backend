@@ -46,6 +46,7 @@
     "moment": "^2.29.4",
     "node-cron": "^3.0.2",
     "nodemailer": "^6.9.2",
+    "randexp": "^0.5.3",
     "swagger-ui-express": "^4.5.0",
     "zod": "^3.21.4"
   },
