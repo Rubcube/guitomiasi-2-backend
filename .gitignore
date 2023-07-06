@@ -131,3 +131,6 @@ dist
 
 # Key-Certificate
 kc/
+
+# Docker env
+.env.docker

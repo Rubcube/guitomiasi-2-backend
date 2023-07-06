@@ -331,6 +331,7 @@
           color: #ffffff;
           border-radius: 8px;
           margin: 0 auto;
+          text-decoration: none;
         }
       }
 
@@ -355,7 +356,7 @@
                         {{#if title}}<h2>{{title}}</h2>{{/if}}
                         <p>{{main_message}}</p>
                         {{#if button_text}}
-                          <button class="btn-primary" href={{button_href}} target="_blank">{{button_text}}</button>
+                          <a class="btn-primary" href={{button_href}} target="_blank">{{button_text}}</a>
                         {{/if}}
                         {{#if code_text}}
                           <p style="text-align: center; font-size: 48px; padding-top: 20px">{{code_text}}</p>

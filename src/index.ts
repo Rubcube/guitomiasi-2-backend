@@ -7,10 +7,13 @@ import { authentication } from "middlewares/auth";
 import * as TransferModel from "models/TransferModel";
 import cron from "node-cron";
 import AccountRoute from "routes/AccountRoute";
+import DeveloperRoute from "routes/DeveloperRoute";
 import LoginRoute from "routes/LoginRoute";
 import OnboardingRoute from "routes/OnboardingRoute";
 import UserRoute from "routes/UserRoute";
 import VerifyRoute from "routes/VerifyRoute";
+
+console.log(process.env);
 
 // const key = fs.readFileSync("kc/key.pem");
 // const cert = fs.readFileSync("kc/cert.pem");
@@ -31,6 +34,12 @@ app.use("/login", LoginRoute);
 app.use("/account", AccountRoute);
 app.use("/user", UserRoute);
 app.use("/verify", VerifyRoute);
+
+if (process.env.ENVIRONMENT === "development") {
+  console.log("Developer route enabled");
+  app.use("/developer", DeveloperRoute);
+}
+
 app.listen(process.env.PORT || 3344);
 
 app.use(async (error: Error, req: Request, res: Response, _: NextFunction) => {

@@ -3,7 +3,7 @@ version: "3.8"
 services:
   db:
     container_name: db
-    image: postgres:14
+    image: postgres:latest
     restart: always
     expose:
       - 5432
@@ -11,10 +11,8 @@ services:
       - 5432:5432
     networks:
       - rubcamp
-    environment:
-      - POSTGRES_DB=rubcamp
-      - POSTGRES_USER=rubcamp
-      - POSTGRES_PASSWORD=rubcamp123
+    env_file:
+      - .env.docker
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rubcamp"]
       interval: 10s
@@ -39,7 +37,7 @@ services:
     links:
       - db
     env_file:
-      - .env.example
+      - .env
     platform: "linux/amd64"
     depends_on:
       db:
