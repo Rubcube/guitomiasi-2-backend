@@ -7,7 +7,7 @@ import { resolve } from "path";
 import { signJWT } from "./jwt";
 
 const templateFile = readFileSync(
-  resolve(__dirname, "mailTemplate.handlebars"),
+  resolve(__dirname, "..", "templates", "mailTemplate.handlebars"),
   "utf-8",
 );
 const emailTemplate = Handlebars.compile(templateFile);

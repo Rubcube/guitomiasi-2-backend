@@ -12,6 +12,7 @@ import {
   RubError,
 } from "handlers/errors/RubError";
 import * as UserModel from "models/UserModel";
+import path from "path";
 import RandExp from "randexp";
 import { parseJWT } from "services/jwt";
 import { mailerTransport, sendResetPasswordMail } from "services/mail";
@@ -33,7 +34,14 @@ export async function verifyUserEmail(
     const parsedToken = parseJWT<{ email: string }>(receivedJWT);
 
     await UserModel.verifyUserEmail(parsedToken.email);
-    return res.status(200).send("Email verificado com sucesso!");
+    return res.sendFile(
+      path.resolve(__dirname, "..", "templates", "accountVerified.handlebars"),
+      {
+        headers: {
+          "Content-Type": "text/html",
+        },
+      },
+    );
   } catch (e) {
     next(e);
   }
