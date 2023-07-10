@@ -1,6 +1,7 @@
 import { AccountStatus, Prisma, TransferStatus } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
 import { RubError } from "handlers/errors/RubError";
+import { DateTime } from "luxon";
 import { prisma } from "prisma";
 
 const TRANSFER_PAGINATION_OPTIONS = {
@@ -164,7 +165,11 @@ export async function getScheduledTransfers({
     transfers: transfers.map(transfer => ({
       id: transfer.id,
       value: transfer.value,
-      time: transfer.time_to_transfer,
+      time: DateTime.fromJSDate(transfer.time_to_transfer!)
+        .plus({
+          hours: 4,
+        })
+        .toJSDate(),
       direction: "OUT",
       status: TransferStatus.SCHEDULED,
     })),
