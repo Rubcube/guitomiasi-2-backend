@@ -218,12 +218,15 @@ export async function postTransfer(
     }
 
     const returnObj = {
-      transfer_status: generatedTransfer.transfer_status,
-      transfer_time:
+      id: generatedTransfer.id,
+      status: generatedTransfer.transfer_status,
+      time:
         generatedTransfer.transfer_status === "DONE"
           ? generatedTransfer.updated_at
-          : generatedTransfer.time_to_transfer,
-      transfered_value: generatedTransfer.value,
+          : DateTime.fromJSDate(generatedTransfer.time_to_transfer!).plus({
+              hour: 4,
+            }),
+      value: generatedTransfer.value,
     };
 
     res.status(201).json(returnObj);
